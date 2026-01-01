@@ -8,7 +8,7 @@ export async function GET() {
     "miniapp": {
       "version": "1",
       "name": "FarFISH",
-      "noindex": "true",
+      "noindex": "false",
       "iconUrl": "https://farfish-baseapp.vercel.app/icon.png",
       "homeUrl": "https://farfish-baseapp.vercel.app",
       "imageUrl": "https://farfish-baseapp.vercel.app/og-image.png",
