@@ -1,9 +1,9 @@
 export async function GET() {
   return Response.json({
     accountAssociation: {
-      header: "",
-      payload: "",
-      signature: "",
+      header: "eyJmaWQiOjE0ODExMDYsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHhjN0E0QjNDMTRhMjhDREY2NTIyNWJhMTRDNjdFMUIxOGUxMUY5NDIyIn0",
+      payload: "eyJkb21haW4iOiJmYXJmaXNoLWJhc2VhcHAudmVyY2VsLmFwcCJ9",
+      signature: "ypecNFm+6U+qDiSdIuUj46L8B8CIKj+JuscDGNXL+skW95Ymsai5zqlp8c1k/NQw/QqjVf2QagLeZu0MXYiYxBw="
     },
     miniapp: {
       version: "1",
