@@ -90,7 +90,19 @@ export default function StakingPage() {
     <div className="flex flex-col flex-1 min-h-0">
       <Header title="Stake" />
 
-      <div className="mt-4 space-y-4 flex-1 flex flex-col">
+      {/* Staking Explanation */}
+      <div className="mt-4 mb-4 p-4 rounded-2xl bg-blue-500/10 border border-blue-400/30">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="text-xl">🔒</span>
+          <div>
+            <p className="font-semibold text-blue-300">Staking Overview</p>
+          </div>
+        </div>
+        <p className="text-sm text-blue-400 mb-2">Staking locks your NFT in a smart contract on Base.</p>
+        <p className="text-sm text-blue-400">Locked NFTs increase your snapshot weight and unlock protocol rewards.</p>
+      </div>
+
+      <div className="space-y-4 flex-1 flex flex-col">
         {/* Actions */}
         <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
           <h2 className="text-xl font-bold mb-4">Stake Your NFTs</h2>
@@ -108,6 +120,10 @@ export default function StakingPage() {
               Unstake NFT
             </button>
           </div>
+          <div className="mt-3 text-center">
+            <p className="text-xs text-white/60">On-chain action • Base Network</p>
+            <p className="text-xs text-white/60">Gas fees may apply</p>
+          </div>
         </section>
 
         <StakeTable />
@@ -116,10 +132,18 @@ export default function StakingPage() {
         <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
           <h3 className="font-semibold text-lg mb-4">My Staked NFTs</h3>
 
-          {/* Static informational text */}
-          <p className="mb-4 text-sm text-white/80">
-            When your claim period ends, you can automatically click the Claim button to claim your staking reward.
-          </p>
+          {/* Staking Flow Explanation */}
+          <div className="mb-4 p-3 rounded-xl bg-white/5 border border-white/10">
+            <p className="text-sm text-white/80 mb-2">
+              <strong>Staking Flow:</strong>
+            </p>
+            <ul className="text-xs text-white/70 space-y-1">
+              <li>• Staking rewards accrue while your NFT is locked</li>
+              <li>• Rewards become claimable after the selected lock period</li>
+              <li>• Claiming finalizes rewards on-chain</li>
+              <li>• Unstaking becomes available after the claim window</li>
+            </ul>
+          </div>
 
           {!readEnabled && <p>Connect wallet.</p>}
           {isLoading && <p>Loading…</p>}
@@ -154,13 +178,13 @@ export default function StakingPage() {
                     <button
                       disabled={!isButtonEnabled}
                       onClick={() => handleClaim(s.stakeId)}
-                      className={`px-4 py-2 rounded-lg ${
+                      className={`px-4 py-2 rounded-lg text-sm ${
                         isButtonEnabled
                           ? "bg-[#00d4c4] text-black"
                           : "bg-white/10 text-white/40"
                       }`}
                     >
-                      Claim
+                      {isButtonEnabled ? "Claim • On-chain action" : "Claim"}
                     </button>
                   </div>
                 );

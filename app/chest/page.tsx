@@ -31,19 +31,17 @@ const formatTime = (seconds: bigint | number): string => {
 
 /* ---------------- ROTATING TEXTS ---------------- */
 const ROTATING_CHEST_TEXTS = [
-  "Daily Bronze Chest unlocked 🟤🐟\n\nClaim 3 FRH every day on FarFISH.\nFree, simple, on Base.",
-  "Another day, another Bronze Chest 🟤\n\nFarFISH rewards consistency.\nFree FRH daily on Base.",
-  "Daily check-in complete ✅\n\nBronze Chest claimed on FarFISH.\nFree FRH for real users.",
-  "Small daily rewards > big promises.\n\nBronze Chest unlocked on FarFISH 🐟\nFree FRH, every day.",
-  "Consistency pays 🟤\n\nClaim your daily Bronze Chest on FarFISH.\nFree FRH on Base.",
-  "Daily Bronze Chest claimed 🐟\n\nFarFISH keeps rewarding active users.\nFree FRH, no tricks.",
-  "Free daily rewards, done right.\n\nBronze Chest unlocked on FarFISH 🟤\nBuilt on Base.",
-  "Daily habit unlocked 🔁\n\nBronze Chest claimed on FarFISH.\n3 FRH every day.",
-  "No hype. Just daily rewards.\n\nBronze Chest unlocked on FarFISH 🐟\nFree FRH on Base.",
-  "Another Bronze Chest day 🟤\n\nFarFISH rewards show up daily.\nFree FRH, claim yours.",
+  "Daily Base Chest unlocked 🟤🐟\n\nClaim 3 FRH every day on FarFISH.\nFree, simple, on Base.",
+  "Another day, another Base Chest 🟤\n\nFarFISH rewards consistency.\nFree FRH daily on Base.",
+  "Daily check-in complete ✅\n\nBase Chest claimed on FarFISH.\nFree FRH for real users.",
+  "Small daily rewards > big promises.\n\nBase Chest unlocked on FarFISH 🐟\nFree FRH, every day.",
+  "Consistency pays 🟤\n\nClaim your daily Base Chest on FarFISH.\nFree FRH on Base.",
+  "Daily Base Chest claimed 🐟\n\nFarFISH keeps rewarding active users.\nFree FRH, no tricks.",
+  "Free daily rewards, done right.\n\nBase Chest unlocked on FarFISH 🟤\nBuilt on Base.",
+  "Daily habit unlocked 🔁\n\nBase Chest claimed on FarFISH.\n3 FRH every day.",
+  "No hype. Just daily rewards.\n\nBase Chest unlocked on FarFISH 🐟\nFree FRH on Base.",
+  "Another Base Chest day 🟤\n\nFarFISH rewards show up daily.\nFree FRH, claim yours.",
 ];
-
-const FARFISH_MINIAPP_URL = "https://farfish-miniapp5.vercel.app";
 
 /* ---------------- page ---------------- */
 export default function ChestPage() {
@@ -112,23 +110,6 @@ export default function ChestPage() {
     hash: dailyTx,
   });
 
-  const handleShareProgress = async () => {
-    const streak = localStorage.getItem('ff_streak') || '0';
-    const streakNum = parseInt(streak, 10);
-    
-    const shareText = `I'm on Day ${streakNum} on FarFISH 🐟 building daily on-chain habits.`;
-
-    try {
-      await sdk.actions.composeCast({
-        text: shareText,
-        embeds: [FARFISH_MINIAPP_URL],
-        close: false,
-      });
-    } catch (err) {
-      console.error("Share failed:", err);
-    }
-  };
-
   const handleBronzeClaim = useCallback(async () => {
     if (!daily?.canClaim || !address) return;
 
@@ -171,7 +152,7 @@ export default function ChestPage() {
         chain: base,
       });
     } catch (error) {
-      console.error('Bronze claim error:', error);
+      console.error('Base chest claim error:', error);
       throw error; // Let ChestCard handle the error display
     }
   }, [daily, address, claimDaily]);
@@ -291,7 +272,18 @@ export default function ChestPage() {
     <div className="flex flex-col flex-1">
       <Header title="Chest" />
 
-      <div className="mt-4 space-y-4 flex-1">
+      {/* Transparency Notice */}
+      <div className="mt-4 mb-4 p-4 rounded-2xl bg-blue-500/10 border border-blue-400/30">
+        <div className="flex items-center gap-3">
+          <span className="text-xl">ℹ️</span>
+          <div>
+            <p className="font-semibold text-blue-300">Daily Rewards</p>
+            <p className="text-sm text-blue-400">Daily rewards are recorded on-chain on Base. Each claim contributes to monthly snapshot rewards.</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4 flex-1">
         {/* Daily Streak Indicator */}
         {trustAnchorData.streak && trustAnchorData.streak > 0 && (
           <div className="bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 rounded-2xl p-4">
@@ -308,14 +300,18 @@ export default function ChestPage() {
                       : `Next check-in available in ${formatTime(daily?.timeLeft ?? 0n)}`
                     }
                   </p>
+                  <p className="text-xs text-white/60 mt-1">This action is available once every 24 hours to ensure fair distribution.</p>
                 </div>
               </div>
               <button
-                onClick={handleShareProgress}
+                onClick={() => {
+                  // Replace share with view reward history
+                  window.location.href = '/profile';
+                }}
                 disabled={!isConnected}
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-sm font-medium text-white transition-all duration-300 hover:scale-105 disabled:opacity-50"
               >
-                Share my progress
+                View reward history
               </button>
             </div>
           </div>
@@ -328,14 +324,14 @@ export default function ChestPage() {
           hasActiveStake={activeStakes.length > 0}
         />
         <ChestCard
-          title="Daily Bronze Chest"
+          title="Daily Base Chest"
           description="Claim rewards every 24 hours."
           variant="bronze"
           badge={daily?.canClaim ? "Ready" : "Cooling"}
           progress={daily?.canClaim ? 100 : 0}
           actionLabel={
             daily?.canClaim 
-              ? "Claim 3 FRH" 
+              ? "Claim 3 FRH • On-chain action" 
               : `Next claim in: ${formatTime(daily?.timeLeft ?? 0n)}`
           }
           actionDisabled={
@@ -349,8 +345,8 @@ export default function ChestPage() {
         />
 
         <ChestCard
-          title="Silver Chest"
-          description="Stake tokens to unlock higher rewards."
+          title="Staked Base Chest"
+          description="Stake tokens to unlock higher rewards. Snapshot weight increases with staked NFTs."
           variant="silver"
           badge={
             !silver?.hasStaked
@@ -361,7 +357,7 @@ export default function ChestPage() {
           }
           actionLabel={
             silver?.canClaim
-              ? "Claim 6 FRH"
+              ? "Claim 6 FRH • On-chain action"
               : `Next claim in: ${formatTime(silver?.timeLeft ?? 0n)}`
           }
           actionDisabled={

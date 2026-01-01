@@ -12,13 +12,6 @@ import Header from "../components/Header";
 import { NFT_CONTRACT_ADDRESS } from "../constants";
 import nftDropAbi from "../abi/nftDrop.json";
 import useUserStakes from "../hooks/useUserStakes";
-import { sdk } from "@farcaster/miniapp-sdk";
-
-type FarcasterContext = {
-  fid: number;
-  username: string;
-  pfpUrl: string;
-} | null;
 
 type ToastState = { type: "error" | "success"; message: string } | null;
 
@@ -35,7 +28,7 @@ const faqItems = [
   },
   {
     question: "2. How do I earn FRH tokens?",
-    answer: "Claim daily rewards in Chest, complete social tasks in Steam, stake NFTs for bonus rewards, and refer friends to the platform.",
+    answer: "Claim daily rewards in Chest, complete Base tasks in Steam, stake NFTs for bonus rewards, and refer friends to the platform.",
   },
   {
     question: "3. What are the main features?",
@@ -46,11 +39,11 @@ const faqItems = [
     answer: "Mint or buy FarFISH NFTs, then stake them to earn higher daily rewards and unlock premium features. Unstake anytime.",
   },
   {
-    question: "5. What determines my rank?",
-    answer: "Your rank is based solely on the total amount of FRH tokens you hold. More FRH = higher rank on the leaderboard.",
+    question: "5. What affects my rank?",
+    answer: "Your rank is based on your total FRH tokens and on-chain activity. More engagement and tokens lead to higher leaderboard position.",
   },
   {
-    question: "6. Is my data safe?",
+    question: "6. Is my data secure?",
     answer: "Yes. FarFISH is non-custodial and built on Base blockchain. You control your wallet and assets at all times.",
   },
   {
@@ -58,7 +51,7 @@ const faqItems = [
     answer: "Share your referral link to earn 40 FRH per new user. Reach milestones (5, 10, 30, 50 referrals) for bonus rewards.",
   },
   {
-    question: "8. When can I trade FRH?",
+    question: "8. When can FRH be used?",
     answer: "FRH token listing is planned for Q1 2026. Until then, focus on building your daily habits and accumulating tokens.",
   },
 ];
@@ -77,26 +70,19 @@ function ProfilePageContent() {
   const [toast, setToast] = useState<ToastState>(null);
   const { stakes } = useUserStakes();
 
-  // Farcaster context state (read-only, non-blocking)
-  const [farcasterContext, setFarcasterContext] = useState<FarcasterContext>(null);
-  const [loadingFarcasterContext, setLoadingFarcasterContext] = useState(true);
-
   // Wallet-dependent stats (only loaded when wallet connected)
   const [liveStats, setLiveStats] = useState<LiveStats>({ nftsOwned: 0, chestStreak: 0, rank: null });
   const [loadingStats, setLoadingStats] = useState(false);
 
   const isBaseNetwork = chainId === base.id;
 
-  // Basic profile data (always available)
+  // Basic profile data (wallet-based only)
   const getUsername = () => {
     const localUsername = typeof window !== "undefined" ? localStorage.getItem('username') : null;
     if (localUsername && localUsername.trim()) {
       return localUsername.trim();
     }
-    if (farcasterContext?.username) {
-      return `@${farcasterContext.username}`;
-    }
-    return "Guest";
+    return "Base User";
   };
 
   const getAvatarUrl = () => {
@@ -104,39 +90,8 @@ function ProfilePageContent() {
     if (localImage && localImage.trim()) {
       return localImage;
     }
-    if (farcasterContext?.pfpUrl) {
-      return farcasterContext.pfpUrl;
-    }
     return "/farfish-logo.png";
   };
-
-  // Read Farcaster context on page load (non-blocking)
-  useEffect(() => {
-    const loadFarcasterContext = async () => {
-      setLoadingFarcasterContext(true);
-      try {
-        sdk.actions.ready();
-        const context = await sdk.context;
-        
-        if (context?.user?.fid) {
-          setFarcasterContext({
-            fid: context.user.fid,
-            username: context.user.username || `user-${context.user.fid}`,
-            pfpUrl: context.user.pfpUrl || "/farfish-logo.png"
-          });
-        } else {
-          setFarcasterContext(null);
-        }
-      } catch (error) {
-        console.log("Not in Farcaster environment:", error);
-        setFarcasterContext(null);
-      } finally {
-        setLoadingFarcasterContext(false);
-      }
-    };
-
-    loadFarcasterContext();
-  }, []);
 
   // Wallet-dependent stats (only when wallet connected)
   type StatsErrorState = { nftsOwned: boolean; chestStreak: boolean; rank: boolean };
@@ -247,20 +202,32 @@ function ProfilePageContent() {
   const stats = useMemo(
     () => [
       {
-        label: "NFT Owned",
+        label: "NFTs Owned",
         value: loadingStats ? "…" : statsError.nftsOwned ? "Error" : formatStatValue(liveStats.nftsOwned),
+        icon: "🐟",
+        color: "from-blue-400 to-cyan-500",
+        bgColor: "from-blue-500/20 to-cyan-500/20"
       },
       {
-        label: "Staked NFT",
+        label: "NFTs Staked",
         value: loadingStats ? "…" : formatStatValue(stakes.length),
+        icon: "🔒",
+        color: "from-purple-400 to-pink-500",
+        bgColor: "from-purple-500/20 to-pink-500/20"
       },
       {
         label: "Chest Streak",
         value: loadingStats ? "…" : statsError.chestStreak ? "Error" : formatStatValue(liveStats.chestStreak, " days"),
+        icon: "🔥",
+        color: "from-orange-400 to-red-500",
+        bgColor: "from-orange-500/20 to-red-500/20"
       },
       {
         label: "Rank",
         value: loadingStats ? "…" : statsError.rank ? "Error" : (liveStats.rank && liveStats.rank > 0 ? `#${liveStats.rank}` : "Unranked"),
+        icon: "🏆",
+        color: "from-yellow-400 to-amber-500",
+        bgColor: "from-yellow-500/20 to-amber-500/20"
       },
     ],
     [liveStats, loadingStats, statsError, stakes.length]
@@ -276,13 +243,25 @@ function ProfilePageContent() {
     <div className="flex flex-col flex-1 min-h-0">
       <Header title="Profile" />
 
-      <div className="mt-4 space-y-4 flex-1 flex flex-col">
-        {/* A) BASIC PROFILE SECTION - ALWAYS VISIBLE */}
-        <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
-          <div className="flex items-start gap-4">
-            {/* Avatar - always visible with fallback */}
+      <div className="mt-4 space-y-6 flex-1 flex flex-col">
+        {/* Profile Identity Section */}
+        <div className="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center shadow-lg">
+              <span className="text-xl">👤</span>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Profile Identity
+              </h2>
+              <p className="text-blue-300 text-sm">Wallet-based identity on Base</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-6">
+            {/* Editable Profile Picture */}
             <div className="relative">
-              <div className="relative h-24 w-24 rounded-2xl overflow-hidden border-2 border-white/20">
+              <div className="relative h-24 w-24 rounded-2xl overflow-hidden border-2 border-white/20 shadow-lg">
                 <Image
                   src={getAvatarUrl()}
                   alt="Profile Avatar"
@@ -292,7 +271,7 @@ function ProfilePageContent() {
                   unoptimized
                 />
                 {/* Edit icon for custom avatar */}
-                <label className="absolute top-1 right-1 bg-blue-500 rounded-full p-1.5 cursor-pointer border-2 border-white/90 shadow-lg hover:bg-blue-600 transition-colors">
+                <label className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full p-2 cursor-pointer border-2 border-white shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 hover:scale-110">
                   <input
                     type="file"
                     accept="image/*"
@@ -304,31 +283,34 @@ function ProfilePageContent() {
                         reader.onload = (event) => {
                           const result = event.target?.result as string;
                           localStorage.setItem('profileImage', result);
+                          setToast({ type: "success", message: "Profile picture updated!" });
+                          // Force re-render
                           window.location.reload();
                         };
                         reader.readAsDataURL(file);
                       }
                     }}
                   />
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                   </svg>
                 </label>
               </div>
             </div>
 
-            {/* Username - always visible with fallback */}
+            {/* Editable Username */}
             <div className="flex-1">
-              <div className="flex items-center gap-2 group relative">
+              <div className="flex items-center gap-2 group relative mb-4">
                 <input
                   type="text"
-                  className="text-2xl font-bold bg-transparent border-b-2 border-transparent focus:border-blue-400 focus:outline-none w-full pr-8"
+                  className="text-2xl font-bold bg-transparent border-b-2 border-transparent focus:border-blue-400 focus:outline-none w-full pr-8 text-white placeholder-white/50"
                   defaultValue={getUsername()}
                   placeholder="Enter username"
                   onBlur={(e) => {
                     const newUsername = e.target.value.trim();
                     if (newUsername) {
                       localStorage.setItem('username', newUsername);
+                      setToast({ type: "success", message: "Username updated!" });
                     } else {
                       localStorage.removeItem('username');
                     }
@@ -337,148 +319,133 @@ function ProfilePageContent() {
                     if (e.key === 'Enter') e.currentTarget.blur();
                   }}
                 />
-                <div className="absolute right-2 text-white/50 group-focus-within:text-blue-400">
+                <div className="absolute right-2 text-white/50 group-focus-within:text-blue-400 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                   </svg>
                 </div>
               </div>
               
-              <div className="mt-2 space-y-1">
+              <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  <span className="text-sm text-blue-300">Profile always accessible</span>
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-green-300 font-medium">Profile always accessible</span>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* B) WALLET SECTION - CONDITIONAL */}
-        <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-            <h3 className="text-lg font-semibold text-white">Wallet Connection</h3>
+        {/* Wallet Connection & Stats Section */}
+        <div className="bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-teal-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg">
+              <span className="text-xl">💳</span>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                Wallet Connection
+              </h2>
+              <p className="text-green-300 text-sm">Base network identity</p>
+            </div>
           </div>
           
           {isConnected && address ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm text-green-300">Wallet connected</span>
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-green-500/20 border border-green-400/30">
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-green-300 font-medium">Wallet Connected</span>
+                {!isBaseNetwork && (
+                  <span className="text-orange-300 text-sm ml-auto">⚠️ Switch to Base</span>
+                )}
               </div>
               
               {/* Wallet Stats Grid */}
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-4">
                 {stats.map((stat) => (
                   <div
                     key={stat.label}
-                    className={`rounded-xl border border-white/10 bg-white/5 p-3 text-center ${
-                      loadingStats ? "animate-pulse" : ""
-                    }`}
+                    className={`
+                      relative overflow-hidden bg-gradient-to-br ${stat.bgColor} backdrop-blur-sm 
+                      border border-white/10 rounded-2xl p-4 hover:scale-105 transition-all duration-300
+                      ${loadingStats ? "animate-pulse" : ""}
+                    `}
                   >
-                    <p className="text-[11px] uppercase tracking-wide text-white/60">
-                      {stat.label}
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className={`
+                        w-8 h-8 rounded-lg bg-gradient-to-br ${stat.color} 
+                        flex items-center justify-center shadow-lg flex-shrink-0
+                      `}>
+                        <span className="text-sm">{stat.icon}</span>
+                      </div>
+                      <p className="text-xs uppercase tracking-wide text-white/60 font-medium">
+                        {stat.label}
+                      </p>
+                    </div>
+                    <p className={`text-lg font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
+                      {stat.value}
                     </p>
-                    <p className="text-lg font-semibold mt-1">{stat.value}</p>
                   </div>
                 ))}
               </div>
               
               {Object.values(statsError).some(Boolean) && !loadingStats && (
-                <p className="text-xs text-red-300 text-center">
-                  Some stats failed to load. Try again later.
-                </p>
+                <div className="p-3 rounded-2xl bg-red-500/10 border border-red-400/30">
+                  <p className="text-sm text-red-300 text-center">
+                    Some stats failed to load. Try refreshing the page.
+                  </p>
+                </div>
               )}
             </div>
           ) : (
-            <div className="text-center py-4">
-              <p className="text-white/70 mb-4">Connect your wallet to view stats and access features</p>
+            <div className="text-center py-6">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
+                <span className="text-2xl">🔌</span>
+              </div>
+              <p className="text-white/70 mb-4 font-medium">Connect your wallet to view on-chain stats</p>
+              <p className="text-white/50 text-sm mb-6">Access your NFTs, staking data, and leaderboard rank</p>
               <WalletConnect />
             </div>
           )}
-        </section>
+        </div>
 
-        {/* C) FARCASTER SECTION - CONDITIONAL */}
-        <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
-            <h3 className="text-lg font-semibold text-white">Social Profile</h3>
+        {/* FAQ Section */}
+        <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
+              <span className="text-xl">❓</span>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                Frequently Asked Questions
+              </h2>
+              <p className="text-amber-300 text-sm">Learn about FarFISH features</p>
+            </div>
           </div>
-          
-          {loadingFarcasterContext ? (
-            <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-xl bg-white/10 animate-pulse"></div>
-              <div className="flex-1 space-y-2">
-                <div className="h-4 bg-white/10 rounded animate-pulse"></div>
-                <div className="h-3 bg-white/10 rounded w-3/4 animate-pulse"></div>
-              </div>
-            </div>
-          ) : farcasterContext ? (
-            <div className="flex items-start gap-4">
-              <div className="relative h-16 w-16 rounded-xl overflow-hidden border-2 border-purple-400/50">
-                <Image
-                  src={farcasterContext.pfpUrl}
-                  alt="Social Profile"
-                  width={64}
-                  height={64}
-                  className="object-cover w-full h-full"
-                  unoptimized
-                />
-                <div className="absolute bottom-0 right-0 bg-purple-500 rounded-full p-1 border border-white/90">
-                  <svg className="w-2 h-2 text-white" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M23.2 12c0-6.2-5-11.2-11.2-11.2S.8 5.8.8 12s5 11.2 11.2 11.2S23.2 18.2 23.2 12z"/>
-                  </svg>
-                </div>
-              </div>
-              
-              <div className="flex-1">
-                <div className="text-lg font-bold text-white mb-1">
-                  @{farcasterContext.username}
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                  <span className="text-sm text-purple-300">
-                    FID: {farcasterContext.fid}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center py-4">
-              <div className="text-white/60 mb-2">
-                <svg className="w-8 h-8 mx-auto mb-2 opacity-50" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.2 12c0-6.2-5-11.2-11.2-11.2S.8 5.8.8 12s5 11.2 11.2 11.2S23.2 18.2 23.2 12z"/>
-                </svg>
-              </div>
-              <p className="text-white/70 text-sm mb-2">Social profile not connected</p>
-              <p className="text-white/50 text-xs">Open inside the social platform to link your profile</p>
-            </div>
-          )}
-        </section>
 
-        {/* FAQ SECTION - ALWAYS VISIBLE */}
-        <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
-          <h3 className="text-lg font-semibold mb-3">Frequently Asked Questions</h3>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {faqItems.map((faq, idx) => {
               const open = openIdx === idx;
               return (
                 <div
                   key={faq.question}
-                  className="rounded-xl border border-white/10 bg-white/5"
+                  className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden hover:bg-white/10 transition-all duration-300"
                 >
                   <button
-                    className="flex w-full items-center justify-between px-4 py-3 text-left"
+                    className="flex w-full items-center justify-between px-6 py-4 text-left hover:bg-white/5 transition-colors"
                     onClick={() => setOpenIdx(open ? null : idx)}
                   >
-                    <span className="font-medium text-sm">{faq.question}</span>
-                    <span className="text-xl leading-none text-white/60">
-                      {open ? "−" : "+"}
-                    </span>
+                    <span className="font-medium text-sm text-white">{faq.question}</span>
+                    <div className={`
+                      w-6 h-6 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 
+                      flex items-center justify-center text-black font-bold text-sm
+                      transition-transform duration-300 ${open ? 'rotate-45' : ''}
+                    `}>
+                      +
+                    </div>
                   </button>
                   {open && (
-                    <div className="px-4 pb-4 text-sm text-white/70">
+                    <div className="px-6 pb-4 text-sm text-white/80 leading-relaxed border-t border-white/10 pt-4 mt-2">
                       {faq.answer}
                     </div>
                   )}
@@ -486,19 +453,24 @@ function ProfilePageContent() {
               );
             })}
           </div>
-        </section>
+        </div>
       </div>
 
       {toast && (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
           <div
-            className={`rounded-lg border px-4 py-3 text-sm shadow-lg ${
+            className={`rounded-2xl border px-6 py-4 text-sm shadow-2xl backdrop-blur-sm ${
               toast.type === "success"
-                ? "border-emerald-400/40 bg-emerald-500/15 text-emerald-100"
-                : "border-red-400/40 bg-red-500/15 text-red-100"
+                ? "border-emerald-400/40 bg-emerald-500/20 text-emerald-100"
+                : "border-red-400/40 bg-red-500/20 text-red-100"
             }`}
           >
-            {toast.message}
+            <div className="flex items-center gap-3">
+              <span className="text-lg">
+                {toast.type === "success" ? "✅" : "❌"}
+              </span>
+              {toast.message}
+            </div>
           </div>
         </div>
       )}
@@ -511,7 +483,10 @@ export default function ProfilePage() {
     <Suspense
       fallback={
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-40 h-10 rounded-xl bg-white/10 animate-pulse" />
+          <div className="text-center">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-2xl bg-white/10 animate-pulse"></div>
+            <div className="w-32 h-4 mx-auto rounded bg-white/10 animate-pulse"></div>
+          </div>
         </div>
       }
     >

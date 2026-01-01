@@ -9,7 +9,7 @@ export default function StakeTable() {
 
   return (
     <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
-      <h3 className="font-semibold text-lg mb-4">FarFISH Official NFT Staking Reward Table</h3>
+      <h3 className="font-semibold text-lg mb-4">FarFISH Official NFT Staking Reward Parameters</h3>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -43,10 +43,10 @@ export default function StakeTable() {
         </table>
       </div>
       <div className="mt-4 text-sm text-white/70 space-y-1">
-        <p>- Rewards are fixed and permanent</p>
-        <p>- You select both NFT and staking duration</p>
-        <p>- Higher NFT rarity gives higher FRH reward</p>
-        <p>- Monthly rewards are distributed from the Chest page</p>
+        <p>- Reward parameters are defined by the protocol</p>
+        <p>- NFT rarity determines reward weight</p>
+        <p>- Longer lock durations increase snapshot weight</p>
+        <p>- Staking rewards are claimable directly from this page</p>
       </div>
     </section>
   );

@@ -91,8 +91,6 @@ function pickWeightedTokenId(candidates: SupplyInfo[]): number {
 
 const TOKEN_IDS = Array.from({ length: 16 }, (_, i) => i); // 0-15
 
-const EARLY_ACCESS_SHARE_URL = "https://farcaster.xyz/miniapps/DfVmB6jF12Ca/farfish";
-
 export default function HomeClient() {
   const { blocked, message } = useFarcasterGate();
   const { address, isConnected, chainId } = useAccount();
@@ -638,14 +636,6 @@ export default function HomeClient() {
   }, [representativePrice]);
 
   // Button states and labels
-  const primaryButtonLabel = useMemo(() => {
-    if (hasMinted) {
-      if (justMinted || isMintConfirmed) return "Minted";
-      return "Already Minted";
-    }
-    return "Early Access";
-  }, [hasMinted, isMintConfirmed, justMinted]);
-
   const primaryButtonClasses = useMemo(() => {
     if (!NFT_CONTRACT_ADDRESS) {
       return "w-full py-4 text-lg font-semibold rounded-xl bg-white/10 text-white/50 cursor-not-allowed";
@@ -693,6 +683,40 @@ export default function HomeClient() {
       <Header title="Home" />
 
       <div className="flex-1 flex flex-col space-y-6">
+        {/* Mandatory Onboarding Block */}
+        <div className="bg-gradient-to-br from-blue-500/15 via-cyan-500/15 to-teal-500/15 backdrop-blur-sm border border-cyan-400/30 rounded-3xl p-6 shadow-2xl">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg">
+              <span className="text-xl">🐟</span>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                How FarFISH Works
+              </h2>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
+                <span className="text-lg">1️⃣</span>
+              </div>
+              <p className="text-white font-medium">Mint a FarFISH NFT</p>
+            </div>
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
+                <span className="text-lg">2️⃣</span>
+              </div>
+              <p className="text-white font-medium">Complete daily on-chain actions</p>
+            </div>
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
+                <span className="text-lg">3️⃣</span>
+              </div>
+              <p className="text-white font-medium">Earn long-term rewards on Base</p>
+            </div>
+          </div>
+        </div>
         {/* Hero Section with animated cards */}
         <div className="relative">
           <div className="bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
@@ -857,9 +881,17 @@ export default function HomeClient() {
                     {isMinting ? "Preparing..." : isMintPending ? "Confirming..." : "Processing..."}
                   </div>
                 ) : (
-                  primaryButtonLabel
+                  hasMinted ? "Minted" : "Start Daily Habit"
                 )}
               </button>
+
+              {/* Transaction Transparency */}
+              {!hasMinted && (
+                <div className="text-center">
+                  <p className="text-xs text-white/60 mb-1">On-chain action • Base Network</p>
+                  <p className="text-xs text-white/60">Gas fees apply</p>
+                </div>
+              )}
 
               {lastMintedDisplay && (
                 <div className="p-4 rounded-2xl bg-green-500/10 border border-green-400/30">
@@ -916,17 +948,16 @@ export default function HomeClient() {
               <h3 className="text-xl font-bold bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
                 Why Get FarFISH?
               </h3>
-              <p className="text-white/70 text-sm">Build habits that pay off</p>
             </div>
           </div>
 
           <div className="space-y-4">
             {[
               { icon: "🎮", title: "Future Games", desc: "Access upcoming play-to-earn features" },
-              { icon: "🚀", title: "Growing Value", desc: "Your activity builds long-term rewards" },
-              { icon: "🌊", title: "Base Network", desc: "Built for the Base ecosystem" },
-              { icon: "⏰", title: "Daily Progress", desc: "Small actions, big results over time" },
-              { icon: "🏆", title: "Early Access", desc: "First to try new features and rewards" }
+              { icon: "🚀", title: "Growing Value", desc: "Activity builds long-term rewards" },
+              { icon: "🌊", title: "Base Network", desc: "Built for Base ecosystem" },
+              { icon: "⏰", title: "Daily Progress", desc: "Small actions, big results" },
+              { icon: "🏆", title: "Early Access", desc: "First to try new features" }
             ].map((item, idx) => (
               <div key={idx} className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:scale-105">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400/20 to-orange-500/20 flex items-center justify-center flex-shrink-0">
@@ -951,7 +982,6 @@ export default function HomeClient() {
               <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
                 Collection Preview
               </h3>
-              <p className="text-white/70 text-sm">Discover the rarities</p>
             </div>
           </div>
 
@@ -972,7 +1002,6 @@ export default function HomeClient() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="absolute bottom-3 left-3">
                     <p className="text-white font-semibold text-sm">Fish #{idx + 1}</p>
-                    <p className="text-white/70 text-xs">Rare Collection</p>
                   </div>
                 </div>
               </div>

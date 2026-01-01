@@ -327,6 +327,19 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
           </button>
         </div>
 
+        {/* Transaction Disclosure */}
+        <div className="mb-4 p-3 bg-blue-500/10 border border-blue-400/30 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-blue-400">ℹ️</span>
+            <p className="text-sm font-semibold text-blue-300">Transaction Notice</p>
+          </div>
+          <div className="text-xs text-blue-400 space-y-1">
+            <p>• This is an on-chain transaction on Base</p>
+            <p>• Your NFT will be locked for the selected duration</p>
+            <p>• Gas fees may apply</p>
+          </div>
+        </div>
+
         {!isConnected && (
           <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
             <p className="text-sm text-yellow-200">Please connect your wallet to stake NFTs.</p>
@@ -391,6 +404,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
               </button>
             ))}
           </div>
+          <p className="text-xs text-white/60 mt-2">Longer lock durations increase snapshot weight.</p>
         </div>
 
         {/* Approval Status */}

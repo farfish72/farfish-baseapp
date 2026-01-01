@@ -94,7 +94,7 @@ export default function TrustAnchor({
             <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Trust Anchor
             </h3>
-            <p className="text-sm text-white/70">Your progress tracker</p>
+            <p className="text-sm text-white/70">Protocol-based activity tracking</p>
           </div>
         </div>
 
@@ -129,7 +129,7 @@ export default function TrustAnchor({
         {/* Explanation */}
         <div className="p-4 rounded-2xl bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-sm border border-white/10">
           <p className="text-sm text-white/80 text-center">
-            Your activity is tracked daily and contributes to future snapshots and rewards.
+            Activity is measured per wallet and finalized during snapshots.
           </p>
         </div>
 

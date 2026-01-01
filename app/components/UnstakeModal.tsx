@@ -130,10 +130,22 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
           </button>
         </div>
 
+        {/* Irreversible Action Warning */}
+        <div className="mb-4 p-3 bg-red-500/10 border border-red-400/30 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-red-400">⚠️</span>
+            <p className="text-sm font-semibold text-red-300">Warning</p>
+          </div>
+          <div className="text-xs text-red-400 space-y-1">
+            <p>• Unstaking removes your NFT from the protocol</p>
+            <p>• You will stop earning rewards after unstaking</p>
+          </div>
+        </div>
+
         {/* Static description text */}
         <p className="mb-4 text-sm text-white/80">
           When your claim period ends, you will be able to unstake your NFT.
-          For more information, please refer to the master reward table.
+          For more information, please refer to the master reward parameters.
         </p>
 
         {/* Stake list */}
