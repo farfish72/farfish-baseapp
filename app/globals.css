@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------
+   Premium Gradient Background + Light Noise (FARFISH FINAL)
+------------------------------------------------------- */
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: 
+    radial-gradient(700px circle at 20% -10%, rgba(0,212,196,0.10) 0%, rgba(0,212,196,0.0) 60%),
+    radial-gradient(900px circle at 80% 110%, rgba(124,58,237,0.08) 0%, rgba(124,58,237,0.0) 60%),
+    linear-gradient(180deg, #020a13 0%, #0b1628 100%);
+  background-attachment: fixed;
+  color: white;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ------------------------------------------------------
+   Light Noise Overlay (Premium Glass Effect)
+------------------------------------------------------- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.0;
+}
+
+/* ------------------------------------------------------
+   Smooth Fonts (iOS + Android premium text)
+------------------------------------------------------- */
+body, input, button {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes jump {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-30px);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+}
