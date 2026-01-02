@@ -792,7 +792,7 @@ export default function HomeClient() {
                 Mint FarFISH NFTs
               </h2>
               <p className="text-white/70 text-sm">
-                {totalMaxSupply ? `${totalMaxSupply} total • 4 rarities` : "Loading supply..."}
+                {totalMaxSupply ? `Total supply ${totalMaxSupply} and 4 rarities` : "Loading supply..."}
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -890,7 +890,7 @@ export default function HomeClient() {
                     {isMinting ? "Preparing..." : isMintPending ? "Confirming..." : "Processing..."}
                   </div>
                 ) : (
-                  hasMinted ? "Minted" : "Start Daily Habit"
+                  hasMinted ? "Minted" : "Early Access Mint"
                 )}
               </button>
 
