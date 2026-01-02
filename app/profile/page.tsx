@@ -135,19 +135,15 @@ function ProfilePageContent() {
         }
       }
 
-      // Fetch chest streak from KV (via API)
+      // Fetch chest streak from localStorage (same source as chest page)
       let chestStreak = 0;
       try {
-        const streakRes = await fetch(`/api/profile/streak?wallet=${address}`, {
-          headers: { "x-user-wallet": address },
-          cache: "no-store",
-        });
-        if (streakRes.ok) {
-          const streakData = await streakRes.json();
-          chestStreak = Number(streakData?.streakDays ?? 0);
+        if (typeof window !== "undefined") {
+          const streakFromStorage = localStorage.getItem('ff_streak');
+          chestStreak = streakFromStorage ? parseInt(streakFromStorage, 10) : 0;
         }
       } catch (error) {
-        console.error("Failed to fetch chest streak:", error);
+        console.error("Failed to fetch chest streak from localStorage:", error);
         setStatsError((prev) => ({ ...prev, chestStreak: true }));
       }
 
@@ -224,7 +220,7 @@ function ProfilePageContent() {
       },
       {
         label: "Rank",
-        value: loadingStats ? "…" : statsError.rank ? "Error" : (liveStats.rank && liveStats.rank > 0 ? `#${liveStats.rank}` : "Unranked"),
+        value: loadingStats ? "…" : statsError.rank ? "Error" : (liveStats.rank && liveStats.rank > 0 ? `#${liveStats.rank}` : "Not ranked yet"),
         icon: "🏆",
         color: "from-yellow-400 to-amber-500",
         bgColor: "from-yellow-500/20 to-amber-500/20"
@@ -437,11 +433,11 @@ function ProfilePageContent() {
                   >
                     <span className="font-medium text-sm text-white">{faq.question}</span>
                     <div className={`
-                      w-6 h-6 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 
-                      flex items-center justify-center text-black font-bold text-sm
-                      transition-transform duration-300 ${open ? 'rotate-45' : ''}
+                      w-6 h-6 rounded-full bg-white/10 border border-white/20
+                      flex items-center justify-center text-white/70 text-xs
+                      transition-all duration-300 ${open ? 'bg-white/20 text-white' : 'hover:bg-white/15'}
                     `}>
-                      +
+                      {open ? '−' : '+'}
                     </div>
                   </button>
                   {open && (

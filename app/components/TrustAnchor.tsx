@@ -1,6 +1,12 @@
 // app/components/TrustAnchor.tsx
 'use client';
 
+import { useAccount, useReadContract } from "wagmi";
+import { ERC20_TOKEN_ADDRESS } from "../constants";
+import erc20Abi from "../abi/erc20.json";
+import { formatUnits } from "viem";
+import { useState, useEffect } from "react";
+
 interface TrustAnchorProps {
   streak: number | null;          // Current consecutive streak
   daysActive: number | null;      // Total cumulative days (never resets)
@@ -18,9 +24,55 @@ export default function TrustAnchor({
   isLoading = false,
   error = null,
 }: TrustAnchorProps) {
+  const { address } = useAccount();
+  const [userRank, setUserRank] = useState<number | null>(null);
+
+  // Read ERC20 balance
+  const { data: frhBalance } = useReadContract({
+    address: ERC20_TOKEN_ADDRESS as `0x${string}`,
+    abi: erc20Abi as any,
+    functionName: "balanceOf",
+    args: address ? [address] : undefined,
+    query: { enabled: Boolean(address && ERC20_TOKEN_ADDRESS) },
+  });
+
+  // Fetch user rank
+  useEffect(() => {
+    if (!address) {
+      setUserRank(null);
+      return;
+    }
+
+    const fetchUserRank = async () => {
+      try {
+        const response = await fetch(`/api/leaderboard/user?wallet=${address}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUserRank(data.rank || null);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user rank:", error);
+        setUserRank(null);
+      }
+    };
+
+    fetchUserRank();
+  }, [address]);
+
   // Format number safely
   const formatNumber = (num: number | null): string => {
     return num !== null && num >= 0 ? num.toString() : '0';
+  };
+
+  // Format FRH balance
+  const formatFrhBalance = (): string => {
+    if (!frhBalance) return '0';
+    return formatUnits(frhBalance as bigint, 18);
+  };
+
+  // Format rank
+  const formatRank = (): string => {
+    return userRank ? `#${userRank}` : '#0';
   };
 
   // Determine tier based ONLY on active stake status
@@ -28,9 +80,9 @@ export default function TrustAnchor({
 
   const fields = [
     { 
-      icon: "✅", 
-      label: "Status", 
-      value: "Active",
+      icon: "💰", 
+      label: "Earning", 
+      value: `${formatFrhBalance()} FRH`,
       color: "from-green-400 to-emerald-500",
       bgColor: "from-green-500/20 to-emerald-500/20"
     },
@@ -58,7 +110,7 @@ export default function TrustAnchor({
     { 
       icon: "📊", 
       label: "Rank", 
-      value: "Tracking",
+      value: formatRank(),
       color: "from-yellow-400 to-amber-500",
       bgColor: "from-yellow-500/20 to-amber-500/20"
     },
@@ -92,7 +144,7 @@ export default function TrustAnchor({
           </div>
           <div>
             <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Trust Anchor
+              Earning
             </h3>
             <p className="text-sm text-white/70">Protocol-based activity tracking</p>
           </div>
