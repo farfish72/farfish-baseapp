@@ -106,15 +106,19 @@ export default function RootLayout({
             <ToastProvider>
               <AutoBindReferral />
 
+              {/* FIXED: Stable content wrapper with consistent dimensions */}
               <div className="w-full max-w-md min-h-screen flex flex-col relative z-10">
                 <main
-                  className="flex-1 px-4 animate-fade-in flex flex-col min-h-0 overflow-y-auto"
+                  className="flex-1 px-4 flex flex-col min-h-0 overflow-y-auto"
                   style={{
                     paddingTop: "env(safe-area-inset-top, 0px)",
                     paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 7rem)",
                   }}
                 >
-                  {children}
+                  {/* FIXED: Prevent layout shift during async loading */}
+                  <div className="min-h-0 flex-1 flex flex-col">
+                    {children}
+                  </div>
                 </main>
                 
                 <Footer />

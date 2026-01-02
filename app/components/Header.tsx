@@ -62,9 +62,13 @@ const pageShadows: Record<string, string> = {
 };
 
 export default function Header({ title }: { title: string }) {
-  const [isFarcaster, setIsFarcaster] = useState(true);
+  const [isFarcaster, setIsFarcaster] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // Mark as client-side rendered
+    setIsClient(true);
+    
     try {
       setIsFarcaster(detectFarcasterEnvironment());
     } catch {
@@ -81,7 +85,7 @@ export default function Header({ title }: { title: string }) {
   const shadow = pageShadows[title] || "shadow-glow";
 
   return (
-    <div className="w-full px-2 pt-3 pb-4 animate-slide-up">
+    <div className="w-full px-2 pt-3 pb-4 stable-layout">
       {/* Top section with app name - left aligned like premium apps */}
       <div className="flex items-start justify-start mb-3">
         <div className="flex flex-col">
@@ -120,7 +124,7 @@ export default function Header({ title }: { title: string }) {
 
       {/* Enhanced page title with emoji and gradient */}
       <div className="flex items-center gap-3">
-        <div className={`relative w-10 h-10 rounded-3xl bg-gradient-to-br ${gradient} flex items-center justify-center ${shadow} transition-all duration-300 hover:scale-110 animate-bounce-gentle shadow-elevated group`}>
+        <div className={`relative w-10 h-10 rounded-3xl bg-gradient-to-br ${gradient} flex items-center justify-center ${shadow} transition-all duration-300 hover:scale-110 shadow-elevated group ${!isClient ? 'animate-none' : 'animate-bounce-gentle'}`}>
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/25 to-white/5"></div>
           <div className="absolute inset-0 rounded-3xl bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <div className="text-white relative z-10 filter drop-shadow-lg">

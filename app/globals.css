@@ -441,7 +441,7 @@ button:focus-visible {
 }
 
 /* ------------------------------------------------------
-   Performance Optimizations
+   Performance Optimizations & Layout Stability
 ------------------------------------------------------- */
 .transform-gpu {
   transform: translateZ(0);
@@ -454,6 +454,26 @@ button:focus-visible {
 
 .will-change-opacity {
   will-change: opacity;
+}
+
+/* FIXED: Prevent layout shifts during async loading */
+.stable-layout {
+  contain: layout style;
+  min-height: 0;
+}
+
+.stable-content {
+  contain: layout;
+  transform: translateZ(0);
+}
+
+/* FIXED: Reduce animation conflicts during data loading */
+.loading-stable {
+  animation-play-state: paused;
+}
+
+.loading-stable * {
+  animation-play-state: paused;
 }
 
 /* ------------------------------------------------------
