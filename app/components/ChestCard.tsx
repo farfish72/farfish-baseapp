@@ -1,5 +1,5 @@
 // app/components/ChestCard.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type Props = {
   title: string;
@@ -90,8 +90,11 @@ export default function ChestCard({
     try {
       await onAction();
     } catch (error) {
+      // FIXED: Always clear loading state and show error without blocking navigation
       setLocalError('Action failed. Please try again.');
+      console.error('ChestCard action error:', error);
     } finally {
+      // FIXED: Always clear loading state to prevent UI freeze
       setIsLoading(false);
     }
   };
@@ -105,13 +108,38 @@ export default function ChestCard({
     try {
       await onSecondaryAction();
     } catch (error) {
+      // FIXED: Always clear loading state and show error without blocking navigation
       setLocalError('Action failed. Please try again.');
+      console.error('ChestCard secondary action error:', error);
     } finally {
+      // FIXED: Always clear loading state to prevent UI freeze
       setSecondaryLoading(false);
     }
   };
 
   const displayError = error || localError;
+
+  // FIXED: Clear loading states on component unmount to prevent navigation freeze
+  useEffect(() => {
+    return () => {
+      setIsLoading(false);
+      setSecondaryLoading(false);
+      setLocalError(null);
+    };
+  }, []);
+
+  // FIXED: Auto-clear loading states after timeout to prevent stuck UI
+  useEffect(() => {
+    if (isLoading || secondaryLoading) {
+      const timeout = setTimeout(() => {
+        setIsLoading(false);
+        setSecondaryLoading(false);
+        setLocalError('Operation timed out. Please try again.');
+      }, 30000); // 30 second timeout
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isLoading, secondaryLoading]);
 
   return (
     <article className={`

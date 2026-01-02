@@ -83,6 +83,29 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
     }
   }, [isApproved]);
 
+  // FIXED: Clear transaction states on component unmount to prevent navigation freeze
+  useEffect(() => {
+    return () => {
+      setNeedsApproval(false);
+      setResolvedTokenId(null);
+      setOwnershipError(null);
+      setIsResolvingTokenId(false);
+      setToast(null);
+    };
+  }, []);
+
+  // FIXED: Auto-clear transaction states after timeout to prevent stuck UI
+  useEffect(() => {
+    if (isPending) {
+      const timeout = setTimeout(() => {
+        // States will auto-clear when wagmi hooks reset
+        setToast({ type: 'error', message: 'Transaction timed out. Please try again.' });
+      }, 60000); // 60 second timeout for blockchain operations
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isPending]);
+
   // Resolve tokenId when category is selected
   useEffect(() => {
     const resolveTokenId = async () => {

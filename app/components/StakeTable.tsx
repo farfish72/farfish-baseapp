@@ -91,10 +91,7 @@ export default function StakeTable() {
                     `}
                   >
                     <td className="py-4 px-4">
-                      <div className="flex items-center gap-3">
-                        <div className="text-white flex-shrink-0">{style.icon}</div>
-                        <span className="font-bold text-premium">{display.name}</span>
-                      </div>
+                      <span className="font-bold text-premium">{display.name}</span>
                     </td>
                     <td className="py-4 px-4">
                       <span className={`font-semibold ${style.color} text-xs`}>{display.rarityLabel}</span>

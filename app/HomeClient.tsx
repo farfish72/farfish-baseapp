@@ -370,6 +370,26 @@ export default function HomeClient() {
     }
   }, [mintError, showError]);
 
+  // FIXED: Clear transaction states on component unmount to prevent navigation freeze
+  useEffect(() => {
+    return () => {
+      setIsMinting(false);
+      setErrorMessage(null);
+    };
+  }, []);
+
+  // FIXED: Auto-clear transaction states after timeout to prevent stuck UI
+  useEffect(() => {
+    if (isMinting || isMintPending || isMintConfirming) {
+      const timeout = setTimeout(() => {
+        setIsMinting(false);
+        setErrorMessage(null);
+      }, 30000); // 30 second timeout
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isMinting, isMintPending, isMintConfirming]);
+
   const handleConnect = useCallback(() => {
     const connector = connectors[0];
     if (!connector) return;

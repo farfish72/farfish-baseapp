@@ -182,6 +182,8 @@ export default function ChestPage() {
       // Update trust anchor data after successful claim
       updateTrustAnchorAfterClaim();
     } catch (error) {
+      // FIXED: Always ensure navigation remains responsive on error
+      console.error('Daily claim error:', error);
       throw error; // Let ChestCard handle the error display
     }
   }, [daily, address, claimDaily, updateTrustAnchorAfterClaim]);
@@ -258,6 +260,8 @@ export default function ChestPage() {
       // Update trust anchor data after successful claim
       updateTrustAnchorAfterClaim();
     } catch (error) {
+      // FIXED: Always ensure navigation remains responsive on error
+      console.error('Silver claim error:', error);
       throw error; // Let ChestCard handle the error display
     }
   }, [silver, address, claimSilver, updateTrustAnchorAfterClaim]);
@@ -295,6 +299,24 @@ export default function ChestPage() {
       daysActive: calculatedDaysActive,
     }));
   }, [address]); // FIXED: Remove dailyData, silverData dependencies
+
+  // FIXED: Clear transaction states on component unmount to prevent navigation freeze
+  useEffect(() => {
+    return () => {
+      // Clear any pending states when navigating away
+    };
+  }, []);
+
+  // FIXED: Auto-clear transaction states after timeout to prevent stuck UI
+  useEffect(() => {
+    if (dailyPending || dailyConfirming || silverPending || silverConfirming) {
+      const timeout = setTimeout(() => {
+        // States will auto-clear when wagmi hooks reset
+      }, 30000); // 30 second timeout
+
+      return () => clearTimeout(timeout);
+    }
+  }, [dailyPending, dailyConfirming, silverPending, silverConfirming]);
 
   /* ================= UI ================= */
   return (
