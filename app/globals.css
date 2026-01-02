@@ -476,6 +476,26 @@ button:focus-visible {
   animation-play-state: paused;
 }
 
+/* FIXED: Timer and layout stability for Chest page */
+.timer-stable {
+  font-variant-numeric: tabular-nums;
+  min-width: 6ch;
+  text-align: center;
+  display: inline-block;
+}
+
+.chest-card-stable {
+  contain: layout;
+  min-height: 200px;
+}
+
+.button-text-stable {
+  min-width: 280px;
+  display: inline-block;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ------------------------------------------------------
    Reduced Motion Support
 ------------------------------------------------------- */

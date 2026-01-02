@@ -23,10 +23,10 @@ import { CLAIM_CONTROLLER_ADDRESS } from "../constants";
 /* ---------------- helpers ---------------- */
 const formatTime = (seconds: bigint | number): string => {
   const s = typeof seconds === "bigint" ? Number(seconds) : seconds;
-  if (!s || s <= 0) return "0m";
+  if (!s || s <= 0) return "0h 0m"; // FIXED: Consistent format to prevent layout shift
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
-  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+  return `${h}h ${m}m`; // FIXED: Always show hours and minutes for consistent width
 };
 
 /* ---------------- ROTATING TEXTS ---------------- */
@@ -326,7 +326,7 @@ export default function ChestPage() {
                   <p className="text-sm text-white/70">
                     {daily?.canClaim 
                       ? "Ready to claim today's reward" 
-                      : `Next check-in available in ${formatTime(daily?.timeLeft ?? 0n)}`
+                      : <span className="timer-stable">Next check-in available in {formatTime(daily?.timeLeft ?? 0n)}</span>
                     }
                   </p>
                   <p className="text-xs text-white/60 mt-1">This action is available once every 24 hours to ensure fair distribution.</p>

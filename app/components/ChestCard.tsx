@@ -117,7 +117,7 @@ export default function ChestCard({
     <article className={`
       relative overflow-hidden rounded-4xl glass-card-hover transition-all duration-500 hover:scale-[1.02]
       bg-gradient-to-br ${styles.gradient} ${styles.border} ${styles.shadow} group animate-scale-in
-      backdrop-blur-4xl transform-gpu will-change-transform
+      backdrop-blur-4xl transform-gpu will-change-transform chest-card-stable
     `}>
       {/* Enhanced animated background elements */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-white/8 to-transparent rounded-full blur-3xl animate-float opacity-60"></div>
@@ -220,12 +220,13 @@ export default function ChestCard({
                   : `bg-gradient-to-r ${styles.button} text-black hover:scale-[1.02] ${styles.glow} hover:shadow-floating`
                 }
               `}
+              style={{ minWidth: '280px' }} // FIXED: Reserve consistent width to prevent layout shift
             >
               {!actionDisabled && !isLoading && (
                 <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
               )}
               
-              <span className="relative z-10">
+              <span className="relative z-10 text-center leading-tight">
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
