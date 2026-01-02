@@ -372,7 +372,7 @@ export default function SteamPage() {
         <Header title="Steam" />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <div className="rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
             <p className="text-white/70">Loading Base tasks...</p>
           </div>
         </div>
@@ -464,7 +464,7 @@ export default function SteamPage() {
                     <button
                       onClick={handleDailyCheckin}
                       disabled={!wallet}
-                      className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:scale-105 text-sm ${
+                      className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl font-medium text-sm ${
                         !wallet ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                     >
@@ -518,7 +518,7 @@ export default function SteamPage() {
                     <button
                       onClick={handleBaseAppOpen}
                       disabled={!wallet}
-                      className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:scale-105 text-sm ${
+                      className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl font-medium text-sm ${
                         !wallet ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                     >
@@ -605,7 +605,7 @@ export default function SteamPage() {
                 <button
                   onClick={handleReferralShare}
                   disabled={!wallet}
-                  className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:scale-105 text-sm ${
+                  className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl font-medium text-sm ${
                     !wallet ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
@@ -642,7 +642,7 @@ export default function SteamPage() {
                   </div>
                   <div className="w-full bg-slate-700/50 rounded-full h-2 mt-2">
                     <div 
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-300"
+                      className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
                       style={{ 
                         width: `${Math.min(100, (referralData.count / milestone.count) * 100)}%` 
                       }}

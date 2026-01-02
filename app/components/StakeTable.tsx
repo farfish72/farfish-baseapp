@@ -47,10 +47,9 @@ export default function StakeTable() {
   };
 
   return (
-    <section className="glass-card-hover rounded-4xl p-4 shadow-elevated backdrop-blur-4xl group animate-scale-in">
-      {/* Premium background elements */}
+    <section className="glass-card rounded-4xl p-4 shadow-elevated backdrop-blur-4xl">
+      {/* Premium background elements - ANIMATIONS REMOVED */}
       <div className="absolute inset-0 bg-premium-gradient opacity-40 rounded-4xl"></div>
-      <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-4xl"></div>
       
       <div className="relative z-10">
         <div className="flex items-center gap-3 mb-4">
@@ -65,16 +64,17 @@ export default function StakeTable() {
           </div>
         </div>
         
+        {/* FIXED: Improved table layout with better mobile responsiveness */}
         <div className="overflow-x-auto rounded-3xl glass-card p-1 shadow-inner">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="text-secondary border-b border-white/15">
-                <th className="text-left py-3 px-3 font-bold">Name</th>
-                <th className="text-left py-3 px-3 font-bold">Rarity</th>
-                <th className="text-left py-3 px-3 font-bold">30d FRH</th>
-                <th className="text-left py-3 px-3 font-bold">90d FRH</th>
-                <th className="text-left py-3 px-3 font-bold">180d FRH</th>
-                <th className="text-left py-3 px-3 font-bold">360d FRH</th>
+                <th className="text-left py-4 px-4 font-bold min-w-[120px]">Name</th>
+                <th className="text-left py-4 px-4 font-bold min-w-[80px]">Rarity</th>
+                <th className="text-center py-4 px-3 font-bold min-w-[70px]">30d<br/>FRH</th>
+                <th className="text-center py-4 px-3 font-bold min-w-[70px]">90d<br/>FRH</th>
+                <th className="text-center py-4 px-3 font-bold min-w-[70px]">180d<br/>FRH</th>
+                <th className="text-center py-4 px-3 font-bold min-w-[70px]">360d<br/>FRH</th>
               </tr>
             </thead>
             <tbody>
@@ -87,23 +87,21 @@ export default function StakeTable() {
                   <tr 
                     key={rarity} 
                     className={`
-                      border-b border-white/10 hover:bg-gradient-to-r ${style.gradient} 
-                      transition-all duration-300 group/row animate-fade-in-delayed
+                      border-b border-white/10 hover:bg-gradient-to-r ${style.gradient}
                     `}
-                    style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <td className="py-3 px-3">
-                      <div className="flex items-center gap-2">
-                        <div className="text-white">{style.icon}</div>
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="text-white flex-shrink-0">{style.icon}</div>
                         <span className="font-bold text-premium">{display.name}</span>
                       </div>
                     </td>
-                    <td className="py-3 px-3">
-                      <span className={`font-semibold ${style.color}`}>{display.rarityLabel}</span>
+                    <td className="py-4 px-4">
+                      <span className={`font-semibold ${style.color} text-xs`}>{display.rarityLabel}</span>
                     </td>
                     {lockDurations.map((duration) => (
-                      <td key={duration} className="py-3 px-3">
-                        <span className="font-bold text-premium group-hover/row:text-white transition-colors">
+                      <td key={duration} className="py-4 px-3 text-center">
+                        <span className="font-bold text-premium text-sm">
                           {rewards[duration].toLocaleString()}
                         </span>
                       </td>
@@ -115,14 +113,14 @@ export default function StakeTable() {
           </table>
         </div>
         
-        <div className="mt-4 glass-card rounded-3xl p-3 space-y-2">
+        <div className="mt-4 glass-card rounded-3xl p-4 space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z"/>
             </svg>
             <h4 className="font-bold text-sm text-premium">Staking Information</h4>
           </div>
-          <div className="text-xs text-secondary space-y-1 leading-relaxed">
+          <div className="text-xs text-secondary space-y-2 leading-relaxed">
             <p>• Reward parameters are defined by the protocol</p>
             <p>• NFT rarity determines reward weight multiplier</p>
             <p>• Longer lock durations increase snapshot weight</p>
@@ -133,4 +131,3 @@ export default function StakeTable() {
     </section>
   );
 }
-

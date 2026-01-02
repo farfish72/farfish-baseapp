@@ -236,43 +236,27 @@ button:focus-visible {
     transform: scale(0.98) translateY(0px);
   }
 
-  /* Enhanced Gradient Text */
+  /* Enhanced Gradient Text - ANIMATIONS REMOVED */
   .gradient-text {
     @apply bg-gradient-to-r from-primary-300 via-primary-400 to-accent-400 bg-clip-text text-transparent;
-    background-size: 200% 100%;
-    animation: gradient-slow 8s ease infinite;
   }
 
   .gradient-text-accent {
     @apply bg-gradient-to-r from-accent-300 via-accent-400 to-primary-400 bg-clip-text text-transparent;
-    background-size: 200% 100%;
-    animation: gradient-slow 8s ease infinite;
   }
 
   .gradient-text-premium {
     @apply bg-gradient-to-r from-white via-primary-200 to-accent-200 bg-clip-text text-transparent;
-    background-size: 200% 100%;
-    animation: gradient-slow 10s ease infinite;
   }
 
-  /* Enhanced Loading States */
+  /* Enhanced Loading States - ANIMATIONS REMOVED */
   .loading-shimmer {
-    background: linear-gradient(90deg, 
-      rgba(255,255,255,0.03) 25%, 
-      rgba(255,255,255,0.08) 50%, 
-      rgba(255,255,255,0.03) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer-slow 2.5s infinite;
+    background: rgba(255,255,255,0.05);
   }
 
   .loading-skeleton {
     @apply loading-shimmer rounded-2xl;
-    background: linear-gradient(90deg, 
-      rgba(255,255,255,0.05) 25%, 
-      rgba(255,255,255,0.1) 50%, 
-      rgba(255,255,255,0.05) 75%
-    );
+    background: rgba(255,255,255,0.08);
   }
 
   /* Enhanced Typography Classes */
@@ -347,67 +331,8 @@ button:focus-visible {
 }
 
 /* ------------------------------------------------------
-   Enhanced Animations & Keyframes
+   All animations permanently removed for layout stability
 ------------------------------------------------------- */
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-8px) rotate(1deg); }
-  66% { transform: translateY(-4px) rotate(-1deg); }
-}
-
-@keyframes float-delayed {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-6px) rotate(0.5deg); }
-}
-
-@keyframes shimmer-slow {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-@keyframes gradient-slow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-@keyframes breathe {
-  0%, 100% { 
-    transform: scale(1); 
-    opacity: 0.8; 
-  }
-  50% { 
-    transform: scale(1.02); 
-    opacity: 1; 
-  }
-}
-
-@keyframes glow-pulse {
-  0%, 100% { 
-    box-shadow: 0 0 20px rgba(20, 184, 166, 0.3);
-  }
-  50% { 
-    box-shadow: 0 0 40px rgba(20, 184, 166, 0.6);
-  }
-}
-
-@keyframes morph {
-  0%, 100% { 
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-    transform: rotate(0deg);
-  }
-  25% { 
-    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-    transform: rotate(90deg);
-  }
-  50% { 
-    border-radius: 70% 30% 40% 60% / 40% 70% 60% 30%;
-    transform: rotate(180deg);
-  }
-  75% { 
-    border-radius: 40% 70% 60% 30% / 70% 40% 30% 60%;
-    transform: rotate(270deg);
-  }
-}
 
 /* ------------------------------------------------------
    Responsive Enhancements
