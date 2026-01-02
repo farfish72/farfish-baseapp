@@ -55,7 +55,7 @@ body {
 }
 
 /* ------------------------------------------------------
-   Enhanced Noise Texture for Premium Feel
+   Enhanced Noise Texture for Premium Feel - ANIMATIONS DISABLED
 ------------------------------------------------------- */
 body::before {
   content: "";
@@ -67,11 +67,10 @@ body::before {
   background-size: 24px 24px;
   opacity: 0.6;
   z-index: 1;
-  animation: float-slow 20s ease-in-out infinite;
 }
 
 /* ------------------------------------------------------
-   Subtle Animated Grain Overlay
+   Subtle Animated Grain Overlay - ANIMATIONS DISABLED
 ------------------------------------------------------- */
 body::after {
   content: "";
@@ -83,7 +82,6 @@ body::after {
   background-size: 32px 32px;
   opacity: 0.4;
   z-index: 1;
-  animation: float-delayed 25s ease-in-out infinite;
 }
 
 /* ------------------------------------------------------
@@ -494,6 +492,56 @@ button:focus-visible {
   display: inline-block;
   text-align: center;
   font-variant-numeric: tabular-nums;
+}
+
+/* DISABLE ALL ANIMATIONS FOR LAYOUT STABILITY */
+*,
+*::before,
+*::after {
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0s !important;
+  animation-play-state: paused !important;
+}
+
+/* Override all custom animations */
+.animate-float,
+.animate-float-slow,
+.animate-float-delayed,
+.animate-pulse-slow,
+.animate-pulse-slower,
+.animate-bounce-subtle,
+.animate-bounce-gentle,
+.animate-rotate-slow,
+.animate-breathe,
+.animate-glow-pulse,
+.animate-morph,
+.animate-spin,
+.animate-pulse,
+.animate-bounce,
+.animate-scale-in,
+.animate-slide-up,
+.animate-fade-in,
+.animate-shimmer,
+.animate-shimmer-slow,
+.animate-gradient,
+.animate-gradient-slow {
+  animation: none !important;
+}
+
+/* Disable gradient text animations */
+.gradient-text,
+.gradient-text-accent,
+.gradient-text-premium {
+  background-size: 100% 100% !important;
+  animation: none !important;
+}
+
+/* Disable shimmer effects */
+.loading-shimmer,
+.loading-skeleton {
+  background-size: 100% 100% !important;
+  animation: none !important;
 }
 
 /* ------------------------------------------------------

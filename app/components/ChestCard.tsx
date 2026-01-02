@@ -115,17 +115,16 @@ export default function ChestCard({
 
   return (
     <article className={`
-      relative overflow-hidden rounded-4xl glass-card-hover transition-all duration-500 hover:scale-[1.02]
-      bg-gradient-to-br ${styles.gradient} ${styles.border} ${styles.shadow} group animate-scale-in
-      backdrop-blur-4xl transform-gpu will-change-transform chest-card-stable
+      relative overflow-hidden rounded-4xl glass-card backdrop-blur-4xl transform-gpu chest-card-stable
+      bg-gradient-to-br ${styles.gradient} ${styles.border} ${styles.shadow} group
     `}>
-      {/* Enhanced animated background elements */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-white/8 to-transparent rounded-full blur-3xl animate-float opacity-60"></div>
-      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-gradient-to-tr from-white/8 to-transparent rounded-full blur-3xl animate-float-delayed opacity-60"></div>
-      <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-white/5 rounded-full blur-2xl animate-pulse-slower opacity-40"></div>
+      {/* Enhanced animated background elements - ANIMATIONS DISABLED */}
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-white/8 to-transparent rounded-full blur-3xl opacity-60"></div>
+      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-gradient-to-tr from-white/8 to-transparent rounded-full blur-3xl opacity-60"></div>
+      <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-white/5 rounded-full blur-2xl opacity-40"></div>
       
-      {/* Enhanced shimmer overlay */}
-      <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-5xl"></div>
+      {/* Enhanced shimmer overlay - DISABLED */}
+      <div className="absolute inset-0 bg-shimmer opacity-0 rounded-5xl"></div>
       
       {/* Premium inner gradient */}
       <div className="absolute inset-0 bg-premium-gradient opacity-30 rounded-5xl"></div>
@@ -136,11 +135,11 @@ export default function ChestCard({
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className={`
               relative w-12 h-12 rounded-3xl bg-gradient-to-br ${styles.iconBg} 
-              flex items-center justify-center ${styles.glow} transition-all duration-300 hover:scale-110
-              shadow-inner-glow backdrop-blur-sm group/icon flex-shrink-0
+              flex items-center justify-center ${styles.glow} backdrop-blur-sm group/icon flex-shrink-0
+              shadow-inner-glow
             `}>
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/30 to-white/5"></div>
-              <div className="absolute inset-0 rounded-3xl bg-shimmer opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 rounded-3xl bg-shimmer opacity-0"></div>
               <div className="text-white relative z-10 filter drop-shadow-lg">
                 {styles.icon}
               </div>
@@ -155,8 +154,7 @@ export default function ChestCard({
 
           {badge && (
             <div className={`
-              px-3 py-2 rounded-2xl glass-card text-xs font-bold tracking-wide transition-all duration-300
-              backdrop-blur-xl shadow-soft hover:scale-105 transform-gpu flex-shrink-0
+              px-3 py-2 rounded-2xl glass-card text-xs font-bold tracking-wide backdrop-blur-xl shadow-soft flex-shrink-0
               ${badge === "Ready" 
                 ? "bg-green-400/25 border-green-400/50 text-green-200 shadow-[0_0_12px_rgba(34,197,94,0.4)]" 
                 : badge === "Cooling" 
@@ -182,12 +180,11 @@ export default function ChestCard({
               <div className="absolute inset-0 bg-gradient-to-r from-white/8 to-transparent rounded-full"></div>
               <div
                 className={`
-                  h-full bg-gradient-to-r ${styles.progress} transition-all duration-1000 ease-out 
-                  shadow-lg relative overflow-hidden rounded-full
+                  h-full bg-gradient-to-r ${styles.progress} shadow-lg relative overflow-hidden rounded-full
                 `}
                 style={{ width: `${progress}%` }}
               >
-                <div className="absolute inset-0 bg-shimmer animate-shimmer-slow"></div>
+                <div className="absolute inset-0 bg-shimmer"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full"></div>
               </div>
             </div>
@@ -196,7 +193,7 @@ export default function ChestCard({
 
         {/* Enhanced Error Display */}
         {displayError && (
-          <div className="mb-5 glass-card bg-red-500/15 border-red-400/40 animate-slide-up backdrop-blur-xl rounded-3xl">
+          <div className="mb-5 glass-card bg-red-500/15 border-red-400/40 backdrop-blur-xl rounded-3xl">
             <div className="flex items-center gap-3 px-4 py-3">
               <span className="text-red-400 text-lg flex-shrink-0">⚠️</span>
               <p className="text-sm font-medium text-red-200 flex-1 leading-relaxed">{displayError}</p>
@@ -212,24 +209,22 @@ export default function ChestCard({
               onClick={handleAction}
               disabled={actionDisabled || isLoading}
               className={`
-                w-full min-h-[44px] rounded-3xl font-bold text-base transition-all duration-300 shadow-elevated
-                btn-premium relative overflow-hidden group transform-gpu will-change-transform
+                w-full min-h-[44px] rounded-3xl font-bold text-base shadow-elevated
+                btn-premium relative overflow-hidden group transform-gpu
                 flex items-center justify-center px-6 py-3
                 ${actionDisabled || isLoading
                   ? "bg-white/15 text-white/50 cursor-not-allowed"
-                  : `bg-gradient-to-r ${styles.button} text-black hover:scale-[1.02] ${styles.glow} hover:shadow-floating`
+                  : `bg-gradient-to-r ${styles.button} text-black ${styles.glow}`
                 }
               `}
               style={{ minWidth: '280px' }} // FIXED: Reserve consistent width to prevent layout shift
             >
-              {!actionDisabled && !isLoading && (
-                <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
-              )}
+              <div className="absolute inset-0 bg-shimmer opacity-0 rounded-3xl"></div>
               
               <span className="relative z-10 text-center leading-tight">
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"></div>
                     Processing...
                   </div>
                 ) : (
