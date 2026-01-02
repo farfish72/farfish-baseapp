@@ -109,6 +109,34 @@ export default function ChestPage() {
     hash: dailyTx,
   });
 
+  // Callback to update trust anchor after successful claims
+  const updateTrustAnchorAfterClaim = useCallback(() => {
+    if (!address) return;
+
+    const streak = localStorage.getItem('ff_streak');
+    const daysActive = localStorage.getItem('ff_days_active');
+    let calculatedDaysActive = 0;
+    
+    if (daysActive) {
+      calculatedDaysActive = parseInt(daysActive, 10);
+    } else {
+      calculatedDaysActive = streak ? parseInt(streak, 10) : 0;
+      localStorage.setItem('ff_days_active', calculatedDaysActive.toString());
+    }
+    
+    const currentStreak = streak ? parseInt(streak, 10) : 0;
+    if (currentStreak > calculatedDaysActive) {
+      calculatedDaysActive = currentStreak;
+      localStorage.setItem('ff_days_active', calculatedDaysActive.toString());
+    }
+
+    setTrustAnchorData(prev => ({
+      ...prev,
+      streak: currentStreak,
+      daysActive: calculatedDaysActive,
+    }));
+  }, [address]);
+
   const handleBronzeClaim = useCallback(async () => {
     if (!daily?.canClaim || !address) return;
 
@@ -150,10 +178,13 @@ export default function ChestPage() {
         account: address,
         chain: base,
       });
+
+      // Update trust anchor data after successful claim
+      updateTrustAnchorAfterClaim();
     } catch (error) {
       throw error; // Let ChestCard handle the error display
     }
-  }, [daily, address, claimDaily]);
+  }, [daily, address, claimDaily, updateTrustAnchorAfterClaim]);
 
   /* ================= SILVER ================= */
   const { data: silverData } = useReadContract({
@@ -223,12 +254,15 @@ export default function ChestPage() {
         account: address,
         chain: base,
       });
+
+      // Update trust anchor data after successful claim
+      updateTrustAnchorAfterClaim();
     } catch (error) {
       throw error; // Let ChestCard handle the error display
     }
-  }, [silver, address, claimSilver]);
+  }, [silver, address, claimSilver, updateTrustAnchorAfterClaim]);
 
-  // Update Trust Anchor data when address changes or claims are made
+  // Update Trust Anchor data when address changes (remove unnecessary dependencies)
   useEffect(() => {
     if (!address) return;
 
@@ -236,8 +270,6 @@ export default function ChestPage() {
     const streak = localStorage.getItem('ff_streak');
     
     // Calculate days active (cumulative, never resets)
-    // For now, use a simple calculation based on streak and historical data
-    // In a real implementation, this would be stored separately and never decrease
     const daysActive = localStorage.getItem('ff_days_active');
     let calculatedDaysActive = 0;
     
@@ -262,7 +294,7 @@ export default function ChestPage() {
       streak: currentStreak,
       daysActive: calculatedDaysActive,
     }));
-  }, [address, dailyData, silverData]);
+  }, [address]); // FIXED: Remove dailyData, silverData dependencies
 
   /* ================= UI ================= */
   return (
