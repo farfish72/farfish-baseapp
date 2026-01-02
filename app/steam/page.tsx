@@ -402,10 +402,10 @@ export default function SteamPage() {
     <div className="flex flex-col flex-1">
       <Header title="Steam" />
 
-      <div className="flex-1 space-y-6 mt-4">
+      <div className="flex-1 space-y-4 mt-4">
         {/* Page Header */}
-        <div className="bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
-          <div className="flex items-center gap-3 mb-4">
+        <div className="bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-4 shadow-2xl">
+          <div className="flex items-center gap-3 mb-3">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg">
               <span className="text-xl">⚡</span>
             </div>
@@ -430,7 +430,7 @@ export default function SteamPage() {
         )}
 
         {/* Task Progress Card */}
-        <div className="bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
+        <div className="bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-4 shadow-2xl">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
@@ -455,7 +455,7 @@ export default function SteamPage() {
         </div>
 
         {/* Base Tasks Section */}
-        <div className="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
+        <div className="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-4 shadow-2xl">
           <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-6">
             🎯 Base Tasks
           </h3>

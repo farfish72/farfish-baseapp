@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { Metadata } from "next";
 
 import BottomNav from "./components/BottomNav";
+import Footer from "./components/Footer";
 import FarcasterMiniAppReady from "./components/FarcasterMiniAppReady";
 import FarcasterWalletProvider from "./providers/FarcasterWalletProvider";
 import AutoBindReferral from "./components/AutoBindReferral";
@@ -110,13 +111,13 @@ export default function RootLayout({
                   className="flex-1 px-4 animate-fade-in"
                   style={{
                     paddingTop: "env(safe-area-inset-top, 0px)",
-                    paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 4rem)",
+                    paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 7rem)",
                   }}
                 >
                   {children}
                 </main>
                 
-                {/* Footer removed - BottomNav provides all necessary navigation */}
+                <Footer />
               </div>
 
               <BottomNav />

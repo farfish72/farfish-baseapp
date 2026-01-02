@@ -687,102 +687,106 @@ export default function HomeClient() {
     <div className="flex flex-col flex-1 min-h-0">
       <Header title="Home" />
 
-      <div className="flex-1 flex flex-col space-y-6">
+      <div className="flex-1 flex flex-col gap-6">
         {/* Mandatory Onboarding Block */}
-        <div className="bg-gradient-to-br from-blue-500/15 via-cyan-500/15 to-teal-500/15 backdrop-blur-sm border border-cyan-400/30 rounded-3xl p-6 shadow-2xl">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg">
-              <span className="text-xl">🐟</span>
-            </div>
-            <div>
-              <h2 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                How FarFISH Works
-              </h2>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-lg">1️⃣</span>
+        <section className="bg-gradient-to-br from-blue-500/15 via-cyan-500/15 to-teal-500/15 backdrop-blur-sm border border-cyan-400/30 rounded-3xl shadow-2xl">
+          <div className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg flex-shrink-0">
+                <span className="text-xl">🐟</span>
               </div>
-              <p className="text-white font-medium">Mint a FarFISH NFT</p>
-            </div>
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-lg">2️⃣</span>
-              </div>
-              <p className="text-white font-medium">Complete daily on-chain actions</p>
-            </div>
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-lg">3️⃣</span>
-              </div>
-              <p className="text-white font-medium">Earn long-term rewards on Base</p>
-            </div>
-          </div>
-        </div>
-        {/* Hero Section with animated cards */}
-        <div className="relative">
-          <div className="bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  Choose Your Tier
+              <div className="min-w-0 flex-1">
+                <h2 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent leading-tight">
+                  How FarFISH Works
                 </h2>
-                <p className="text-white/70 text-sm">Unlock exclusive benefits</p>
-              </div>
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg animate-pulse">
-                <span className="text-2xl">🐟</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              {/* Basic Tier */}
-              <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl p-4 hover:scale-105 transition-all duration-300">
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center">
-                    <span className="text-lg">🥉</span>
-                  </div>
-                  <h3 className="font-bold text-white mb-2">Basic</h3>
-                  <div className="space-y-1 text-xs text-white/70">
-                    <p>• Claim daily rewards</p>
-                    <p>• Build your activity streak</p>
-                    <p>• Appear on the leaderboard</p>
-                  </div>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 py-2 px-3 rounded-xl bg-white/5">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-lg">1️⃣</span>
                 </div>
+                <p className="text-white font-medium leading-relaxed">Mint a FarFISH NFT</p>
               </div>
-
-              {/* Premium Tier */}
-              <div className="relative bg-gradient-to-br from-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-cyan-400/30 rounded-2xl p-4 hover:scale-105 transition-all duration-300 shadow-lg shadow-cyan-500/20">
-                <div className="absolute -top-2 -right-2 bg-gradient-to-r from-cyan-400 to-blue-400 text-xs font-bold text-black px-3 py-1 rounded-full animate-bounce">
-                  HOT 🔥
+              <div className="flex items-center gap-3 py-2 px-3 rounded-xl bg-white/5">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-lg">2️⃣</span>
                 </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg">
-                    <span className="text-lg">👑</span>
-                  </div>
-                  <h3 className="font-bold text-cyan-400 mb-2">Premium</h3>
-                  <div className="space-y-1 text-xs text-white/90">
-                    <p>• Earn rewards faster</p>
-                    <p>• Boost your leaderboard rank</p>
-                    <p>• Priority snapshot inclusion</p>
-                  </div>
-                </div>
+                <p className="text-white font-medium leading-relaxed">Complete daily on-chain actions</p>
               </div>
-            </div>
-
-            <div className="mt-4 text-center">
-              <p className="text-xs text-white/60">
-                Higher activity leads to higher long-term rewards.
-              </p>
+              <div className="flex items-center gap-3 py-2 px-3 rounded-xl bg-white/5">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-lg">3️⃣</span>
+                </div>
+                <p className="text-white font-medium leading-relaxed">Earn long-term rewards on Base</p>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
+        {/* Hero Section with animated cards */}
+        <section className="relative">
+          <div className="bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/20 rounded-3xl shadow-2xl">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent leading-tight">
+                    Choose Your Tier
+                  </h2>
+                  <p className="text-white/70 text-sm leading-relaxed mt-1">Unlock exclusive benefits</p>
+                </div>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg animate-pulse flex-shrink-0">
+                  <span className="text-2xl">🐟</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Basic Tier */}
+                <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl hover:scale-105 transition-all duration-300">
+                  <div className="text-center p-4">
+                    <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center">
+                      <span className="text-lg">🥉</span>
+                    </div>
+                    <h3 className="font-bold text-white mb-2 leading-tight">Basic</h3>
+                    <div className="space-y-1 text-xs text-white/70">
+                      <p>• Claim daily rewards</p>
+                      <p>• Build your activity streak</p>
+                      <p>• Appear on the leaderboard</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Premium Tier */}
+                <div className="relative bg-gradient-to-br from-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-cyan-400/30 rounded-2xl hover:scale-105 transition-all duration-300 shadow-lg shadow-cyan-500/20">
+                  <div className="absolute -top-2 -right-2 bg-gradient-to-r from-cyan-400 to-blue-400 text-xs font-bold text-black px-3 py-1 rounded-full animate-bounce">
+                    HOT 🔥
+                  </div>
+                  <div className="text-center p-4">
+                    <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg">
+                      <span className="text-lg">👑</span>
+                    </div>
+                    <h3 className="font-bold text-cyan-400 mb-2 leading-tight">Premium</h3>
+                    <div className="space-y-1 text-xs text-white/90">
+                      <p>• Earn rewards faster</p>
+                      <p>• Boost your leaderboard rank</p>
+                      <p>• Priority snapshot inclusion</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 text-center">
+                <p className="text-xs text-white/60 leading-relaxed">
+                  Higher activity leads to higher long-term rewards.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* NFT Minting Section */}
-        <div className="bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-red-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
-          <div className="flex items-center justify-between mb-6">
+        <div className="bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-red-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-4 shadow-2xl">
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Mint FarFISH NFTs
@@ -944,7 +948,7 @@ export default function HomeClient() {
         </div>
 
         {/* Why Mint Section */}
-        <div className="bg-gradient-to-br from-amber-500/10 via-orange-500/10 to-red-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
+        <div className="bg-gradient-to-br from-amber-500/10 via-orange-500/10 to-red-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-4 shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
               <span className="text-xl">💎</span>
@@ -978,7 +982,7 @@ export default function HomeClient() {
         </div>
 
         {/* Collection Preview */}
-        <div className="bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
+        <div className="bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-4 shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-lg">
               <span className="text-xl">🖼️</span>

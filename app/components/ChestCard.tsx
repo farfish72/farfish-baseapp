@@ -21,7 +21,7 @@ const variantStyles = {
     gradient: "from-amber-400/20 via-orange-400/15 to-red-400/8",
     border: "border-amber-400/40",
     icon: (
-      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
       </svg>
     ),
@@ -35,7 +35,7 @@ const variantStyles = {
     gradient: "from-slate-400/20 via-gray-400/15 to-slate-500/8",
     border: "border-slate-400/40",
     icon: (
-      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
       </svg>
     ),
@@ -49,7 +49,7 @@ const variantStyles = {
     gradient: "from-accent-400/20 via-primary-400/15 to-blue-400/8",
     border: "border-accent-400/40",
     icon: (
-      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M6,2A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z M6,4H13V9H18V20H6V4Z"/>
       </svg>
     ),
@@ -117,8 +117,8 @@ export default function ChestCard({
 
   return (
     <article className={`
-      relative overflow-hidden rounded-5xl glass-card-hover transition-all duration-500 hover:scale-[1.02]
-      bg-gradient-to-br ${styles.gradient} ${styles.border} ${styles.shadow} p-7 group animate-scale-in
+      relative overflow-hidden rounded-4xl glass-card-hover transition-all duration-500 hover:scale-[1.02]
+      bg-gradient-to-br ${styles.gradient} ${styles.border} ${styles.shadow} group animate-scale-in
       backdrop-blur-4xl transform-gpu will-change-transform
     `}>
       {/* Enhanced animated background elements */}
@@ -132,33 +132,33 @@ export default function ChestCard({
       {/* Premium inner gradient */}
       <div className="absolute inset-0 bg-premium-gradient opacity-30 rounded-5xl"></div>
       
-      <div className="relative z-10">
+      <div className="relative z-10 p-4">
         {/* Enhanced Header */}
-        <div className="flex items-start justify-between gap-5 mb-7">
-          <div className="flex items-center gap-5">
+        <div className="flex items-start justify-between gap-4 mb-5">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className={`
-              relative w-18 h-18 rounded-4xl bg-gradient-to-br ${styles.iconBg} 
+              relative w-12 h-12 rounded-3xl bg-gradient-to-br ${styles.iconBg} 
               flex items-center justify-center ${styles.glow} transition-all duration-300 hover:scale-110
-              shadow-inner-glow backdrop-blur-sm group/icon
+              shadow-inner-glow backdrop-blur-sm group/icon flex-shrink-0
             `}>
-              <div className="absolute inset-0 rounded-4xl bg-gradient-to-br from-white/30 to-white/5"></div>
-              <div className="absolute inset-0 rounded-4xl bg-shimmer opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/30 to-white/5"></div>
+              <div className="absolute inset-0 rounded-3xl bg-shimmer opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
               <div className="text-white relative z-10 filter drop-shadow-lg">
                 {styles.icon}
               </div>
             </div>
-            <div>
-              <h3 className="text-2xl font-display font-bold text-premium-lg text-premium mb-2">{title}</h3>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-lg font-display font-bold text-premium-lg text-premium leading-tight">{title}</h3>
               {description && (
-                <p className="text-base font-medium text-secondary leading-relaxed">{description}</p>
+                <p className="text-sm font-medium text-secondary leading-relaxed mt-1">{description}</p>
               )}
             </div>
           </div>
 
           {badge && (
             <div className={`
-              px-5 py-2.5 rounded-3xl glass-card text-sm font-bold tracking-wide transition-all duration-300
-              backdrop-blur-xl shadow-soft hover:scale-105 transform-gpu
+              px-3 py-2 rounded-2xl glass-card text-xs font-bold tracking-wide transition-all duration-300
+              backdrop-blur-xl shadow-soft hover:scale-105 transform-gpu flex-shrink-0
               ${badge === "Ready" 
                 ? "bg-green-400/25 border-green-400/50 text-green-200 shadow-[0_0_12px_rgba(34,197,94,0.4)]" 
                 : badge === "Cooling" 
@@ -175,10 +175,10 @@ export default function ChestCard({
 
         {/* Enhanced Progress Bar */}
         {typeof progress === "number" && (
-          <div className="mb-7">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-base font-bold text-secondary">Progress</span>
-              <span className="text-base font-bold text-premium">{progress}%</span>
+          <div className="mb-5">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-bold text-secondary">Progress</span>
+              <span className="text-sm font-bold text-premium">{progress}%</span>
             </div>
             <div className="relative h-4 w-full rounded-full bg-white/15 overflow-hidden shadow-inner backdrop-blur-sm">
               <div className="absolute inset-0 bg-gradient-to-r from-white/8 to-transparent rounded-full"></div>
@@ -198,24 +198,25 @@ export default function ChestCard({
 
         {/* Enhanced Error Display */}
         {displayError && (
-          <div className="mb-5 p-5 rounded-4xl glass-card bg-red-500/15 border-red-400/40 animate-slide-up backdrop-blur-xl">
-            <div className="flex items-center gap-4">
-              <span className="text-red-400 text-xl">⚠️</span>
-              <p className="text-base font-medium text-red-200 flex-1">{displayError}</p>
+          <div className="mb-5 glass-card bg-red-500/15 border-red-400/40 animate-slide-up backdrop-blur-xl rounded-3xl">
+            <div className="flex items-center gap-3 px-4 py-3">
+              <span className="text-red-400 text-lg flex-shrink-0">⚠️</span>
+              <p className="text-sm font-medium text-red-200 flex-1 leading-relaxed">{displayError}</p>
             </div>
           </div>
         )}
 
         {/* Enhanced Action Buttons */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {actionLabel && onAction && (
             <button
               type="button"
               onClick={handleAction}
               disabled={actionDisabled || isLoading}
               className={`
-                w-full py-5 rounded-4xl font-bold text-lg transition-all duration-300 shadow-elevated
+                w-full min-h-[44px] rounded-3xl font-bold text-base transition-all duration-300 shadow-elevated
                 btn-premium relative overflow-hidden group transform-gpu will-change-transform
+                flex items-center justify-center px-6 py-3
                 ${actionDisabled || isLoading
                   ? "bg-white/15 text-white/50 cursor-not-allowed"
                   : `bg-gradient-to-r ${styles.button} text-black hover:scale-[1.02] ${styles.glow} hover:shadow-floating`
@@ -223,13 +224,13 @@ export default function ChestCard({
               `}
             >
               {!actionDisabled && !isLoading && (
-                <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-4xl"></div>
+                <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
               )}
               
               <span className="relative z-10">
                 {isLoading ? (
-                  <div className="flex items-center justify-center gap-3">
-                    <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
                     Processing...
                   </div>
                 ) : (
@@ -245,8 +246,9 @@ export default function ChestCard({
               onClick={handleSecondaryAction}
               disabled={secondaryActionDisabled || secondaryLoading}
               className={`
-                w-full py-4 rounded-4xl glass-card text-base font-bold transition-all duration-300
+                w-full min-h-[44px] rounded-3xl glass-card text-sm font-bold transition-all duration-300
                 btn-premium relative overflow-hidden group backdrop-blur-xl transform-gpu will-change-transform
+                flex items-center justify-center px-6 py-2.5 gap-2
                 ${secondaryActionDisabled || secondaryLoading
                   ? "border-white/25 text-white/50 cursor-not-allowed"
                   : "border-white/40 text-premium hover:bg-white/15 hover:border-white/50 hover:scale-[1.02] shadow-soft hover:shadow-elevated"
@@ -254,22 +256,22 @@ export default function ChestCard({
               `}
             >
               {!secondaryActionDisabled && !secondaryLoading && (
-                <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-4xl"></div>
+                <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
               )}
               
-              <span className="relative z-10">
+              <span className="relative z-10 flex items-center gap-2">
                 {secondaryLoading ? (
-                  <div className="flex items-center justify-center gap-3">
-                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                  <>
+                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
                     Loading...
-                  </div>
+                  </>
                 ) : (
-                  <div className="flex items-center justify-center gap-3">
+                  <>
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21C5,22.11 5.89,23 7,23H17C18.11,23 19,22.11 19,21V3C19,1.89 18.11,1 17,1Z"/>
                     </svg>
                     {secondaryActionLabel}
-                  </div>
+                  </>
                 )}
               </span>
             </button>

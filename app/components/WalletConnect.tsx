@@ -22,7 +22,7 @@ export default function WalletConnect() {
 
   return (
     <div className="w-full animate-slide-up">
-      <div className="glass-card-interactive rounded-4xl p-6 mb-4 group shadow-elevated backdrop-blur-4xl">
+      <div className="glass-card-interactive rounded-4xl p-4 mb-4 group shadow-elevated backdrop-blur-4xl">
         {/* Premium inner gradient */}
         <div className="absolute inset-0 bg-premium-gradient opacity-30 rounded-4xl"></div>
         
@@ -59,7 +59,7 @@ export default function WalletConnect() {
             onClick={handleConnect}
             disabled={isPending || isConnected}
             className={`
-              px-6 py-3 rounded-3xl text-sm font-bold transition-all duration-300 btn-premium
+              px-4 py-2.5 rounded-3xl text-sm font-bold transition-all duration-300 btn-premium
               transform-gpu will-change-transform relative overflow-hidden group/btn
               ${isPending || isConnected
                 ? "bg-white/15 text-white/60 cursor-not-allowed"

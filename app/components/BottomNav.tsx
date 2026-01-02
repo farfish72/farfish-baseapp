@@ -23,16 +23,11 @@ export default function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50 animate-slide-up">
-      <div className="glass-card rounded-t-3xl px-2 py-2.5 shadow-premium-lg border-t border-white/20 backdrop-blur-xl">
-        {/* Enhanced top accent line with branding */}
+      <div className="glass-card rounded-t-3xl border-t border-white/20 backdrop-blur-xl">
+        {/* Clean top accent line */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-primary-400 via-accent-400 to-primary-400 rounded-full opacity-80 shadow-glow"></div>
         
-        {/* Subtle branding text */}
-        <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-[8px] font-medium text-white/60 whitespace-nowrap">
-          FarFISH © 2026 • Built on <span className="gradient-text font-semibold">Base</span>
-        </div>
-        
-        <ul className="flex justify-between items-center">
+        <ul className="flex justify-between items-center px-2 py-3">
           {items.map((item, index) => {
             const active = path === item.href;
             const Icon = item.icon;
@@ -45,8 +40,9 @@ export default function BottomNav() {
                     flex flex-col items-center gap-1 
                     text-xs font-semibold
                     transition-all duration-300 ease-out
-                    py-1.5 px-2 rounded-2xl
+                    py-2 px-2 rounded-2xl
                     group relative overflow-hidden
+                    min-h-[44px] min-w-[44px]
                     ${active 
                       ? `bg-gradient-to-br ${item.color} text-white scale-105 shadow-lg` 
                       : "text-gray-400 hover:text-white hover:scale-105"
@@ -59,7 +55,7 @@ export default function BottomNav() {
                   )}
                   
                   <div className={`
-                    relative p-1.5 rounded-xl transition-all duration-300
+                    relative rounded-xl transition-all duration-300 p-1.5
                     ${active 
                       ? "bg-white/20 backdrop-blur-sm shadow-inner-glow" 
                       : "group-hover:bg-white/10"
@@ -74,7 +70,7 @@ export default function BottomNav() {
                   </div>
                   
                   <span className={`
-                    text-[9px] font-bold tracking-wider uppercase relative z-10
+                    text-[9px] font-bold tracking-wider uppercase relative z-10 leading-tight
                     ${active ? "text-white" : "text-gray-400 group-hover:text-white/90"}
                   `}>
                     {item.label}

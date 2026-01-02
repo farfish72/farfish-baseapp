@@ -68,7 +68,7 @@ export default function Toast({ type, message, onClose, duration = 4000 }: Toast
     <div className="fixed top-8 left-1/2 -translate-x-1/2 w-full max-w-md px-5 z-[100] animate-slide-up">
       <div className={`
         relative overflow-hidden glass-card bg-gradient-to-r ${styles.bg} border ${styles.border} 
-        rounded-4xl p-5 ${styles.shadow} group backdrop-blur-4xl
+        rounded-4xl p-4 ${styles.shadow} group backdrop-blur-4xl
       `}>
         {/* Enhanced shimmer effect */}
         <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-4xl"></div>
