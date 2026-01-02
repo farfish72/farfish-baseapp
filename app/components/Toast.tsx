@@ -11,28 +11,48 @@ export interface ToastProps {
 
 const toastStyles = {
   error: {
-    bg: 'from-red-500/20 to-red-600/20',
-    border: 'border-red-400/30',
-    text: 'text-red-300',
-    icon: '❌'
+    bg: 'from-red-400/25 via-red-500/20 to-red-600/15',
+    border: 'border-red-400/50',
+    text: 'text-red-100',
+    icon: (
+      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+      </svg>
+    ),
+    shadow: 'shadow-[0_12px_40px_rgba(239,68,68,0.4)]'
   },
   success: {
-    bg: 'from-green-500/20 to-green-600/20',
-    border: 'border-green-400/30',
-    text: 'text-green-300',
-    icon: '✅'
+    bg: 'from-green-400/25 via-green-500/20 to-green-600/15',
+    border: 'border-green-400/50',
+    text: 'text-green-100',
+    icon: (
+      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+      </svg>
+    ),
+    shadow: 'shadow-[0_12px_40px_rgba(34,197,94,0.4)]'
   },
   warning: {
-    bg: 'from-amber-500/20 to-amber-600/20',
-    border: 'border-amber-400/30',
-    text: 'text-amber-300',
-    icon: '⚠️'
+    bg: 'from-amber-400/25 via-amber-500/20 to-amber-600/15',
+    border: 'border-amber-400/50',
+    text: 'text-amber-100',
+    icon: (
+      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+      </svg>
+    ),
+    shadow: 'shadow-[0_12px_40px_rgba(245,158,11,0.4)]'
   },
   info: {
-    bg: 'from-blue-500/20 to-blue-600/20',
-    border: 'border-blue-400/30',
-    text: 'text-blue-300',
-    icon: 'ℹ️'
+    bg: 'from-blue-400/25 via-blue-500/20 to-blue-600/15',
+    border: 'border-blue-400/50',
+    text: 'text-blue-100',
+    icon: (
+      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+      </svg>
+    ),
+    shadow: 'shadow-[0_12px_40px_rgba(59,130,246,0.4)]'
   }
 };
 
@@ -45,24 +65,49 @@ export default function Toast({ type, message, onClose, duration = 4000 }: Toast
   }, [onClose, duration]);
 
   return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-md px-4 z-[100] animate-in slide-in-from-top-2 duration-300">
+    <div className="fixed top-8 left-1/2 -translate-x-1/2 w-full max-w-md px-5 z-[100] animate-slide-up">
       <div className={`
-        bg-gradient-to-r ${styles.bg} backdrop-blur-xl border ${styles.border} 
-        rounded-2xl p-4 shadow-2xl
+        relative overflow-hidden glass-card bg-gradient-to-r ${styles.bg} border ${styles.border} 
+        rounded-4xl p-5 ${styles.shadow} group backdrop-blur-4xl
       `}>
-        <div className="flex items-center gap-3">
-          <span className="text-lg flex-shrink-0">{styles.icon}</span>
-          <p className={`text-sm font-medium ${styles.text} flex-1`}>
+        {/* Enhanced shimmer effect */}
+        <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-4xl"></div>
+        
+        {/* Premium inner gradient */}
+        <div className="absolute inset-0 bg-premium-gradient opacity-40 rounded-4xl"></div>
+        
+        {/* Enhanced progress bar */}
+        <div className="absolute bottom-0 left-0 h-1.5 bg-white/25 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-gradient-to-r from-white/80 to-white/60 animate-[shrink_4s_linear] shadow-soft"
+            style={{
+              animation: `shrink ${duration}ms linear`,
+            }}
+          />
+        </div>
+        
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center backdrop-blur-sm shadow-inner-glow">
+            <div className="text-white filter drop-shadow-sm">{styles.icon}</div>
+          </div>
+          <p className={`text-base font-bold ${styles.text} flex-1 leading-relaxed`}>
             {message}
           </p>
           <button
             onClick={onClose}
-            className="text-white/60 hover:text-white/80 transition-colors flex-shrink-0"
+            className="flex-shrink-0 w-10 h-10 rounded-2xl bg-white/15 hover:bg-white/25 transition-all duration-200 flex items-center justify-center group/close backdrop-blur-sm shadow-soft hover:shadow-elevated transform-gpu hover:scale-105"
           >
-            <span className="text-lg">×</span>
+            <span className="text-xl text-white/70 group-hover/close:text-white/90 transition-colors">×</span>
           </button>
         </div>
       </div>
+      
+      <style jsx>{`
+        @keyframes shrink {
+          from { width: 100%; }
+          to { width: 0%; }
+        }
+      `}</style>
     </div>
   );
 }

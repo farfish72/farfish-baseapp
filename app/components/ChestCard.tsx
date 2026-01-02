@@ -18,31 +18,46 @@ type Props = {
 
 const variantStyles = {
   bronze: {
-    gradient: "from-amber-500/20 via-orange-500/20 to-red-500/20",
-    border: "border-amber-400/30",
-    icon: "🥉",
-    iconBg: "from-amber-400 to-orange-500",
+    gradient: "from-amber-400/20 via-orange-400/15 to-red-400/8",
+    border: "border-amber-400/40",
+    icon: (
+      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+    ),
+    iconBg: "from-amber-400 via-orange-400 to-red-500",
     button: "from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600",
     progress: "from-amber-400 to-orange-500",
-    shadow: "shadow-amber-500/20"
+    shadow: "shadow-[0_12px_40px_rgba(251,191,36,0.3)]",
+    glow: "shadow-[0_0_24px_rgba(251,191,36,0.4)]"
   },
   silver: {
-    gradient: "from-slate-400/20 via-gray-400/20 to-slate-500/20",
-    border: "border-slate-400/30",
-    icon: "🥈",
-    iconBg: "from-slate-400 to-gray-500",
+    gradient: "from-slate-400/20 via-gray-400/15 to-slate-500/8",
+    border: "border-slate-400/40",
+    icon: (
+      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+    ),
+    iconBg: "from-slate-400 via-gray-400 to-slate-600",
     button: "from-slate-400 to-gray-500 hover:from-slate-500 hover:to-gray-600",
     progress: "from-slate-400 to-gray-500",
-    shadow: "shadow-slate-500/20"
+    shadow: "shadow-[0_12px_40px_rgba(148,163,184,0.3)]",
+    glow: "shadow-[0_0_24px_rgba(148,163,184,0.4)]"
   },
   default: {
-    gradient: "from-purple-500/20 via-pink-500/20 to-red-500/20",
-    border: "border-purple-400/30",
-    icon: "💎",
-    iconBg: "from-purple-400 to-pink-500",
-    button: "from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600",
-    progress: "from-purple-400 to-pink-500",
-    shadow: "shadow-purple-500/20"
+    gradient: "from-accent-400/20 via-primary-400/15 to-blue-400/8",
+    border: "border-accent-400/40",
+    icon: (
+      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M6,2A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z M6,4H13V9H18V20H6V4Z"/>
+      </svg>
+    ),
+    iconBg: "from-accent-400 via-primary-400 to-blue-500",
+    button: "from-accent-400 to-primary-500 hover:from-accent-500 hover:to-primary-600",
+    progress: "from-accent-400 to-primary-500",
+    shadow: "shadow-floating",
+    glow: "shadow-glow-accent"
   }
 };
 
@@ -102,41 +117,55 @@ export default function ChestCard({
 
   return (
     <article className={`
-      relative overflow-hidden rounded-3xl border backdrop-blur-sm transition-all duration-300 hover:scale-105
-      bg-gradient-to-br ${styles.gradient} ${styles.border} ${styles.shadow} p-6 shadow-2xl
+      relative overflow-hidden rounded-5xl glass-card-hover transition-all duration-500 hover:scale-[1.02]
+      bg-gradient-to-br ${styles.gradient} ${styles.border} ${styles.shadow} p-7 group animate-scale-in
+      backdrop-blur-4xl transform-gpu will-change-transform
     `}>
-      {/* Animated background elements */}
-      <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-white/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      {/* Enhanced animated background elements */}
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-white/8 to-transparent rounded-full blur-3xl animate-float opacity-60"></div>
+      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-gradient-to-tr from-white/8 to-transparent rounded-full blur-3xl animate-float-delayed opacity-60"></div>
+      <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-white/5 rounded-full blur-2xl animate-pulse-slower opacity-40"></div>
+      
+      {/* Enhanced shimmer overlay */}
+      <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-5xl"></div>
+      
+      {/* Premium inner gradient */}
+      <div className="absolute inset-0 bg-premium-gradient opacity-30 rounded-5xl"></div>
       
       <div className="relative z-10">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-6">
-          <div className="flex items-center gap-4">
+        {/* Enhanced Header */}
+        <div className="flex items-start justify-between gap-5 mb-7">
+          <div className="flex items-center gap-5">
             <div className={`
-              w-16 h-16 rounded-2xl bg-gradient-to-br ${styles.iconBg} 
-              flex items-center justify-center shadow-lg ${styles.shadow}
+              relative w-18 h-18 rounded-4xl bg-gradient-to-br ${styles.iconBg} 
+              flex items-center justify-center ${styles.glow} transition-all duration-300 hover:scale-110
+              shadow-inner-glow backdrop-blur-sm group/icon
             `}>
-              <span className="text-2xl">{styles.icon}</span>
+              <div className="absolute inset-0 rounded-4xl bg-gradient-to-br from-white/30 to-white/5"></div>
+              <div className="absolute inset-0 rounded-4xl bg-shimmer opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
+              <div className="text-white relative z-10 filter drop-shadow-lg">
+                {styles.icon}
+              </div>
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white mb-1">{title}</h3>
+              <h3 className="text-2xl font-display font-bold text-premium-lg text-premium mb-2">{title}</h3>
               {description && (
-                <p className="text-sm text-white/70">{description}</p>
+                <p className="text-base font-medium text-secondary leading-relaxed">{description}</p>
               )}
             </div>
           </div>
 
           {badge && (
             <div className={`
-              px-4 py-2 rounded-full backdrop-blur-sm border text-xs font-semibold
+              px-5 py-2.5 rounded-3xl glass-card text-sm font-bold tracking-wide transition-all duration-300
+              backdrop-blur-xl shadow-soft hover:scale-105 transform-gpu
               ${badge === "Ready" 
-                ? "bg-green-500/20 border-green-400/30 text-green-300" 
+                ? "bg-green-400/25 border-green-400/50 text-green-200 shadow-[0_0_12px_rgba(34,197,94,0.4)]" 
                 : badge === "Cooling" 
-                  ? "bg-blue-500/20 border-blue-400/30 text-blue-300"
+                  ? "bg-blue-400/25 border-blue-400/50 text-blue-200 shadow-[0_0_12px_rgba(59,130,246,0.4)]"
                   : badge === "Stake required"
-                    ? "bg-red-500/20 border-red-400/30 text-red-300"
-                    : "bg-white/10 border-white/20 text-white/80"
+                    ? "bg-red-400/25 border-red-400/50 text-red-200 shadow-[0_0_12px_rgba(239,68,68,0.4)]"
+                    : "bg-white/15 border-white/25 text-white/95"
               }
             `}>
               {badge}
@@ -144,55 +173,69 @@ export default function ChestCard({
           )}
         </div>
 
-        {/* Progress Bar */}
+        {/* Enhanced Progress Bar */}
         {typeof progress === "number" && (
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-white/70">Progress</span>
-              <span className="text-sm font-semibold text-white">{progress}%</span>
+          <div className="mb-7">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-base font-bold text-secondary">Progress</span>
+              <span className="text-base font-bold text-premium">{progress}%</span>
             </div>
-            <div className="h-3 w-full rounded-full bg-white/10 overflow-hidden">
+            <div className="relative h-4 w-full rounded-full bg-white/15 overflow-hidden shadow-inner backdrop-blur-sm">
+              <div className="absolute inset-0 bg-gradient-to-r from-white/8 to-transparent rounded-full"></div>
               <div
-                className={`h-full bg-gradient-to-r ${styles.progress} transition-all duration-1000 ease-out shadow-lg`}
+                className={`
+                  h-full bg-gradient-to-r ${styles.progress} transition-all duration-1000 ease-out 
+                  shadow-lg relative overflow-hidden rounded-full
+                `}
                 style={{ width: `${progress}%` }}
-              />
+              >
+                <div className="absolute inset-0 bg-shimmer animate-shimmer-slow"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full"></div>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Error Display */}
+        {/* Enhanced Error Display */}
         {displayError && (
-          <div className="mb-4 p-3 rounded-2xl bg-red-500/10 border border-red-400/30">
-            <div className="flex items-center gap-2">
-              <span className="text-red-400">⚠️</span>
-              <p className="text-sm text-red-300">{displayError}</p>
+          <div className="mb-5 p-5 rounded-4xl glass-card bg-red-500/15 border-red-400/40 animate-slide-up backdrop-blur-xl">
+            <div className="flex items-center gap-4">
+              <span className="text-red-400 text-xl">⚠️</span>
+              <p className="text-base font-medium text-red-200 flex-1">{displayError}</p>
             </div>
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="space-y-3">
+        {/* Enhanced Action Buttons */}
+        <div className="space-y-4">
           {actionLabel && onAction && (
             <button
               type="button"
               onClick={handleAction}
               disabled={actionDisabled || isLoading}
               className={`
-                w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg
+                w-full py-5 rounded-4xl font-bold text-lg transition-all duration-300 shadow-elevated
+                btn-premium relative overflow-hidden group transform-gpu will-change-transform
                 ${actionDisabled || isLoading
-                  ? "bg-white/10 text-white/50 cursor-not-allowed"
-                  : `bg-gradient-to-r ${styles.button} text-black hover:scale-105 ${styles.shadow}`
+                  ? "bg-white/15 text-white/50 cursor-not-allowed"
+                  : `bg-gradient-to-r ${styles.button} text-black hover:scale-[1.02] ${styles.glow} hover:shadow-floating`
                 }
               `}
             >
-              {isLoading ? (
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                  Processing...
-                </div>
-              ) : (
-                actionLabel
+              {!actionDisabled && !isLoading && (
+                <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-4xl"></div>
               )}
+              
+              <span className="relative z-10">
+                {isLoading ? (
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                    Processing...
+                  </div>
+                ) : (
+                  actionLabel
+                )}
+              </span>
             </button>
           )}
           
@@ -202,24 +245,33 @@ export default function ChestCard({
               onClick={handleSecondaryAction}
               disabled={secondaryActionDisabled || secondaryLoading}
               className={`
-                w-full py-3 rounded-2xl border backdrop-blur-sm text-sm font-semibold transition-all duration-300
+                w-full py-4 rounded-4xl glass-card text-base font-bold transition-all duration-300
+                btn-premium relative overflow-hidden group backdrop-blur-xl transform-gpu will-change-transform
                 ${secondaryActionDisabled || secondaryLoading
-                  ? "border-white/20 text-white/40 cursor-not-allowed"
-                  : "border-white/30 text-white/90 hover:bg-white/10 hover:border-white/40 hover:scale-105"
+                  ? "border-white/25 text-white/50 cursor-not-allowed"
+                  : "border-white/40 text-premium hover:bg-white/15 hover:border-white/50 hover:scale-[1.02] shadow-soft hover:shadow-elevated"
                 }
               `}
             >
-              {secondaryLoading ? (
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                  Loading...
-                </div>
-              ) : (
-                <div className="flex items-center justify-center gap-2">
-                  <span>📱</span>
-                  {secondaryActionLabel}
-                </div>
+              {!secondaryActionDisabled && !secondaryLoading && (
+                <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-4xl"></div>
               )}
+              
+              <span className="relative z-10">
+                {secondaryLoading ? (
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                    Loading...
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-3">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21C5,22.11 5.89,23 7,23H17C18.11,23 19,22.11 19,21V3C19,1.89 18.11,1 17,1Z"/>
+                    </svg>
+                    {secondaryActionLabel}
+                  </div>
+                )}
+              </span>
             </button>
           )}
         </div>

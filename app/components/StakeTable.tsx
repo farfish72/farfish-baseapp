@@ -7,46 +7,128 @@ export default function StakeTable() {
   const rarities = Object.keys(STAKING_TOKEN_RANGES) as Array<keyof typeof STAKING_TOKEN_RANGES>;
   const lockDurations: Array<30 | 90 | 180 | 360> = [30, 90, 180, 360];
 
-  return (
-    <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
-      <h3 className="font-semibold text-lg mb-4">FarFISH Official NFT Staking Reward Parameters</h3>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-white/70 border-b border-white/10">
-              <th className="text-left py-3 px-2">Name</th>
-              <th className="text-left py-3 px-2">Rarity</th>
-              <th className="text-left py-3 px-2">30d FRH</th>
-              <th className="text-left py-3 px-2">90d FRH</th>
-              <th className="text-left py-3 px-2">180d FRH</th>
-              <th className="text-left py-3 px-2">360d FRH</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rarities.map((rarity) => {
-              const rewards = STAKING_REWARDS[rarity];
-              const display = RARITY_DISPLAY[rarity];
+  const rarityStyles = {
+    Bluefin: { 
+      gradient: "from-blue-400/20 to-cyan-400/10", 
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+        </svg>
+      ), 
+      color: "text-blue-300" 
+    },
+    GoldRay: { 
+      gradient: "from-amber-400/20 to-yellow-400/10", 
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      ), 
+      color: "text-amber-300" 
+    },
+    RedSpike: { 
+      gradient: "from-red-400/20 to-orange-400/10", 
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M7.5,4A5.5,5.5 0 0,0 2,9.5C2,10 2,10.5 2,11H22C22,10.5 22,10 22,9.5A5.5,5.5 0 0,0 16.5,4C14.64,4 13.09,4.91 12,6.34C10.91,4.91 9.36,4 7.5,4Z"/>
+        </svg>
+      ), 
+      color: "text-red-300" 
+    },
+    ShadowGill: { 
+      gradient: "from-purple-400/20 to-indigo-400/10", 
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M5,16L3,5H1V3H4L6,14L7,18H20V16H5Z M19,5V7H17V5H19Z M17,8H19V10H17V8Z M19,11V13H17V11H19Z"/>
+        </svg>
+      ), 
+      color: "text-purple-300" 
+    },
+  };
 
-              return (
-                <tr key={rarity} className="border-b border-white/10 hover:bg-white/5 transition">
-                  <td className="py-3 px-2 font-medium">{display.name}</td>
-                  <td className="py-3 px-2 text-white/70">{display.rarityLabel}</td>
-                  {lockDurations.map((duration) => (
-                    <td key={duration} className="py-3 px-2">
-                      {rewards[duration].toLocaleString()}
+  return (
+    <section className="glass-card-hover rounded-5xl p-7 shadow-elevated backdrop-blur-4xl group animate-scale-in">
+      {/* Premium background elements */}
+      <div className="absolute inset-0 bg-premium-gradient opacity-40 rounded-5xl"></div>
+      <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-5xl"></div>
+      
+      <div className="relative z-10">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="w-12 h-12 rounded-3xl bg-gradient-to-br from-primary-400 to-accent-400 flex items-center justify-center shadow-glow">
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7 14H5v5h2v-5zm3-7H8v12h2V7zm3-4h-2v16h2V3zm3 6h-2v10h2V9zm3-2h-2v12h2V7z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 className="font-bold text-xl text-premium-lg mb-1">FarFISH Official NFT Staking</h3>
+            <p className="text-sm font-medium text-secondary">Reward Parameters</p>
+          </div>
+        </div>
+        
+        <div className="overflow-x-auto rounded-4xl glass-card p-1 shadow-inner">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-secondary border-b border-white/15">
+                <th className="text-left py-4 px-4 font-bold">Name</th>
+                <th className="text-left py-4 px-4 font-bold">Rarity</th>
+                <th className="text-left py-4 px-4 font-bold">30d FRH</th>
+                <th className="text-left py-4 px-4 font-bold">90d FRH</th>
+                <th className="text-left py-4 px-4 font-bold">180d FRH</th>
+                <th className="text-left py-4 px-4 font-bold">360d FRH</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rarities.map((rarity, index) => {
+                const rewards = STAKING_REWARDS[rarity];
+                const display = RARITY_DISPLAY[rarity];
+                const style = rarityStyles[rarity as keyof typeof rarityStyles];
+
+                return (
+                  <tr 
+                    key={rarity} 
+                    className={`
+                      border-b border-white/10 hover:bg-gradient-to-r ${style.gradient} 
+                      transition-all duration-300 group/row animate-fade-in-delayed
+                    `}
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="text-white">{style.icon}</div>
+                        <span className="font-bold text-premium">{display.name}</span>
+                      </div>
                     </td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      <div className="mt-4 text-sm text-white/70 space-y-1">
-        <p>- Reward parameters are defined by the protocol</p>
-        <p>- NFT rarity determines reward weight</p>
-        <p>- Longer lock durations increase snapshot weight</p>
-        <p>- Staking rewards are claimable directly from this page</p>
+                    <td className="py-4 px-4">
+                      <span className={`font-semibold ${style.color}`}>{display.rarityLabel}</span>
+                    </td>
+                    {lockDurations.map((duration) => (
+                      <td key={duration} className="py-4 px-4">
+                        <span className="font-bold text-premium group-hover/row:text-white transition-colors">
+                          {rewards[duration].toLocaleString()}
+                        </span>
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        
+        <div className="mt-6 glass-card rounded-4xl p-5 space-y-2">
+          <div className="flex items-center gap-3 mb-3">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z"/>
+            </svg>
+            <h4 className="font-bold text-base text-premium">Staking Information</h4>
+          </div>
+          <div className="text-sm text-secondary space-y-2 leading-relaxed">
+            <p>• Reward parameters are defined by the protocol</p>
+            <p>• NFT rarity determines reward weight multiplier</p>
+            <p>• Longer lock durations increase snapshot weight</p>
+            <p>• Staking rewards are claimable directly from this page</p>
+          </div>
+        </div>
       </div>
     </section>
   );
