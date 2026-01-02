@@ -150,21 +150,6 @@ export default function HomeClient() {
         };
       }
 
-      // DIAGNOSTIC LOGGING: Log contract address, chainId, and tokenId
-      const chainId = publicClient.chain?.id;
-      console.log("🔍 [DIAGNOSTIC] getActiveClaimConditionId call:", {
-        tokenId,
-        contractAddress: NFT_CONTRACT_ADDRESS,
-        chainId: chainId,
-        expectedChainId: 8453,
-        chainName: publicClient.chain?.name,
-        isBaseChain: chainId === 8453,
-        baseChainId: base.id,
-        contractFromEnv: NFT_CONTRACT_ADDRESS,
-        contractFromError: "0xA10C5a76910D3B9f22CAE78a4c718bE98715339b",
-        contractMatches: NFT_CONTRACT_ADDRESS.toLowerCase() === "0xA10C5a76910D3B9f22CAE78a4c718bE98715339b".toLowerCase(),
-      });
-
       // Get active claim condition ID
       const activeConditionId = (await (publicClient.readContract as any)({
         address: NFT_CONTRACT_ADDRESS as `0x${string}`,
@@ -173,27 +158,8 @@ export default function HomeClient() {
         args: [BigInt(tokenId)],
       })) as bigint;
 
-      // DIAGNOSTIC LOGGING: Log the result
-      console.log("🔍 [DIAGNOSTIC] getActiveClaimConditionId result:", {
-        tokenId,
-        activeConditionId: activeConditionId.toString(),
-        activeConditionIdNumber: Number(activeConditionId),
-        contractAddress: NFT_CONTRACT_ADDRESS,
-        chainId: chainId,
-        isZero: activeConditionId === BigInt(0),
-      });
-
       // If no active condition (returns 0 or throws), return error
       if (activeConditionId === BigInt(0)) {
-        console.warn(`⚠️ [DIAGNOSTIC] No active claim condition for tokenId ${tokenId}`, {
-          tokenId,
-          activeConditionId: activeConditionId.toString(),
-          contractAddress: NFT_CONTRACT_ADDRESS,
-          chainId: chainId,
-          expectedChainId: 8453,
-          chainMismatch: chainId !== 8453,
-          contractMismatch: NFT_CONTRACT_ADDRESS !== "0xA10C5a76910D3B9f22CAE78a4c718bE98715339b",
-        });
         return {
           tokenId,
           condition: null,
@@ -204,34 +170,12 @@ export default function HomeClient() {
       }
 
       // Get claim condition details
-      console.log("🔍 [DIAGNOSTIC] Calling getClaimConditionById:", {
-        tokenId,
-        activeConditionId: activeConditionId.toString(),
-        contractAddress: NFT_CONTRACT_ADDRESS,
-        chainId: chainId,
-      });
-
       const condition = (await (publicClient.readContract as any)({
         address: NFT_CONTRACT_ADDRESS as `0x${string}`,
         abi: nftDropAbi as any,
         functionName: "getClaimConditionById",
         args: [BigInt(tokenId), activeConditionId],
       })) as ClaimCondition;
-
-      // Log claim condition for debugging
-      if (condition) {
-        console.log(`✅ [DIAGNOSTIC] Claim condition for tokenId ${tokenId}:`, {
-          activeConditionId: activeConditionId.toString(),
-          pricePerToken: condition.pricePerToken.toString(),
-          currency: condition.currency,
-          startTimestamp: condition.startTimestamp.toString(),
-          maxClaimableSupply: condition.maxClaimableSupply.toString(),
-          supplyClaimed: condition.supplyClaimed.toString(),
-          quantityLimitPerWallet: condition.quantityLimitPerWallet.toString(),
-          contractAddress: NFT_CONTRACT_ADDRESS,
-          chainId: chainId,
-        });
-      }
 
       return {
         tokenId,
@@ -243,16 +187,6 @@ export default function HomeClient() {
     } catch (error) {
       const publicClient = getPublicClient(wagmiConfig, { chainId: base.id });
       const chainId = publicClient?.chain?.id;
-      console.error(`❌ [DIAGNOSTIC] Failed to fetch claim condition for tokenId ${tokenId}:`, {
-        error,
-        errorMessage: error instanceof Error ? error.message : "Unknown error",
-        errorStack: error instanceof Error ? error.stack : undefined,
-        tokenId,
-        contractAddress: NFT_CONTRACT_ADDRESS,
-        chainId: chainId,
-        expectedChainId: 8453,
-        chainMismatch: chainId !== 8453,
-      });
       // Check for specific error types
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       if (errorMessage.includes("DropNoActiveCondition") || errorMessage.includes("execution reverted")) {
@@ -289,7 +223,6 @@ export default function HomeClient() {
       });
       setClaimInfo(newMap);
     } catch (error) {
-      console.error("Failed to fetch claim conditions:", error);
     } finally {
       setLoadingClaimConditions(false);
     }
@@ -338,7 +271,6 @@ export default function HomeClient() {
       const supplies = await Promise.all(supplyPromises);
       setSupplyInfo(supplies);
     } catch (error) {
-      console.error("Failed to fetch supply info:", error);
       setErrorMessage("Failed to load supply data");
     } finally {
       setLoadingSupplies(false);
@@ -392,7 +324,6 @@ export default function HomeClient() {
         }
       }
     } catch (error) {
-      console.error("Failed to check mint status:", error);
     }
   }, [address]);
 
@@ -561,7 +492,6 @@ export default function HomeClient() {
       } as any);
 
     } catch (error) {
-      console.error("Mint error:", error);
       setIsMinting(false);
       
       const appError = handleTransactionError(error);
@@ -684,7 +614,7 @@ export default function HomeClient() {
   }, [lastMintedTokenId]);
 
   return (
-    <div className="flex flex-col flex-1 min-h-0">
+    <>
       <Header title="Home" />
 
       <div className="flex-1 flex flex-col gap-6">
@@ -1018,6 +948,6 @@ export default function HomeClient() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

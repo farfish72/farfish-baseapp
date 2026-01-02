@@ -9,9 +9,6 @@ export default function useFarcasterEnvironment(logLabel?: string) {
   useEffect(() => {
     const detected = detectFarcasterEnvironment();
     setIsFarcaster(detected);
-    if (detected && logLabel) {
-      console.log(`${logLabel} running in Farcaster environment`);
-    }
   }, [logLabel]);
 
   return isFarcaster;

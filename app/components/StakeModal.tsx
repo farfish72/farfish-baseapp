@@ -123,7 +123,6 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
               return;
             }
           } catch (err) {
-            console.error(`Failed to check balance for tokenId ${tokenId}:`, err);
             // Continue to next tokenId
           }
         }
@@ -133,7 +132,6 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
         setOwnershipError("You do not own this NFT");
         setIsResolvingTokenId(false);
       } catch (error) {
-        console.error("Failed to resolve tokenId:", error);
         setResolvedTokenId(null);
         setOwnershipError(null);
         setIsResolvingTokenId(false);
@@ -179,7 +177,6 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
       } as any);
     } catch (error: any) {
       const errorMsg = error?.message || String(error);
-      console.error("Stake error:", error);
       if (errorMsg.includes("mint") || errorMsg.includes("Mint") || errorMsg.includes("revert")) {
         setToast({ type: "error", message: "Rewards temporarily unavailable — contact support." });
       } else {
@@ -237,7 +234,6 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
   useEffect(() => {
     if (approvalError) {
       const errorMsg = approvalError.message || String(approvalError);
-      console.error("Approval error:", approvalError);
       setToast({ type: "error", message: `Approval failed: ${errorMsg}` });
     }
   }, [approvalError]);
@@ -246,7 +242,6 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
   useEffect(() => {
     if (stakeError) {
       const errorMsg = stakeError.message || String(stakeError);
-      console.error("Stake error:", stakeError);
       if (errorMsg.includes("mint") || errorMsg.includes("Mint") || errorMsg.includes("revert")) {
         setToast({ type: "error", message: "Rewards temporarily unavailable — contact support." });
       } else {
@@ -289,7 +284,6 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
         setToast({ type: "success", message: "Please approve the transaction in your wallet..." });
       } catch (error: any) {
         const errorMsg = error?.message || String(error);
-        console.error("Approval error:", error);
         setToast({ type: "error", message: `Approval failed: ${errorMsg}` });
       }
     } else if (needsApproval === false) {

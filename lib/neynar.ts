@@ -15,18 +15,13 @@ const NEYNAR_HEADERS = {
 export async function neynarRequest(endpoint: string): Promise<any> {
   const url = `${NEYNAR_BASE_URL}${endpoint}`;
   
-  console.log("[NEYNAR] request:", url);
-  
   try {
     const response = await fetch(url, {
       headers: NEYNAR_HEADERS,
     });
     
-    console.log("[NEYNAR] status:", response.status);
-    
     if (!response.ok) {
       const errorBody = await response.text();
-      console.error("[NEYNAR] error response:", errorBody);
       
       if (response.status === 429) {
         throw new Error("Farcaster verification unavailable - rate limit hit");
@@ -38,7 +33,6 @@ export async function neynarRequest(endpoint: string): Promise<any> {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("[NEYNAR] request failed:", error);
     throw new Error("Farcaster verification unavailable");
   }
 }
@@ -49,7 +43,6 @@ export async function verifyFollow(fid: number, targetFid: number): Promise<bool
     const data = await neynarRequest(`/following?fid=${fid}&limit=100`);
     return (data.users || []).some((u: any) => u.fid === targetFid);
   } catch (error) {
-    console.error("[NEYNAR] Follow verification failed:", error);
     return false;
   }
 }
@@ -65,7 +58,6 @@ export async function verifyLikeAndRecast(fid: number, castHash: string): Promis
       recasts.some((r: any) => r.user?.fid === fid)
     );
   } catch (error) {
-    console.error("[NEYNAR] Like/Recast verification failed:", error);
     return false;
   }
 }
@@ -77,7 +69,6 @@ export async function verifyComment(fid: number, castHash: string): Promise<bool
     
     return replies.some((r: any) => r.author?.fid === fid);
   } catch (error) {
-    console.error("[NEYNAR] Comment verification failed:", error);
     return false;
   }
 }

@@ -32,10 +32,6 @@ const sessionCache = new Map<string, any>();
  * which only accepts fid from Farcaster Miniapp context.
  */
 export async function getFarcasterDisplayData(walletAddress: string): Promise<FarcasterProfile | null> {
-  console.warn("DEPRECATED: getFarcasterDisplayData violates Farcaster security model");
-  console.warn("This function attempts wallet → fid resolution which is forbidden");
-  console.warn("Use Farcaster Miniapp context for secure fid access");
-  
   // Return null to prevent any wallet → fid resolution
   return null;
 }
@@ -52,20 +48,14 @@ export async function getFarcasterDisplayData(walletAddress: string): Promise<Fa
  */
 
 export async function verifyFarcasterFollow(wallet: string, targetFid: number): Promise<boolean> {
-  console.warn("DEPRECATED: verifyFarcasterFollow violates security model");
-  console.warn("Use /api/farcaster/verify with fid from Miniapp context");
   return false;
 }
 
 export async function verifyFarcasterEngagement(wallet: string, castHash: string): Promise<{ liked: boolean; recasted: boolean }> {
-  console.warn("DEPRECATED: verifyFarcasterEngagement violates security model");
-  console.warn("Use /api/farcaster/verify with fid from Miniapp context");
   return { liked: false, recasted: false };
 }
 
 export async function verifyFarcasterComment(wallet: string, castHash: string): Promise<boolean> {
-  console.warn("DEPRECATED: verifyFarcasterComment violates security model");
-  console.warn("Use /api/farcaster/verify with fid from Miniapp context");
   return false;
 }
 

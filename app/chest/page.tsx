@@ -76,7 +76,6 @@ export default function ChestPage() {
           }));
         }
       } catch (error) {
-        console.error('Failed to fetch referral data:', error);
       }
     };
     
@@ -152,7 +151,6 @@ export default function ChestPage() {
         chain: base,
       });
     } catch (error) {
-      console.error('Base chest claim error:', error);
       throw error; // Let ChestCard handle the error display
     }
   }, [daily, address, claimDaily]);
@@ -226,7 +224,6 @@ export default function ChestPage() {
         chain: base,
       });
     } catch (error) {
-      console.error('Silver claim error:', error);
       throw error; // Let ChestCard handle the error display
     }
   }, [silver, address, claimSilver]);
@@ -269,7 +266,7 @@ export default function ChestPage() {
 
   /* ================= UI ================= */
   return (
-    <div className="flex flex-col flex-1">
+    <>
       <Header title="Chest" />
 
       {/* Transparency Notice */}
@@ -381,6 +378,6 @@ export default function ChestPage() {
           onAction={() => {}}
         />
       </div>
-    </div>
+    </>
   );
 }

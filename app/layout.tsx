@@ -7,7 +7,7 @@ import Footer from "./components/Footer";
 import FarcasterMiniAppReady from "./components/FarcasterMiniAppReady";
 import FarcasterWalletProvider from "./providers/FarcasterWalletProvider";
 import AutoBindReferral from "./components/AutoBindReferral";
-import ErrorBoundary from "./components/ErrorBoundary";
+import ErrorBoundary from "./components/MinimalErrorBoundary";
 import ToastProvider from "./providers/ToastProvider";
 
 export const metadata: Metadata = {
@@ -108,7 +108,7 @@ export default function RootLayout({
 
               <div className="w-full max-w-md min-h-screen flex flex-col relative z-10">
                 <main
-                  className="flex-1 px-4 animate-fade-in"
+                  className="flex-1 px-4 animate-fade-in flex flex-col min-h-0 overflow-y-auto"
                   style={{
                     paddingTop: "env(safe-area-inset-top, 0px)",
                     paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 7rem)",

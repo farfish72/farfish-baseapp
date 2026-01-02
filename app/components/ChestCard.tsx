@@ -90,7 +90,6 @@ export default function ChestCard({
     try {
       await onAction();
     } catch (error) {
-      console.error('ChestCard action error:', error);
       setLocalError('Action failed. Please try again.');
     } finally {
       setIsLoading(false);
@@ -106,7 +105,6 @@ export default function ChestCard({
     try {
       await onSecondaryAction();
     } catch (error) {
-      console.error('ChestCard secondary action error:', error);
       setLocalError('Action failed. Please try again.');
     } finally {
       setSecondaryLoading(false);

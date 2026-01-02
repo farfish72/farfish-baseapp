@@ -44,7 +44,6 @@ export default function useAutoBindReferral() {
           hasRecorded.current = true;
         }
       } catch (error) {
-        console.error("Referral recording failed:", error);
       }
     };
 

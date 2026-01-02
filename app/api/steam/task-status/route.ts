@@ -81,7 +81,6 @@ export async function GET(req: NextRequest) {
     });
     
   } catch (error) {
-    console.error("Failed to fetch task status:", error);
     return NextResponse.json(
       { error: "Failed to fetch task status" },
       { status: 500 }

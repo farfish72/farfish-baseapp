@@ -81,7 +81,6 @@ export default function useUser() {
           }
         }
       } catch (error) {
-        console.error("Failed to fetch Farcaster display data:", error);
         if (!cancelled) {
           setFarcasterProfile(null);
         }
@@ -111,7 +110,6 @@ export default function useUser() {
         // NFT fetching logic would go here
         setRarityBreakdown(defaultBreakdown());
       } catch (error) {
-        console.error("Failed to fetch owned NFTs", error);
         setRarityBreakdown(defaultBreakdown());
       } finally {
         setLoadingNFTs(false);

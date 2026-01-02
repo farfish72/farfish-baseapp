@@ -41,7 +41,6 @@ export async function GET(request: Request) {
       recasts: recastsRaw !== null ? Number(recastsRaw) : null,
     });
   } catch (error) {
-    console.error('[trust-anchor]', error);
     return NextResponse.json(
       { error: 'Failed to fetch trust anchor data' },
       { status: 500 }

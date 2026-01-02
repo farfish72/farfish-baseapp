@@ -149,13 +149,11 @@ export default function SteamPage() {
 
   // Debug log when page mounts
   useEffect(() => {
-    console.log("[STEAM] Base App Steam page mounted");
   }, []);
 
   // Debug log when wallet is detected
   useEffect(() => {
     if (wallet) {
-      console.log("[STEAM] Wallet address:", wallet);
     }
   }, [wallet]);
 
@@ -177,15 +175,12 @@ export default function SteamPage() {
         const data = await response.json();
         const referralCount = data.referrals_count || 0;
         
-        console.log("[STEAM] Referral count:", referralCount);
-        
         setReferralData({
           count: referralCount,
           rewards: data.rewards || 0,
         });
       }
     } catch (error) {
-      console.error('Failed to fetch referral data:', error);
     }
   }, [wallet]);
 
@@ -196,8 +191,6 @@ export default function SteamPage() {
         ...task,
         status: "not_started" as TaskStatus,
       }));
-
-      console.log("[STEAM] Base tasks loaded:", staticTasks);
       setTasks(staticTasks);
 
       if (!wallet) {
@@ -210,8 +203,6 @@ export default function SteamPage() {
       const res = await fetch(`/api/steam/task-status?wallet=${wallet}`);
       const taskStatusData = await res.json();
       
-      console.log("[STEAM] Task status response:", taskStatusData);
-
       // Set fishing cooldown from API response
       setFishingCooldown(taskStatusData.fishingCooldown || 0);
 
@@ -255,11 +246,8 @@ export default function SteamPage() {
         };
       });
 
-      console.log("[STEAM] Base referral milestones:", withStatus.filter(t => t.type === "referral_milestone"));
-
       setTasks(withStatus);
     } catch (error) {
-      console.error('Failed to fetch task statuses:', error);
       // Even on error, show static tasks
       setTasks(
         TASKS.map((task) => ({
@@ -302,10 +290,8 @@ export default function SteamPage() {
         // Refresh task status to show completion
         fetchTaskStatuses();
       } else {
-        console.error('Base app open completion failed:', data.error);
       }
     } catch (error) {
-      console.error("Base app open failed:", error);
     }
   };
 
@@ -333,12 +319,9 @@ export default function SteamPage() {
       } else if (response.status === 429) {
         // Cooldown active - update local cooldown state
         setFishingCooldown(data.cooldownRemaining || 0);
-        console.log('Daily check-in on cooldown:', data.cooldownRemaining, 'seconds remaining');
       } else {
-        console.error('Daily check-in failed:', data.error);
       }
     } catch (error) {
-      console.error('Daily check-in error:', error);
     }
   };
 
@@ -365,7 +348,6 @@ export default function SteamPage() {
         alert('Referral link copied to clipboard!');
       }
     } catch (error) {
-      console.error("Referral share failed:", error);
       // Fallback alert
       const referralCode = wallet.slice(2, 10).toUpperCase();
       const referralLink = `https://farfish-baseapp.vercel.app/?ref=${referralCode}`;
@@ -386,7 +368,7 @@ export default function SteamPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col flex-1">
+      <>
         <Header title="Steam" />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
@@ -394,12 +376,12 @@ export default function SteamPage() {
             <p className="text-white/70">Loading Base tasks...</p>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="flex flex-col flex-1">
+    <>
       <Header title="Steam" />
 
       <div className="flex-1 space-y-4 mt-4">
@@ -699,6 +681,6 @@ export default function SteamPage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -63,11 +63,9 @@ export default function LeaderboardPage() {
             setUserEntry(userEntry);
           }
         } catch (error) {
-          console.error("Failed to fetch user rank:", error);
         }
       }
     } catch (error) {
-      console.error("Failed to fetch leaderboard", error);
       setToast({ type: "error", message: "Could not load leaderboard. Please try again." });
     } finally {
       setLoading(false);
@@ -85,7 +83,7 @@ export default function LeaderboardPage() {
   }, [toast]);
 
   return (
-    <div className="flex flex-col flex-1 min-h-0">
+    <>
       <Header title="Rank" />
 
       <div className="mt-4 flex-1 flex flex-col space-y-4">
@@ -197,6 +195,6 @@ export default function LeaderboardPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

@@ -23,12 +23,7 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log full error details for developers
-    console.error('Global Error Boundary caught an error:', {
-      error: error.message,
-      stack: error.stack,
-      componentStack: errorInfo.componentStack,
-      timestamp: new Date().toISOString(),
-    });
+    // Error boundary caught an error - component will show fallback UI
   }
 
   handleRefresh = () => {

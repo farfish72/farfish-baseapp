@@ -130,7 +130,6 @@ function ProfilePageContent() {
             nftsOwned = balances.reduce((sum, balance) => sum + Number(balance), 0);
           }
         } catch (error) {
-          console.error("Failed to fetch NFT owned count:", error);
           setStatsError((prev) => ({ ...prev, nftsOwned: true }));
         }
       }
@@ -143,7 +142,6 @@ function ProfilePageContent() {
           chestStreak = streakFromStorage ? parseInt(streakFromStorage, 10) : 0;
         }
       } catch (error) {
-        console.error("Failed to fetch chest streak from localStorage:", error);
         setStatsError((prev) => ({ ...prev, chestStreak: true }));
       }
 
@@ -158,13 +156,11 @@ function ProfilePageContent() {
           rank = Number(rankData?.rank ?? 0) > 0 ? Number(rankData.rank) : null;
         }
       } catch (error) {
-        console.error("Failed to fetch rank:", error);
         setStatsError((prev) => ({ ...prev, rank: true }));
       }
 
       setLiveStats({ nftsOwned, chestStreak, rank });
     } catch (error) {
-      console.error("Failed to fetch live stats:", error);
       setStatsError((prev) => ({
         nftsOwned: prev.nftsOwned || true,
         chestStreak: prev.chestStreak || true,
@@ -236,7 +232,7 @@ function ProfilePageContent() {
   }, [toast]);
 
   return (
-    <div className="flex flex-col flex-1 min-h-0">
+    <>
       <Header title="Profile" />
 
       <div className="mt-4 space-y-6 flex-1 flex flex-col">
@@ -470,7 +466,7 @@ function ProfilePageContent() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

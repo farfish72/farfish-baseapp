@@ -51,7 +51,6 @@ export default function TrustAnchor({
           setUserRank(data.rank || null);
         }
       } catch (error) {
-        console.error("Failed to fetch user rank:", error);
         setUserRank(null);
       }
     };

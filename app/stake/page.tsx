@@ -87,7 +87,7 @@ export default function StakingPage() {
 
   /* ---------------- render ---------------- */
   return (
-    <div className="flex flex-col flex-1 min-h-0">
+    <>
       <Header title="Stake" />
 
       {/* Staking Explanation */}
@@ -208,6 +208,6 @@ export default function StakingPage() {
         onClose={() => setIsUnstakeModalOpen(false)}
         onSuccess={refetch}
       />
-    </div>
+    </>
   );
 }

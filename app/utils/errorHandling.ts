@@ -9,8 +9,6 @@ export interface AppError {
 
 // Wallet-specific error handling
 export function handleWalletError(error: any): AppError {
-  console.error('Wallet error:', error);
-
   // User rejected transaction
   if (error?.code === 4001 || error?.message?.includes('rejected') || error?.message?.includes('denied')) {
     return {
@@ -62,8 +60,6 @@ export function handleWalletError(error: any): AppError {
 
 // API/Network error handling
 export function handleApiError(error: any): AppError {
-  console.error('API error:', error);
-
   // Network timeout
   if (error?.name === 'TimeoutError' || error?.message?.includes('timeout')) {
     return {
@@ -112,8 +108,6 @@ export function handleApiError(error: any): AppError {
 
 // Transaction-specific error handling
 export function handleTransactionError(error: any): AppError {
-  console.error('Transaction error:', error);
-
   // Transaction reverted
   if (error?.message?.includes('reverted') || error?.message?.includes('execution reverted')) {
     return {
@@ -138,8 +132,6 @@ export function handleTransactionError(error: any): AppError {
 
 // Generic error handler
 export function handleGenericError(error: any): AppError {
-  console.error('Generic error:', error);
-
   if (error instanceof Error) {
     return {
       type: 'unknown',
