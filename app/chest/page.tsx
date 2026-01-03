@@ -74,9 +74,27 @@ export default function ChestPage() {
           rank: data.rank,
           lastClaimDate: data.lastClaimDate,
         });
+      } else {
+        console.error('Trust Anchor API error:', response.status, response.statusText);
+        // Set default values on error
+        setTrustAnchorData({
+          streak: 0,
+          daysActive: 0,
+          referrals: 0,
+          rank: null,
+          lastClaimDate: null,
+        });
       }
     } catch (error) {
       console.error('Failed to fetch Trust Anchor data:', error);
+      // Set default values on error
+      setTrustAnchorData({
+        streak: 0,
+        daysActive: 0,
+        referrals: 0,
+        rank: null,
+        lastClaimDate: null,
+      });
     } finally {
       setTrustAnchorLoading(false);
     }
@@ -259,6 +277,7 @@ export default function ChestPage() {
           streak={trustAnchorData.streak}
           daysActive={trustAnchorData.daysActive}
           referrals={trustAnchorData.referrals}
+          rank={trustAnchorData.rank}
           hasActiveStake={activeStakes.length > 0}
           isLoading={trustAnchorLoading}
         />

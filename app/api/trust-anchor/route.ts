@@ -53,11 +53,43 @@ export async function GET(request: Request) {
     const daysActive = chestData.daysActive || 0;
     const lastClaimDate = chestData.lastClaimDate || null;
     
-    // Get referral data
-    const referralCount = userObj.referrals?.count || 0;
+    // Get referral data from leaderboard API for consistency
+    let referralCount = 0;
+    try {
+      // Use internal API call instead of fetch for server-side
+      const { getKey: getLeaderboardKey } = await import("../../../lib/upstash");
+      const leaderboardKey = `user:${address}`;
+      const leaderboardData = await getLeaderboardKey(leaderboardKey);
+      
+      if (leaderboardData) {
+        const parsedData = typeof leaderboardData === 'string' ? JSON.parse(leaderboardData) : leaderboardData;
+        referralCount = parsedData.referrals_count || parsedData.referrals?.count || 0;
+      }
+    } catch (error) {
+      console.error('Failed to fetch referral data:', error);
+      // Fallback to stored referral data
+      referralCount = userObj.referrals?.count || 0;
+    }
     
-    // Get rank data
-    const rankData = userObj.rank || null;
+    // Get rank data from stored data
+    let rankData = null;
+    try {
+      // Check if rank is stored in user data
+      rankData = userObj.rank || null;
+      
+      // If no rank stored, try to get from leaderboard data
+      if (!rankData) {
+        const leaderboardKey = `user:${address}`;
+        const leaderboardData = await getKey(leaderboardKey);
+        if (leaderboardData) {
+          const parsedData = typeof leaderboardData === 'string' ? JSON.parse(leaderboardData) : leaderboardData;
+          rankData = parsedData.rank || null;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch rank data:', error);
+      rankData = userObj.rank || null;
+    }
 
     return NextResponse.json({
       address,

@@ -330,9 +330,11 @@ export default function SteamPage() {
       if (response.ok && data.success) {
         // Refresh task status to reflect the completed fishing
         fetchTaskStatuses();
+        console.log('Fishing completed successfully!');
       } else if (response.status === 429) {
         // Cooldown active - update local cooldown state
         setFishingCooldown(data.cooldownRemaining || 0);
+        console.log('Fishing on cooldown:', data.cooldownRemaining, 'seconds remaining');
       } else {
         console.error('Fishing failed:', data.error);
       }
@@ -345,26 +347,27 @@ export default function SteamPage() {
     if (!wallet) return;
 
     try {
-      // Generate referral code from wallet address (first 8 characters)
-      const referralCode = wallet.slice(2, 10).toUpperCase();
+      // Generate referral code from wallet address (last 8 characters)
+      const referralCode = wallet.slice(-8).toUpperCase();
       
-      // Create Base App embed with referrer context
+      // Create embed URL with referrer context
       const embedUrl = `https://farfish-baseapp.vercel.app/?ref=${referralCode}`;
       
-      // Open Base App embed with invite automatically attached
-      await sdk.actions.openUrl(embedUrl);
+      // Use Farcaster-style embed with composeCast (REAL EMBED)
+      await sdk.actions.composeCast({
+        text: `Earn FRH tokens by completing Base activities.\n\nDaily rewards, referrals, on-chain progress.\nJoin FarFISH on Base now!`,
+        embeds: [embedUrl]
+      });
       
     } catch (error) {
-      console.error('Base App invite error:', error);
-      // Fallback: use native sharing if Base App embed fails
-      if (navigator.share) {
-        const referralCode = wallet.slice(2, 10).toUpperCase();
+      console.error('Base App embed error:', error);
+      // Fallback: try openUrl if composeCast fails
+      try {
+        const referralCode = wallet.slice(-8).toUpperCase();
         const embedUrl = `https://farfish-baseapp.vercel.app/?ref=${referralCode}`;
-        await navigator.share({
-          title: 'Join FarFISH on Base',
-          text: `Earn FRH tokens by completing Base activities.\n\nDaily rewards, referrals, on-chain progress.\nJoin FarFISH on Base now!`,
-          url: embedUrl,
-        });
+        await sdk.actions.openUrl(embedUrl);
+      } catch (fallbackError) {
+        console.error('Fallback embed error:', fallbackError);
       }
     }
   };
@@ -556,8 +559,8 @@ export default function SteamPage() {
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <h4 className="text-lg font-bold text-white mb-1">Invite Users on Base</h4>
-                <p className="text-white/70 text-sm mb-2">Earn FRH when new users join FarFISH through your invite.</p>
-                <div className="text-xs text-cyan-400 font-medium mb-1">Reward: 40 FRH per successful referral</div>
+                <p className="text-white/70 text-sm mb-2">Earn FRH when users join FarFISH through your invite.</p>
+                <div className="text-xs text-cyan-400 font-medium mb-1">Reward: 40 FRH per referral</div>
                 <div className="text-xs text-white/60 mb-1">Current: {referralData.count} referrals · {referralData.count * 40} FRH earned</div>
                 <div className="text-xs text-white/60">
                   Tracked securely via Base App embed.

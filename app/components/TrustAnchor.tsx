@@ -12,6 +12,7 @@ interface TrustAnchorProps {
   daysActive: number | null;      // Total cumulative days (never resets)
   referrals: number | null;       // Lifetime referral count
   hasActiveStake: boolean;        // Whether user has active NFT stake
+  rank: number | null;            // User rank from Trust Anchor API
   isLoading?: boolean;            // Loading state
   error?: string | null;          // Error message if any
 }
@@ -21,11 +22,11 @@ export default function TrustAnchor({
   daysActive,
   referrals,
   hasActiveStake,
+  rank,
   isLoading = false,
   error = null,
 }: TrustAnchorProps) {
   const { address } = useAccount();
-  const [userRank, setUserRank] = useState<number | null>(null);
 
   // Read ERC20 balance
   const { data: frhBalance } = useReadContract({
@@ -35,28 +36,6 @@ export default function TrustAnchor({
     args: address ? [address] : undefined,
     query: { enabled: Boolean(address && ERC20_TOKEN_ADDRESS) },
   });
-
-  // Fetch user rank
-  useEffect(() => {
-    if (!address) {
-      setUserRank(null);
-      return;
-    }
-
-    const fetchUserRank = async () => {
-      try {
-        const response = await fetch(`/api/leaderboard/user?wallet=${address}`);
-        if (response.ok) {
-          const data = await response.json();
-          setUserRank(data.rank || null);
-        }
-      } catch (error) {
-        setUserRank(null);
-      }
-    };
-
-    fetchUserRank();
-  }, [address]);
 
   // Format number safely
   const formatNumber = (num: number | null): string => {
@@ -71,7 +50,7 @@ export default function TrustAnchor({
 
   // Format rank
   const formatRank = (): string => {
-    return userRank ? `#${userRank}` : '#0';
+    return rank ? `#${rank}` : '#0';
   };
 
   // Determine tier based ONLY on active stake status
