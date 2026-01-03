@@ -143,7 +143,7 @@ export default function TrustAnchor({
           </div>
           <div>
             <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Earning
+              Trust Anchor
             </h3>
             <p className="text-sm text-white/70">Protocol-based activity tracking</p>
           </div>
