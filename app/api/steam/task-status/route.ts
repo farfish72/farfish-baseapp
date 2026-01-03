@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
     
     // Map to the task IDs used in the frontend
     const tasks: Record<string, boolean> = {
-      "daily_checkin": fishingStatus, // true = on cooldown, false = available
+      "fishing": fishingStatus, // true = on cooldown, false = available
       "add_miniapp": steamData.add_app?.completed || false,
       "fc_follow": steamData.follow?.completed || false,
       "fc_like_recast": steamData.like_recast?.completed || false,

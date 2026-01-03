@@ -9,7 +9,6 @@ import {
   useWriteContract,
 } from "wagmi";
 import { base } from "viem/chains";
-import { sdk } from "@farcaster/miniapp-sdk";
 
 import Header from "../components/Header";
 import ChestCard from "../components/ChestCard";
@@ -23,25 +22,20 @@ import { CLAIM_CONTROLLER_ADDRESS } from "../constants";
 /* ---------------- helpers ---------------- */
 const formatTime = (seconds: bigint | number): string => {
   const s = typeof seconds === "bigint" ? Number(seconds) : seconds;
-  if (!s || s <= 0) return "0h 0m"; // FIXED: Consistent format to prevent layout shift
+  if (!s || s <= 0) return "0h 0m";
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
-  return `${h}h ${m}m`; // FIXED: Always show hours and minutes for consistent width
+  return `${h}h ${m}m`;
 };
 
-/* ---------------- ROTATING TEXTS ---------------- */
-const ROTATING_CHEST_TEXTS = [
-  "Daily Base Chest unlocked 🟤🐟\n\nClaim 3 FRH every day on FarFISH.\nFree, simple, on Base.",
-  "Another day, another Base Chest 🟤\n\nFarFISH rewards consistency.\nFree FRH daily on Base.",
-  "Daily check-in complete ✅\n\nBase Chest claimed on FarFISH.\nFree FRH for real users.",
-  "Small daily rewards > big promises.\n\nBase Chest unlocked on FarFISH 🐟\nFree FRH, every day.",
-  "Consistency pays 🟤\n\nClaim your daily Base Chest on FarFISH.\nFree FRH on Base.",
-  "Daily Base Chest claimed 🐟\n\nFarFISH keeps rewarding active users.\nFree FRH, no tricks.",
-  "Free daily rewards, done right.\n\nBase Chest unlocked on FarFISH 🟤\nBuilt on Base.",
-  "Daily habit unlocked 🔁\n\nBase Chest claimed on FarFISH.\n3 FRH every day.",
-  "No hype. Just daily rewards.\n\nBase Chest unlocked on FarFISH 🐟\nFree FRH on Base.",
-  "Another Base Chest day 🟤\n\nFarFISH rewards show up daily.\nFree FRH, claim yours.",
-];
+/* ---------------- TRUST ANCHOR TYPES ---------------- */
+interface TrustAnchorData {
+  streak: number;
+  daysActive: number;
+  referrals: number;
+  rank: number | null;
+  lastClaimDate: string | null;
+}
 
 /* ---------------- page ---------------- */
 export default function ChestPage() {
@@ -54,33 +48,44 @@ export default function ChestPage() {
   // Get user stakes to determine tier
   const { activeStakes } = useUserStakes();
   
-  // Trust Anchor state
-  const [trustAnchorData, setTrustAnchorData] = useState({
-    streak: null as number | null,
-    daysActive: null as number | null,
-    referrals: null as number | null,
+  // Trust Anchor state - SINGLE SOURCE OF TRUTH
+  const [trustAnchorData, setTrustAnchorData] = useState<TrustAnchorData>({
+    streak: 0,
+    daysActive: 0,
+    referrals: 0,
+    rank: null,
+    lastClaimDate: null,
   });
+  const [trustAnchorLoading, setTrustAnchorLoading] = useState(false);
 
-  // Fetch referral data from KV
-  useEffect(() => {
-    const fetchReferralData = async () => {
-      if (!address) return;
-      
-      try {
-        const response = await fetch(`/api/leaderboard/user?wallet=${address}`);
-        if (response.ok) {
-          const data = await response.json();
-          setTrustAnchorData(prev => ({
-            ...prev,
-            referrals: data.referrals_count || 0,
-          }));
-        }
-      } catch (error) {
-      }
-    };
+  // Fetch Trust Anchor data (authoritative)
+  const fetchTrustAnchorData = useCallback(async () => {
+    if (!address) return;
     
-    fetchReferralData();
+    setTrustAnchorLoading(true);
+    try {
+      const response = await fetch(`/api/trust-anchor?address=${address}`);
+      if (response.ok) {
+        const data = await response.json();
+        setTrustAnchorData({
+          streak: data.streak || 0,
+          daysActive: data.daysActive || 0,
+          referrals: data.referrals || 0,
+          rank: data.rank,
+          lastClaimDate: data.lastClaimDate,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch Trust Anchor data:', error);
+    } finally {
+      setTrustAnchorLoading(false);
+    }
   }, [address]);
+
+  // Load Trust Anchor data on address change
+  useEffect(() => {
+    fetchTrustAnchorData();
+  }, [fetchTrustAnchorData]);
 
   /* ================= DAILY BRONZE ================= */
   const { data: dailyData } = useReadContract({
@@ -105,71 +110,44 @@ export default function ChestPage() {
     isPending: dailyPending,
   } = useWriteContract();
 
-  const { isLoading: dailyConfirming } = useWaitForTransactionReceipt({
+  const { isLoading: dailyConfirming, isSuccess: dailySuccess } = useWaitForTransactionReceipt({
     hash: dailyTx,
   });
 
-  // Callback to update trust anchor after successful claims
-  const updateTrustAnchorAfterClaim = useCallback(() => {
-    if (!address) return;
-
-    const streak = localStorage.getItem('ff_streak');
-    const daysActive = localStorage.getItem('ff_days_active');
-    let calculatedDaysActive = 0;
-    
-    if (daysActive) {
-      calculatedDaysActive = parseInt(daysActive, 10);
-    } else {
-      calculatedDaysActive = streak ? parseInt(streak, 10) : 0;
-      localStorage.setItem('ff_days_active', calculatedDaysActive.toString());
+  // Update Trust Anchor after successful daily claim
+  useEffect(() => {
+    if (dailySuccess && dailyTx && address) {
+      const updateTrustAnchor = async () => {
+        try {
+          const response = await fetch('/api/trust-anchor', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              address,
+              action: 'chest_claim_success',
+              txHash: dailyTx,
+            }),
+          });
+          
+          if (response.ok) {
+            // Refresh Trust Anchor data
+            await fetchTrustAnchorData();
+          }
+        } catch (error) {
+          console.error('Failed to update Trust Anchor:', error);
+        }
+      };
+      
+      updateTrustAnchor();
     }
-    
-    const currentStreak = streak ? parseInt(streak, 10) : 0;
-    if (currentStreak > calculatedDaysActive) {
-      calculatedDaysActive = currentStreak;
-      localStorage.setItem('ff_days_active', calculatedDaysActive.toString());
-    }
-
-    setTrustAnchorData(prev => ({
-      ...prev,
-      streak: currentStreak,
-      daysActive: calculatedDaysActive,
-    }));
-  }, [address]);
+  }, [dailySuccess, dailyTx, address, fetchTrustAnchorData]);
 
   const handleBronzeClaim = useCallback(async () => {
     if (!daily?.canClaim || !address) return;
 
     try {
-      // Mark bronze as claimed today in localStorage
-      localStorage.setItem('ff_bronze_claimed_today', 'true');
-      
-      // Update total rewards
-      const currentTotal = parseFloat(localStorage.getItem('ff_total_rewards') || '0');
-      localStorage.setItem('ff_total_rewards', (currentTotal + 3).toString());
-      
-      // Update streak and last claim date
-      const lastClaimDate = localStorage.getItem('ff_last_claim_date');
-      const today = new Date().toISOString().split('T')[0];
-      
-      if (lastClaimDate !== today) {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toISOString().split('T')[0];
-        
-        const currentStreak = parseInt(localStorage.getItem('ff_streak') || '0', 10);
-        
-        if (lastClaimDate === yesterdayStr) {
-          // Consecutive day - increment streak
-          localStorage.setItem('ff_streak', (currentStreak + 1).toString());
-        } else if (lastClaimDate !== today) {
-          // Not consecutive - reset streak to 1
-          localStorage.setItem('ff_streak', '1');
-        }
-        
-        localStorage.setItem('ff_last_claim_date', today);
-      }
-
       await claimDaily({
         address: CLAIM_CONTROLLER_ADDRESS,
         abi: claimControllerAbi,
@@ -178,15 +156,11 @@ export default function ChestPage() {
         account: address,
         chain: base,
       });
-
-      // Update trust anchor data after successful claim
-      updateTrustAnchorAfterClaim();
     } catch (error) {
-      // FIXED: Always ensure navigation remains responsive on error
       console.error('Daily claim error:', error);
-      throw error; // Let ChestCard handle the error display
+      throw error;
     }
-  }, [daily, address, claimDaily, updateTrustAnchorAfterClaim]);
+  }, [daily, address, claimDaily]);
 
   /* ================= SILVER ================= */
   const { data: silverData } = useReadContract({
@@ -208,46 +182,48 @@ export default function ChestPage() {
 
   const {
     writeContract: claimSilver,
+    data: silverTx,
     isPending: silverPending,
   } = useWriteContract();
 
-  const { isLoading: silverConfirming } = useWaitForTransactionReceipt({
-    hash: undefined,
+  const { isLoading: silverConfirming, isSuccess: silverSuccess } = useWaitForTransactionReceipt({
+    hash: silverTx,
   });
+
+  // Update Trust Anchor after successful silver claim
+  useEffect(() => {
+    if (silverSuccess && silverTx && address) {
+      const updateTrustAnchor = async () => {
+        try {
+          const response = await fetch('/api/trust-anchor', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              address,
+              action: 'chest_claim_success',
+              txHash: silverTx,
+            }),
+          });
+          
+          if (response.ok) {
+            // Refresh Trust Anchor data
+            await fetchTrustAnchorData();
+          }
+        } catch (error) {
+          console.error('Failed to update Trust Anchor:', error);
+        }
+      };
+      
+      updateTrustAnchor();
+    }
+  }, [silverSuccess, silverTx, address, fetchTrustAnchorData]);
 
   const handleSilverClaim = useCallback(async () => {
     if (!silver?.canClaim || !address) return;
 
     try {
-      // Mark silver as claimed today in localStorage
-      localStorage.setItem('ff_silver_claimed_today', 'true');
-      
-      // Update total rewards
-      const currentTotal = parseFloat(localStorage.getItem('ff_total_rewards') || '0');
-      localStorage.setItem('ff_total_rewards', (currentTotal + 6).toString());
-      
-      // Update streak and last claim date (same logic as bronze)
-      const lastClaimDate = localStorage.getItem('ff_last_claim_date');
-      const today = new Date().toISOString().split('T')[0];
-      
-      if (lastClaimDate !== today) {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toISOString().split('T')[0];
-        
-        const currentStreak = parseInt(localStorage.getItem('ff_streak') || '0', 10);
-        
-        if (lastClaimDate === yesterdayStr) {
-          // Consecutive day - increment streak
-          localStorage.setItem('ff_streak', (currentStreak + 1).toString());
-        } else if (lastClaimDate !== today) {
-          // Not consecutive - reset streak to 1
-          localStorage.setItem('ff_streak', '1');
-        }
-        
-        localStorage.setItem('ff_last_claim_date', today);
-      }
-
       await claimSilver({
         address: CLAIM_CONTROLLER_ADDRESS,
         abi: claimControllerAbi,
@@ -256,67 +232,11 @@ export default function ChestPage() {
         account: address,
         chain: base,
       });
-
-      // Update trust anchor data after successful claim
-      updateTrustAnchorAfterClaim();
     } catch (error) {
-      // FIXED: Always ensure navigation remains responsive on error
       console.error('Silver claim error:', error);
-      throw error; // Let ChestCard handle the error display
+      throw error;
     }
-  }, [silver, address, claimSilver, updateTrustAnchorAfterClaim]);
-
-  // Update Trust Anchor data when address changes (remove unnecessary dependencies)
-  useEffect(() => {
-    if (!address) return;
-
-    // Get streak from localStorage
-    const streak = localStorage.getItem('ff_streak');
-    
-    // Calculate days active (cumulative, never resets)
-    const daysActive = localStorage.getItem('ff_days_active');
-    let calculatedDaysActive = 0;
-    
-    if (daysActive) {
-      calculatedDaysActive = parseInt(daysActive, 10);
-    } else {
-      // Initialize days active based on current streak if not set
-      calculatedDaysActive = streak ? parseInt(streak, 10) : 0;
-      localStorage.setItem('ff_days_active', calculatedDaysActive.toString());
-    }
-    
-    // Update days active if current streak is higher (user has been more active)
-    const currentStreak = streak ? parseInt(streak, 10) : 0;
-    if (currentStreak > calculatedDaysActive) {
-      calculatedDaysActive = currentStreak;
-      localStorage.setItem('ff_days_active', calculatedDaysActive.toString());
-    }
-
-    // Update state
-    setTrustAnchorData(prev => ({
-      ...prev,
-      streak: currentStreak,
-      daysActive: calculatedDaysActive,
-    }));
-  }, [address]); // FIXED: Remove dailyData, silverData dependencies
-
-  // FIXED: Clear transaction states on component unmount to prevent navigation freeze
-  useEffect(() => {
-    return () => {
-      // Clear any pending states when navigating away
-    };
-  }, []);
-
-  // FIXED: Auto-clear transaction states after timeout to prevent stuck UI
-  useEffect(() => {
-    if (dailyPending || dailyConfirming || silverPending || silverConfirming) {
-      const timeout = setTimeout(() => {
-        // States will auto-clear when wagmi hooks reset
-      }, 30000); // 30 second timeout
-
-      return () => clearTimeout(timeout);
-    }
-  }, [dailyPending, dailyConfirming, silverPending, silverConfirming]);
+  }, [silver, address, claimSilver]);
 
   /* ================= UI ================= */
   return (
@@ -335,45 +255,14 @@ export default function ChestPage() {
       </div>
 
       <div className="space-y-4 flex-1">
-        {/* Daily Streak Indicator */}
-        {trustAnchorData.streak && trustAnchorData.streak > 0 && (
-          <div className="bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 rounded-2xl p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center shadow-lg">
-                  <span className="text-xl">🔥</span>
-                </div>
-                <div>
-                  <h3 className="font-bold text-orange-400">Day {trustAnchorData.streak} streak</h3>
-                  <p className="text-sm text-white/70">
-                    {daily?.canClaim 
-                      ? "Ready to claim today's reward" 
-                      : <span className="timer-stable">Next check-in available in {formatTime(daily?.timeLeft ?? 0n)}</span>
-                    }
-                  </p>
-                  <p className="text-xs text-white/60 mt-1">This action is available once every 24 hours to ensure fair distribution.</p>
-                </div>
-              </div>
-              <button
-                onClick={() => {
-                  // Replace share with view reward history
-                  window.location.href = '/profile';
-                }}
-                disabled={!isConnected}
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-sm font-medium text-white transition-all duration-300 hover:scale-105 disabled:opacity-50"
-              >
-                View reward history
-              </button>
-            </div>
-          </div>
-        )}
-
         <TrustAnchor
           streak={trustAnchorData.streak}
           daysActive={trustAnchorData.daysActive}
           referrals={trustAnchorData.referrals}
           hasActiveStake={activeStakes.length > 0}
+          isLoading={trustAnchorLoading}
         />
+        
         <ChestCard
           title="Daily Base Chest"
           description="Claim rewards every 24 hours."

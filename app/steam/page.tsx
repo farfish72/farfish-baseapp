@@ -4,8 +4,9 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useAccount, useReadContract } from "wagmi";
 import Header from "../components/Header";
 import useUserStakes from "../hooks/useUserStakes";
-import { NFT_CONTRACT_ADDRESS } from "../constants";
+import { NFT_CONTRACT_ADDRESS, STAKING_CONTRACT_ADDRESS } from "../constants";
 import nftAbi from "../abi/nftDrop.json";
+import stakeAbi from "../abi/stake.json";
 
 type TaskStatus = "not_started" | "verified";
 
@@ -14,16 +15,18 @@ type Task = {
   title: string;
   description: string;
   reward: number;
-  type: "daily" | "base_activity" | "referral" | "referral_milestone" | "nft" | "base_app";
+  type: "daily" | "base_activity" | "referral" | "referral_milestone" | "nft";
   status: TaskStatus;
   target?: number; // For referral milestones
+  tokenId?: number; // For NFT tasks
+  stakeId?: number; // For staking tasks
 };
 
 const TASKS: Omit<Task, "status">[] = [
   {
-    id: "daily_checkin",
-    title: "Daily Check-in",
-    description: "Claim your daily Base activity reward",
+    id: "fishing",
+    title: "Fishing",
+    description: "Perform one fishing action per 24 hours to earn rewards",
     reward: 10,
     type: "daily",
   },
@@ -35,24 +38,10 @@ const TASKS: Omit<Task, "status">[] = [
     type: "base_activity",
   },
   {
-    id: "open_farfish_base",
-    title: "Open FarFISH (Base App)",
-    description: "Open FarFISH via Base App to confirm activity",
-    reward: 40,
-    type: "base_app",
-  },
-  {
     id: "nft_mint",
     title: "Mint FarFISH NFT",
     description: "Mint a FarFISH NFT on Base",
     reward: 2500,
-    type: "nft",
-  },
-  {
-    id: "nft_stake",
-    title: "Stake FarFISH NFT",
-    description: "Stake any FarFISH NFT on Base",
-    reward: 0, // Included in staking rewards
     type: "nft",
   },
   {
@@ -111,6 +100,7 @@ export default function SteamPage() {
   const { activeStakes } = useUserStakes();
   const [referralData, setReferralData] = useState({ count: 0, rewards: 0 });
   const [streak, setStreak] = useState(0);
+  const [nftData, setNftData] = useState<{ tokenId?: number; stakeId?: number }>({});
   
   // Countdown effect for fishing cooldown
   useEffect(() => {
@@ -157,14 +147,53 @@ export default function SteamPage() {
     }
   }, [wallet]);
 
-  // NFT balance check
-  const { data: nftBalance } = useReadContract({
+  // NFT balance check - check multiple token IDs to find owned NFTs
+  const { data: nftBalance0 } = useReadContract({
     address: NFT_CONTRACT_ADDRESS as `0x${string}`,
     abi: nftAbi,
     functionName: "balanceOf",
-    args: wallet ? [wallet, 0] : undefined, // Check token ID 0 as example
+    args: wallet ? [wallet, 0] : undefined,
     query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
   });
+
+  const { data: nftBalance1 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf", 
+    args: wallet ? [wallet, 1] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance2 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 2] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance3 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 3] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  // Check if user has any NFTs and get the first owned token ID
+  const hasNFT = Boolean(
+    (nftBalance0 && Number(nftBalance0) > 0) ||
+    (nftBalance1 && Number(nftBalance1) > 0) ||
+    (nftBalance2 && Number(nftBalance2) > 0) ||
+    (nftBalance3 && Number(nftBalance3) > 0)
+  );
+
+  const ownedTokenId = hasNFT ? (
+    (nftBalance0 && Number(nftBalance0) > 0) ? 0 :
+    (nftBalance1 && Number(nftBalance1) > 0) ? 1 :
+    (nftBalance2 && Number(nftBalance2) > 0) ? 2 :
+    (nftBalance3 && Number(nftBalance3) > 0) ? 3 : undefined
+  ) : undefined;
 
   const fetchReferralData = useCallback(async () => {
     if (!wallet) return;
@@ -206,23 +235,33 @@ export default function SteamPage() {
       // Set fishing cooldown from API response
       setFishingCooldown(taskStatusData.fishingCooldown || 0);
 
-      // Get streak from localStorage
-      const currentStreak = parseInt(localStorage.getItem('ff_streak') || '0', 10);
-      setStreak(currentStreak);
+      // Get streak from Trust Anchor API (KV-based, not localStorage)
+      const streakRes = await fetch(`/api/trust-anchor?address=${wallet}`);
+      const streakData = await streakRes.json();
+      setStreak(streakData.streak || 0);
+
+      // Update NFT data with auto-detected values
+      const newNftData: { tokenId?: number; stakeId?: number } = {};
+      if (ownedTokenId !== undefined) {
+        newNftData.tokenId = ownedTokenId;
+      }
+      if (activeStakes.length > 0) {
+        newNftData.stakeId = Number(activeStakes[0].stakeId);
+      }
+      setNftData(newNftData);
 
       const withStatus = TASKS.map((task) => {
         let status: TaskStatus = "not_started";
+        let tokenId: number | undefined;
+        let stakeId: number | undefined;
 
         if (task.type === "daily") {
-          // Daily check-in task: "verified" means on cooldown, "not_started" means available
-          const dailyOnCooldown = taskStatusData.tasks?.[task.id];
-          status = dailyOnCooldown ? "verified" : "not_started";
+          // Fishing task: "verified" means on cooldown, "not_started" means available
+          const fishingOnCooldown = taskStatusData.tasks?.[task.id] || taskStatusData.fishingCooldown > 0;
+          status = fishingOnCooldown ? "verified" : "not_started";
         } else if (task.type === "base_activity") {
-          // Activity streak: always show as active if user has a streak
-          status = currentStreak > 0 ? "verified" : "not_started";
-        } else if (task.type === "base_app") {
-          // Base app task completion from server
-          status = taskStatusData.tasks?.[task.id] ? "verified" : "not_started";
+          // Activity streak: only verified if user has streak from chest claims
+          status = streakData.streak > 0 ? "verified" : "not_started";
         } else if (task.type === "referral") {
           // Referral is always "verified" if user has referrals
           status = referralData.count > 0 ? "verified" : "not_started";
@@ -230,19 +269,20 @@ export default function SteamPage() {
           // Referral milestone: completed if referral count >= target
           status = referralData.count >= (task.target || 0) ? "verified" : "not_started";
         } else if (task.type === "nft") {
-          // NFT tasks: completed based on specific task
+          // NFT tasks: auto-detect completion
           if (task.id === "nft_mint") {
-            const hasNFT = nftBalance && Number(nftBalance) > 0;
             status = hasNFT ? "verified" : "not_started";
-          } else if (task.id === "nft_stake") {
-            const hasStake = activeStakes.length > 0;
-            status = hasStake ? "verified" : "not_started";
+            if (hasNFT && ownedTokenId !== undefined) {
+              tokenId = ownedTokenId;
+            }
           }
         }
 
         return {
           ...task,
           status,
+          tokenId,
+          stakeId,
         };
       });
 
@@ -258,7 +298,7 @@ export default function SteamPage() {
     } finally {
       setLoading(false);
     }
-  }, [wallet, nftBalance, activeStakes, referralData.count]);
+  }, [wallet, hasNFT, ownedTokenId, activeStakes, referralData.count]);
 
   useEffect(() => {
     fetchTaskStatuses();
@@ -268,34 +308,7 @@ export default function SteamPage() {
     fetchReferralData();
   }, [fetchReferralData]); // Fetch referral data when function changes
 
-  const handleBaseAppOpen = async () => {
-    if (!wallet) return;
-
-    try {
-      // Call the unified task completion API for Base app open
-      const response = await fetch('/api/steam/task/complete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          wallet: wallet,
-          taskId: 'base_app_open',
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        // Refresh task status to show completion
-        fetchTaskStatuses();
-      } else {
-      }
-    } catch (error) {
-    }
-  };
-
-  const handleDailyCheckin = async () => {
+  const handleFishing = async () => {
     if (!wallet) return;
 
     try {
@@ -314,14 +327,16 @@ export default function SteamPage() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Refresh task status to reflect the completed check-in
+        // Refresh task status to reflect the completed fishing
         fetchTaskStatuses();
       } else if (response.status === 429) {
         // Cooldown active - update local cooldown state
         setFishingCooldown(data.cooldownRemaining || 0);
       } else {
+        console.error('Fishing failed:', data.error);
       }
     } catch (error) {
+      console.error('Fishing error:', error);
     }
   };
 
@@ -443,15 +458,15 @@ export default function SteamPage() {
           </h3>
 
           <div className="space-y-4">
-            {/* Daily Check-in */}
+            {/* Fishing */}
             <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-2xl">🎣</span>
-                    <h4 className="text-lg font-bold text-white">Daily Check-in</h4>
+                    <h4 className="text-lg font-bold text-white">Fishing</h4>
                   </div>
-                  <p className="text-white/70 text-sm mb-3">Claim your daily Base activity reward</p>
+                  <p className="text-white/70 text-sm mb-3">Perform one fishing action per 24 hours to earn rewards</p>
                   <div className="text-xs text-cyan-400 font-medium">Reward: 10 FRH</div>
                   <div className="text-xs text-white/60 mt-1">Cooldown: 24 hours</div>
                 </div>
@@ -462,13 +477,13 @@ export default function SteamPage() {
                     </div>
                   ) : (
                     <button
-                      onClick={handleDailyCheckin}
+                      onClick={handleFishing}
                       disabled={!wallet}
                       className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl font-medium text-sm ${
                         !wallet ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                     >
-                      Check In
+                      Go Fishing
                     </button>
                   )}
                 </div>
@@ -484,7 +499,7 @@ export default function SteamPage() {
                     <h4 className="text-lg font-bold text-white">Activity Streak</h4>
                   </div>
                   <p className="text-white/70 text-sm mb-3">Maintain consecutive daily activity on Base</p>
-                  <div className="text-xs text-cyan-400 font-medium">Bonus increases with streak length</div>
+                  <div className="text-xs text-cyan-400 font-medium">Increases only when claiming Daily Base Chest</div>
                   {streak > 0 && (
                     <div className="text-xs text-green-400 mt-1">Current streak: {streak} days</div>
                   )}
@@ -493,38 +508,6 @@ export default function SteamPage() {
                   <div className="px-3 py-1 rounded-full bg-green-500/20 border border-green-400/30 text-green-400 text-sm font-medium">
                     {streak > 0 ? `${streak} days` : "Start streak"}
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Open FarFISH Base App */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-2xl">🧭</span>
-                    <h4 className="text-lg font-bold text-white">Open FarFISH (Base App)</h4>
-                  </div>
-                  <p className="text-white/70 text-sm mb-3">Open FarFISH via Base App to confirm activity</p>
-                  <div className="text-xs text-cyan-400 font-medium">Reward: 40 FRH</div>
-                  <div className="text-xs text-white/60 mt-1">Status: {tasks.find(t => t.id === "open_farfish_base")?.status === "verified" ? "Completed" : "Pending"}</div>
-                </div>
-                <div className="flex flex-col items-end gap-3">
-                  {tasks.find(t => t.id === "open_farfish_base")?.status === "verified" ? (
-                    <div className="px-3 py-1 rounded-full bg-green-500/20 border border-green-400/30 text-green-400 text-sm font-medium">
-                      Completed
-                    </div>
-                  ) : (
-                    <button
-                      onClick={handleBaseAppOpen}
-                      disabled={!wallet}
-                      className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl font-medium text-sm ${
-                        !wallet ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
-                    >
-                      Confirm Open
-                    </button>
-                  )}
                 </div>
               </div>
             </div>
@@ -539,42 +522,22 @@ export default function SteamPage() {
                   </div>
                   <p className="text-white/70 text-sm mb-3">Mint a FarFISH NFT on Base</p>
                   <div className="text-xs text-cyan-400 font-medium">Reward: 2500 FRH</div>
-                  <div className="text-xs text-white/60 mt-1">Status: {tasks.find(t => t.id === "nft_mint")?.status === "verified" ? "Completed" : "Pending"}</div>
-                </div>
-                <div className="flex flex-col items-end gap-3">
-                  {tasks.find(t => t.id === "nft_mint")?.status === "verified" ? (
-                    <div className="px-3 py-1 rounded-full bg-green-500/20 border border-green-400/30 text-green-400 text-sm font-medium">
-                      Completed
-                    </div>
-                  ) : (
-                    <div className="text-xs text-white/80 text-center">
-                      Mint NFT<br />on Home page
-                    </div>
+                  {hasNFT && ownedTokenId !== undefined && (
+                    <div className="text-xs text-green-400 mt-1">Token ID: {ownedTokenId}</div>
+                  )}
+                  {activeStakes.length > 0 && (
+                    <div className="text-xs text-blue-400 mt-1">Stake ID: {Number(activeStakes[0].stakeId)}</div>
                   )}
                 </div>
-              </div>
-            </div>
-
-            {/* Stake FarFISH NFT */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-2xl">🔒</span>
-                    <h4 className="text-lg font-bold text-white">Stake FarFISH NFT</h4>
-                  </div>
-                  <p className="text-white/70 text-sm mb-3">Stake any FarFISH NFT on Base</p>
-                  <div className="text-xs text-cyan-400 font-medium">Reward: Included in staking rewards</div>
-                  <div className="text-xs text-white/60 mt-1">Status: {tasks.find(t => t.id === "nft_stake")?.status === "verified" ? "Active" : "Inactive"}</div>
-                </div>
                 <div className="flex flex-col items-end gap-3">
-                  {tasks.find(t => t.id === "nft_stake")?.status === "verified" ? (
+                  {hasNFT ? (
                     <div className="px-3 py-1 rounded-full bg-green-500/20 border border-green-400/30 text-green-400 text-sm font-medium">
-                      Active
+                      ✅ Completed
                     </div>
                   ) : (
                     <div className="text-xs text-white/80 text-center">
-                      Stake NFT<br />on Stake page
+                      ⏳ Incomplete<br />
+                      <span className="text-white/60">Mint on Home page</span>
                     </div>
                   )}
                 </div>
@@ -590,22 +553,22 @@ export default function SteamPage() {
           </h3>
 
           {/* Invite Users */}
-          <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6 mb-4">
-            <div className="flex items-center justify-between mb-4">
+          <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl p-4 mb-4">
+            <div className="flex items-center justify-between">
               <div className="flex-1">
-                <h4 className="text-lg font-bold text-white mb-2">Invite Users on Base</h4>
-                <p className="text-white/70 text-sm mb-3">Earn FRH when users join FarFISH using your invite</p>
-                <div className="text-xs text-cyan-400 font-medium mb-2">Reward: 40 FRH per referral</div>
+                <h4 className="text-lg font-bold text-white mb-1">Invite Users on Base</h4>
+                <p className="text-white/70 text-sm mb-2">Earn FRH when users join FarFISH using your invite</p>
+                <div className="text-xs text-cyan-400 font-medium mb-1">Reward: 40 FRH per referral</div>
                 <div className="text-xs text-white/60">Current: {referralData.count} referrals ({referralData.count * 40} FRH earned)</div>
-                <div className="text-xs text-white/60 mt-2">
-                  Secure domain-based tracking via Base App embed.
+                <div className="text-xs text-white/60 mt-1">
+                  Secure Base App embed text
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-3">
+              <div className="flex flex-col items-end gap-2">
                 <button
                   onClick={handleReferralShare}
                   disabled={!wallet}
-                  className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl font-medium text-sm ${
+                  className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-3 py-1.5 rounded-lg font-medium text-sm ${
                     !wallet ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
