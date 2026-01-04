@@ -107,17 +107,17 @@ function VerifyContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-950 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-b from-[#1C1C1E] to-[#2C2C2E] flex items-center justify-center p-6">
       <div className="max-w-md w-full bg-white/10 border border-white/20 rounded-lg p-8 text-center">
         <h1 className="text-2xl font-bold text-white mb-2">
           FarFISH Verification
         </h1>
-        <p className="text-purple-200 mb-6">{taskText()}</p>
+        <p className="text-white/70 mb-6">{taskText()}</p>
 
         <p className="text-white mb-6">{message}</p>
 
         {fid && (
-          <p className="text-purple-300 text-sm mb-4">
+          <p className="text-white/70 text-sm mb-4">
             Verifying for FID: {fid}
           </p>
         )}
@@ -125,7 +125,7 @@ function VerifyContent() {
         {state === "no_fid" && returnUrl && (
           <button
             onClick={() => (window.location.href = returnUrl)}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm"
+            className="bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black px-4 py-2 rounded-lg text-sm font-medium"
           >
             Return to Steam Page
           </button>
@@ -138,7 +138,7 @@ function VerifyContent() {
 export default function FarcasterVerifyPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-950 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gradient-to-b from-[#1C1C1E] to-[#2C2C2E] flex items-center justify-center p-6">
         <div className="max-w-md w-full bg-white/10 border border-white/20 rounded-lg p-8 text-center">
           <h1 className="text-2xl font-bold text-white mb-2">
             FarFISH Verification

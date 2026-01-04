@@ -131,12 +131,12 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
         </div>
 
         {/* Irreversible Action Warning */}
-        <div className="mb-4 p-3 bg-red-500/10 border border-red-400/30 rounded-lg">
+        <div className="mb-4 p-3 bg-white/10 border border-white/30 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-red-400">⚠️</span>
-            <p className="text-sm font-semibold text-red-300">Warning</p>
+            <span className="text-white">⚠️</span>
+            <p className="text-sm font-semibold text-white">Warning</p>
           </div>
-          <div className="text-xs text-red-400 space-y-1">
+          <div className="text-xs text-white/70 space-y-1">
             <p>• Unstaking removes your NFT from the protocol</p>
             <p>• You will stop earning rewards after unstaking</p>
           </div>
@@ -158,8 +158,8 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
             <p className="text-sm text-white/70">Loading staked positions...</p>
           </div>
         ) : stakesError && activeStakes.length === 0 ? (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-            <p className="text-sm text-red-200">Failed to load your staked positions. Please try again.</p>
+          <div className="mb-4 p-3 bg-white/10 border border-white/20 rounded-lg">
+            <p className="text-sm text-white">Failed to load your staked positions. Please try again.</p>
           </div>
         ) : !stakesError && !isLoadingStakes && activeStakes.length === 0 ? (
           <div className="mb-4 p-3 bg-white/5 border border-white/10 rounded-lg">

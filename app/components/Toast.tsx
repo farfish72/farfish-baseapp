@@ -13,7 +13,7 @@ const toastStyles = {
   error: {
     bg: 'from-red-400/25 via-red-500/20 to-red-600/15',
     border: 'border-red-400/50',
-    text: 'text-red-100',
+    text: 'text-white',
     icon: (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
         <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
@@ -24,7 +24,7 @@ const toastStyles = {
   success: {
     bg: 'from-green-400/25 via-green-500/20 to-green-600/15',
     border: 'border-green-400/50',
-    text: 'text-green-100',
+    text: 'text-white',
     icon: (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
         <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
@@ -35,7 +35,7 @@ const toastStyles = {
   warning: {
     bg: 'from-amber-400/25 via-amber-500/20 to-amber-600/15',
     border: 'border-amber-400/50',
-    text: 'text-amber-100',
+    text: 'text-white',
     icon: (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
         <path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
@@ -44,9 +44,9 @@ const toastStyles = {
     shadow: 'shadow-[0_12px_40px_rgba(245,158,11,0.4)]'
   },
   info: {
-    bg: 'from-blue-400/25 via-blue-500/20 to-blue-600/15',
-    border: 'border-blue-400/50',
-    text: 'text-blue-100',
+    bg: 'from-white/25 via-white/20 to-white/15',
+    border: 'border-white/50',
+    text: 'text-white',
     icon: (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
         <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>

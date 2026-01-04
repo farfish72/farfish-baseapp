@@ -262,12 +262,12 @@ export default function ChestPage() {
       <Header title="Chest" />
 
       {/* Transparency Notice */}
-      <div className="mt-4 mb-4 p-4 rounded-2xl bg-blue-500/10 border border-blue-400/30">
+      <div className="mt-4 mb-4 p-4 rounded-2xl bg-white/10 border border-white/30">
         <div className="flex items-center gap-3">
           <span className="text-xl">ℹ️</span>
           <div>
-            <p className="font-semibold text-blue-300">Daily Rewards</p>
-            <p className="text-sm text-blue-400">Daily rewards are recorded on-chain on Base. Each claim contributes to monthly snapshot rewards.</p>
+            <p className="font-semibold text-white">Daily Rewards</p>
+            <p className="text-sm text-white/70">Daily rewards are recorded on-chain on Base. Each claim contributes to monthly snapshot rewards.</p>
           </div>
         </div>
       </div>

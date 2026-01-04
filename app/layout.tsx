@@ -8,6 +8,7 @@ import FarcasterWalletProvider from "./providers/FarcasterWalletProvider";
 import AutoBindReferral from "./components/AutoBindReferral";
 import ErrorBoundary from "./components/MinimalErrorBoundary";
 import ToastProvider from "./providers/ToastProvider";
+import ThemeProvider from "./components/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "FarFISH – Mint & Rewards",
@@ -71,7 +72,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col relative items-center overflow-x-hidden text-white">
-        <ErrorBoundary>
+        <ThemeProvider>
+          <ErrorBoundary>
           {/* Premium atmospheric elements - simplified */}
           <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
             {/* Primary accent orb */}
@@ -115,6 +117,7 @@ export default function RootLayout({
             </ToastProvider>
           </FarcasterWalletProvider>
         </ErrorBoundary>
+        </ThemeProvider>
       </body>
     </html>
   );

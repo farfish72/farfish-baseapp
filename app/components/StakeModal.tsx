@@ -345,12 +345,12 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
         </div>
 
         {/* Transaction Disclosure */}
-        <div className="mb-4 p-3 bg-blue-500/10 border border-blue-400/30 rounded-lg">
+        <div className="mb-4 p-3 bg-white/10 border border-white/30 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-blue-400">ℹ️</span>
-            <p className="text-sm font-semibold text-blue-300">Transaction Notice</p>
+            <span className="text-white">ℹ️</span>
+            <p className="text-sm font-semibold text-white">Transaction Notice</p>
           </div>
-          <div className="text-xs text-blue-400 space-y-1">
+          <div className="text-xs text-white/70 space-y-1">
             <p>• This is an on-chain transaction on Base</p>
             <p>• Your NFT will be locked for the selected duration</p>
             <p>• Gas fees may apply</p>
@@ -358,14 +358,14 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
         </div>
 
         {!isConnected && (
-          <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-            <p className="text-sm text-yellow-200">Please connect your wallet to stake NFTs.</p>
+          <div className="mb-4 p-3 bg-white/10 border border-white/20 rounded-lg">
+            <p className="text-sm text-white">Please connect your wallet to stake NFTs.</p>
           </div>
         )}
 
         {isConnected && !isBaseNetwork && (
-          <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-            <p className="text-sm text-yellow-200">Please switch to the correct network (chainId {expectedChainId}).</p>
+          <div className="mb-4 p-3 bg-white/10 border border-white/20 rounded-lg">
+            <p className="text-sm text-white">Please switch to the correct network (chainId {expectedChainId}).</p>
           </div>
         )}
 
@@ -395,8 +395,8 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
             })}
           </div>
           {ownershipError && selectedCategory && (
-            <div className="mt-2 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <p className="text-sm text-red-200">{ownershipError}</p>
+            <div className="mt-2 p-3 bg-white/10 border border-white/20 rounded-lg">
+              <p className="text-sm text-white">{ownershipError}</p>
             </div>
           )}
         </div>
@@ -426,8 +426,8 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
 
         {/* Approval Status */}
         {needsApproval === true && !isApprovalSuccess && (
-          <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-            <p className="text-sm text-yellow-200">
+          <div className="mb-4 p-3 bg-white/10 border border-white/20 rounded-lg">
+            <p className="text-sm text-white">
               Approval required: Please approve the staking contract to transfer your NFTs.
             </p>
           </div>
@@ -435,8 +435,8 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
 
         {/* Transaction Status */}
         {isPending && (
-          <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <p className="text-sm text-blue-200">
+          <div className="mb-4 p-3 bg-white/10 border border-white/20 rounded-lg">
+            <p className="text-sm text-white">
               {isApprovalPending || isApprovalConfirming
                 ? isApprovalConfirming
                   ? "Confirming approval..."
@@ -463,8 +463,8 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
           <div
             className={`mb-4 p-3 rounded-lg border ${
               toast.type === "success"
-                ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-200"
-                : "bg-red-500/10 border-red-500/20 text-red-200"
+                ? "bg-white/10 border-white/20 text-white"
+                : "bg-white/10 border-white/20 text-white"
             }`}
           >
             <p className="text-sm">{toast.message}</p>

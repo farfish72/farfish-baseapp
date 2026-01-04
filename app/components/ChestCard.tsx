@@ -46,14 +46,14 @@ const variantStyles = {
     glow: "shadow-[0_0_24px_rgba(148,163,184,0.4)]"
   },
   default: {
-    gradient: "from-accent-400/20 via-primary-400/15 to-blue-400/8",
+    gradient: "from-white/20 via-white/15 to-white/8",
     border: "border-accent-400/40",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M6,2A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z M6,4H13V9H18V20H6V4Z"/>
       </svg>
     ),
-    iconBg: "from-accent-400 via-primary-400 to-blue-500",
+    iconBg: "from-white via-white to-white",
     button: "from-accent-400 to-primary-500 hover:from-accent-500 hover:to-primary-600",
     progress: "from-accent-400 to-primary-500",
     shadow: "shadow-floating",
@@ -184,11 +184,11 @@ export default function ChestCard({
             <div className={`
               px-3 py-2 rounded-2xl glass-card text-xs font-bold tracking-wide backdrop-blur-xl shadow-soft flex-shrink-0
               ${badge === "Ready" 
-                ? "bg-green-400/25 border-green-400/50 text-green-200 shadow-[0_0_12px_rgba(34,197,94,0.4)]" 
+                ? "bg-white/25 border-white/50 text-white shadow-[0_0_12px_rgba(255,255,255,0.4)]" 
                 : badge === "Cooling" 
-                  ? "bg-blue-400/25 border-blue-400/50 text-blue-200 shadow-[0_0_12px_rgba(59,130,246,0.4)]"
+                  ? "bg-white/15 border-white/30 text-white/70 shadow-[0_0_12px_rgba(255,255,255,0.2)]"
                   : badge === "Stake required"
-                    ? "bg-red-400/25 border-red-400/50 text-red-200 shadow-[0_0_12px_rgba(239,68,68,0.4)]"
+                    ? "bg-white/10 border-white/20 text-white/60 shadow-[0_0_12px_rgba(255,255,255,0.1)]"
                     : "bg-white/15 border-white/25 text-white/95"
               }
             `}>
@@ -221,10 +221,10 @@ export default function ChestCard({
 
         {/* Enhanced Error Display */}
         {displayError && (
-          <div className="mb-5 glass-card bg-red-500/15 border-red-400/40 backdrop-blur-xl rounded-3xl">
+          <div className="mb-5 glass-card bg-white/15 border-white/40 backdrop-blur-xl rounded-3xl">
             <div className="flex items-center gap-3 px-4 py-3">
-              <span className="text-red-400 text-lg flex-shrink-0">⚠️</span>
-              <p className="text-sm font-medium text-red-200 flex-1 leading-relaxed">{displayError}</p>
+              <span className="text-white text-lg flex-shrink-0">⚠️</span>
+              <p className="text-sm font-medium text-white flex-1 leading-relaxed">{displayError}</p>
             </div>
           </div>
         )}

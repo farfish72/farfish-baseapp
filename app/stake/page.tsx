@@ -115,15 +115,15 @@ export default function StakingPage() {
       <Header title="Stake" />
 
       {/* Staking Explanation */}
-      <div className="mt-4 mb-4 p-4 rounded-2xl bg-blue-500/10 border border-blue-400/30">
+      <div className="mt-4 mb-4 p-4 rounded-2xl bg-white/10 border border-white/30">
         <div className="flex items-center gap-3 mb-2">
           <span className="text-xl">🔒</span>
           <div>
-            <p className="font-semibold text-blue-300">Staking Overview</p>
+            <p className="font-semibold text-white">Staking Overview</p>
           </div>
         </div>
-        <p className="text-sm text-blue-400 mb-2">Staking locks your NFT in a smart contract on Base.</p>
-        <p className="text-sm text-blue-400">Locked NFTs increase your snapshot weight and unlock protocol rewards.</p>
+        <p className="text-sm text-white/70 mb-2">Staking locks your NFT in a smart contract on Base.</p>
+        <p className="text-sm text-white/70">Locked NFTs increase your snapshot weight and unlock protocol rewards.</p>
       </div>
 
       <div className="space-y-4 flex-1 flex flex-col">
@@ -171,7 +171,7 @@ export default function StakingPage() {
 
           {!readEnabled && <p>Connect wallet.</p>}
           {isLoading && <p>Loading…</p>}
-          {isError && <p className="text-red-400">Failed to load stakes.</p>}
+          {isError && <p className="text-white">Failed to load stakes.</p>}
 
           {readEnabled && !isLoading && stakes.length === 0 && (
             <p>No staked NFTs.</p>
@@ -204,7 +204,7 @@ export default function StakingPage() {
                       onClick={() => handleClaim(s.stakeId)}
                       className={`px-4 py-2 rounded-lg text-sm ${
                         isButtonEnabled
-                          ? "bg-[#00d4c4] text-black"
+                          ? "bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black"
                           : "bg-white/10 text-white/40"
                       }`}
                     >
@@ -215,7 +215,7 @@ export default function StakingPage() {
               })}
 
           {writeError && (
-            <p className="text-red-400 text-sm mt-2">
+            <p className="text-white text-sm mt-2">
               {writeError.message}
             </p>
           )}

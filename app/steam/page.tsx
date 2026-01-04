@@ -403,25 +403,25 @@ export default function SteamPage() {
 
       <div className="flex-1 space-y-4 mt-4">
         {/* Page Header */}
-        <div className="bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-4 shadow-2xl">
+        <div className="glass-card rounded-3xl p-4 shadow-2xl">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
               <span className="text-xl">⚡</span>
             </div>
             <div>
-              <h2 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              <h2 className="text-xl font-bold text-white">
                 Steam
               </h2>
-              <p className="text-cyan-300 text-sm">Complete Base tasks to earn FRH</p>
+              <p className="text-white/70 text-sm">Complete Base tasks to earn FRH</p>
             </div>
           </div>
         </div>
 
         {/* Wallet Connection Notice */}
         {!wallet && (
-          <div className="bg-gradient-to-br from-yellow-500/10 via-orange-500/10 to-red-500/10 backdrop-blur-sm border border-yellow-400/30 rounded-2xl p-4">
+          <div className="glass-card rounded-2xl p-4">
             <div className="text-center">
-              <p className="text-yellow-400 text-sm font-medium">
+              <p className="text-white text-sm font-medium">
                 Connect wallet to verify & earn rewards
               </p>
             </div>
@@ -429,16 +429,16 @@ export default function SteamPage() {
         )}
 
         {/* Task Progress Card */}
-        <div className="bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-4 shadow-2xl">
+        <div className="glass-card rounded-3xl p-4 shadow-2xl">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              <h3 className="text-xl font-bold text-white">
                 📊 Task Progress
               </h3>
               <p className="text-white/70 text-sm">Complete Base-native activities to earn verified FRH rewards</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-cyan-400">
+              <div className="text-2xl font-bold text-white">
                 {completedTasks}/{totalTasks}
               </div>
               <div className="text-xs text-white/80">Tasks Completed</div>
@@ -447,15 +447,15 @@ export default function SteamPage() {
           
           <div className="mb-4">
             <p className="text-sm text-white/80 mb-2">Total Earned:</p>
-            <div className="text-lg font-bold text-cyan-400">
+            <div className="text-lg font-bold text-white">
               {wallet ? totalRewards : 0} FRH
             </div>
           </div>
         </div>
 
         {/* Base Tasks Section */}
-        <div className="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-4 shadow-2xl">
-          <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-6">
+        <div className="glass-card rounded-3xl p-4 shadow-2xl">
+          <h3 className="text-xl font-bold text-white mb-6">
             🎯 Base Tasks
           </h3>
 
@@ -469,19 +469,19 @@ export default function SteamPage() {
                     <h4 className="text-lg font-bold text-white">Fishing</h4>
                   </div>
                   <p className="text-white/70 text-sm mb-3">Perform one fishing action per 24 hours to earn rewards</p>
-                  <div className="text-xs text-cyan-400 font-medium">Reward: 10 FRH</div>
+                  <div className="text-xs text-white font-medium">Reward: 10 FRH</div>
                   <div className="text-xs text-white/60 mt-1">Cooldown: 24 hours</div>
                 </div>
                 <div className="flex flex-col items-end gap-3">
                   {fishingCooldown > 0 ? (
-                    <div className="px-3 py-1 rounded-full bg-orange-500/20 border border-orange-400/30 text-orange-400 text-sm font-medium">
+                    <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
                       {formatCooldownTime(fishingCooldown)}
                     </div>
                   ) : (
                     <button
                       onClick={handleFishing}
                       disabled={!wallet}
-                      className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl font-medium text-sm ${
+                      className={`bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black px-4 py-2 rounded-xl font-medium text-sm ${
                         !wallet ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                     >
@@ -501,13 +501,13 @@ export default function SteamPage() {
                     <h4 className="text-lg font-bold text-white">Activity Streak</h4>
                   </div>
                   <p className="text-white/70 text-sm mb-3">Maintain consecutive daily activity on Base</p>
-                  <div className="text-xs text-cyan-400 font-medium">Increases only when claiming Daily Base Chest</div>
+                  <div className="text-xs text-white font-medium">Increases only when claiming Daily Base Chest</div>
                   {streak > 0 && (
-                    <div className="text-xs text-green-400 mt-1">Current streak: {streak} days</div>
+                    <div className="text-xs text-white mt-1">Current streak: {streak} days</div>
                   )}
                 </div>
                 <div className="flex flex-col items-end gap-3">
-                  <div className="px-3 py-1 rounded-full bg-green-500/20 border border-green-400/30 text-green-400 text-sm font-medium">
+                  <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
                     {streak > 0 ? `${streak} days` : "Start streak"}
                   </div>
                 </div>
@@ -523,17 +523,17 @@ export default function SteamPage() {
                     <h4 className="text-lg font-bold text-white">Mint FarFISH NFT</h4>
                   </div>
                   <p className="text-white/70 text-sm mb-3">Mint a FarFISH NFT on Base</p>
-                  <div className="text-xs text-cyan-400 font-medium">Reward: 2500 FRH</div>
+                  <div className="text-xs text-white font-medium">Reward: 2500 FRH</div>
                   {hasNFT && ownedTokenId !== undefined && (
-                    <div className="text-xs text-green-400 mt-1">Token ID: {ownedTokenId}</div>
+                    <div className="text-xs text-white mt-1">Token ID: {ownedTokenId}</div>
                   )}
                   {activeStakes.length > 0 && (
-                    <div className="text-xs text-blue-400 mt-1">Stake ID: {Number(activeStakes[0].stakeId)}</div>
+                    <div className="text-xs text-white mt-1">Stake ID: {Number(activeStakes[0].stakeId)}</div>
                   )}
                 </div>
                 <div className="flex flex-col items-end gap-3">
                   {hasNFT ? (
-                    <div className="px-3 py-1 rounded-full bg-green-500/20 border border-green-400/30 text-green-400 text-sm font-medium">
+                    <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
                       ✅ Completed
                     </div>
                   ) : (
@@ -549,8 +549,8 @@ export default function SteamPage() {
         </div>
 
         {/* Referral Rewards Section */}
-        <div className="bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-purple-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
-          <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
+        <div className="glass-card rounded-3xl p-6 shadow-2xl">
+          <h3 className="text-xl font-bold text-white mb-6">
             🤝 Referral Rewards (Base)
           </h3>
 
@@ -560,7 +560,7 @@ export default function SteamPage() {
               <div className="flex-1">
                 <h4 className="text-lg font-bold text-white mb-1">Invite Users on Base</h4>
                 <p className="text-white/70 text-sm mb-2">Earn FRH when users join FarFISH through your invite.</p>
-                <div className="text-xs text-cyan-400 font-medium mb-1">Reward: 40 FRH per referral</div>
+                <div className="text-xs text-white font-medium mb-1">Reward: 40 FRH per referral</div>
                 <div className="text-xs text-white/60 mb-1">Current: {referralData.count} referrals · {referralData.count * 40} FRH earned</div>
                 <div className="text-xs text-white/60">
                   Tracked securely via Base App embed.
@@ -570,7 +570,7 @@ export default function SteamPage() {
                 <button
                   onClick={handleBaseAppInvite}
                   disabled={!wallet}
-                  className={`bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 backdrop-blur-sm border border-white/20 text-white px-3 py-1.5 rounded-lg font-medium text-sm ${
+                  className={`bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black px-3 py-1.5 rounded-lg font-medium text-sm ${
                     !wallet ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
@@ -589,7 +589,7 @@ export default function SteamPage() {
                   key={milestone.count}
                   className={`p-4 rounded-xl border ${
                     referralData.count >= milestone.count
-                      ? "bg-green-500/20 border-green-400/30"
+                      ? "bg-white/20 border-white/30"
                       : "bg-slate-500/20 border-slate-400/30"
                   }`}
                 >
@@ -601,13 +601,13 @@ export default function SteamPage() {
                     </span>
                     <div className="text-sm font-bold text-white">{milestone.count} Referrals</div>
                   </div>
-                  <div className="text-xs text-cyan-400 font-medium mb-2">Reward: {milestone.reward} FRH</div>
+                  <div className="text-xs text-white font-medium mb-2">Reward: {milestone.reward} FRH</div>
                   <div className="text-xs text-white/70">
                     Progress: {Math.min(referralData.count, milestone.count)} / {milestone.count}
                   </div>
                   <div className="w-full bg-slate-700/50 rounded-full h-2 mt-2">
                     <div 
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
+                      className="bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] h-2 rounded-full"
                       style={{ 
                         width: `${Math.min(100, (referralData.count / milestone.count) * 100)}%` 
                       }}

@@ -11,19 +11,19 @@ module.exports = {
         display: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
       colors: {
-        // Premium 4-color system
+        // Premium 4-color system - Primary changed from blue to white
         primary: {
-          DEFAULT: '#007AFF',
-          50: '#E6F3FF',
-          100: '#CCE7FF',
-          200: '#99CFFF',
-          300: '#66B7FF',
-          400: '#339FFF',
-          500: '#007AFF',
-          600: '#0062CC',
-          700: '#004999',
-          800: '#003166',
-          900: '#001933',
+          DEFAULT: '#FFFFFF',
+          50: '#FFFFFF',
+          100: '#FFFFFF',
+          200: '#F5F5F5',
+          300: '#E5E5E5',
+          400: '#D4D4D4',
+          500: '#FFFFFF',
+          600: '#E5E5E5',
+          700: '#D4D4D4',
+          800: '#A3A3A3',
+          900: '#737373',
         },
         secondary: {
           DEFAULT: '#5856D6',
@@ -64,13 +64,8 @@ module.exports = {
           800: '#39393C',
           900: '#1C1C1E',
         },
-        // Background system
-        background: {
-          primary: '#000000',
-          secondary: '#1C1C1E',
-          tertiary: '#2C2C2E',
-          elevated: '#3A3A3C',
-        },
+        // Background system - REMOVED: Use CSS custom properties only
+        // All background colors now controlled via --app-background in globals.css
         // Glass system
         glass: {
           50: 'rgba(28, 28, 30, 0.95)',

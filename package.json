@@ -5,7 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "theme:default": "node scripts/change-theme.js default",
+    "theme:black": "node scripts/change-theme.js black",
+    "theme:blue": "node scripts/change-theme.js blue",
+    "theme:purple": "node scripts/change-theme.js purple",
+    "theme:green": "node scripts/change-theme.js green",
+    "theme:solid": "node scripts/change-theme.js solid"
   },
   "dependencies": {
     "@farcaster/miniapp-sdk": "^0.2.1",

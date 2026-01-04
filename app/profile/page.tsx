@@ -197,8 +197,8 @@ function ProfilePageContent() {
         label: "NFTs Owned",
         value: loadingStats ? "…" : statsError.nftsOwned ? "Error" : formatStatValue(liveStats.nftsOwned),
         icon: "🐟",
-        color: "from-blue-400 to-cyan-500",
-        bgColor: "from-blue-500/20 to-cyan-500/20"
+        color: "from-white to-white",
+        bgColor: "from-white/20 to-white/20"
       },
       {
         label: "NFTs Staked",
@@ -237,16 +237,16 @@ function ProfilePageContent() {
 
       <div className="mt-4 space-y-6 flex-1 flex flex-col">
         {/* Profile Identity Section */}
-        <div className="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
+        <div className="glass-card rounded-3xl p-6 shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
               <span className="text-xl">👤</span>
             </div>
             <div>
-              <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <h2 className="text-xl font-bold text-white">
                 Profile Identity
               </h2>
-              <p className="text-blue-300 text-sm">Wallet-based identity on Base</p>
+              <p className="text-white/70 text-sm">Wallet-based identity on Base</p>
             </div>
           </div>
 
@@ -263,7 +263,7 @@ function ProfilePageContent() {
                   unoptimized
                 />
                 {/* Edit icon for custom avatar */}
-                <label className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full p-2 cursor-pointer border-2 border-white shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 hover:scale-110">
+                <label className="absolute -top-2 -right-2 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full p-2 cursor-pointer border-2 border-white shadow-lg hover:from-[#00b8a9] hover:to-[#2dd4b8] transition-all duration-300 hover:scale-110">
                   <input
                     type="file"
                     accept="image/*"
@@ -295,7 +295,7 @@ function ProfilePageContent() {
               <div className="flex items-center gap-2 group relative mb-4">
                 <input
                   type="text"
-                  className="text-2xl font-bold bg-transparent border-b-2 border-transparent focus:border-blue-400 focus:outline-none w-full pr-8 text-white placeholder-white/50"
+                  className="text-2xl font-bold bg-transparent border-b-2 border-transparent focus:border-white/40 focus:outline-none w-full pr-8 text-white placeholder-white/50"
                   defaultValue={getUsername()}
                   placeholder="Enter username"
                   onBlur={(e) => {
@@ -311,7 +311,7 @@ function ProfilePageContent() {
                     if (e.key === 'Enter') e.currentTarget.blur();
                   }}
                 />
-                <div className="absolute right-2 text-white/50 group-focus-within:text-blue-400 transition-colors">
+                <div className="absolute right-2 text-white/50 group-focus-within:text-white/70 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                   </svg>
@@ -320,8 +320,8 @@ function ProfilePageContent() {
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm text-green-300 font-medium">Profile always accessible</span>
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  <span className="text-sm text-white font-medium">Profile always accessible</span>
                 </div>
               </div>
             </div>
@@ -329,26 +329,26 @@ function ProfilePageContent() {
         </div>
 
         {/* Wallet Connection & Stats Section */}
-        <div className="bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-teal-500/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
+        <div className="glass-card rounded-3xl p-6 shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
               <span className="text-xl">💳</span>
             </div>
             <div>
-              <h2 className="text-xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+              <h2 className="text-xl font-bold text-white">
                 Wallet Connection
               </h2>
-              <p className="text-green-300 text-sm">Base network identity</p>
+              <p className="text-white/70 text-sm">Base network identity</p>
             </div>
           </div>
           
           {isConnected && address ? (
             <div className="space-y-6">
-              <div className="flex items-center gap-3 p-4 rounded-2xl bg-green-500/20 border border-green-400/30">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-green-300 font-medium">Wallet Connected</span>
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/20 border border-white/30">
+                <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                <span className="text-white font-medium">Wallet Connected</span>
                 {!isBaseNetwork && (
-                  <span className="text-orange-300 text-sm ml-auto">⚠️ Switch to Base</span>
+                  <span className="text-white/70 text-sm ml-auto">⚠️ Switch to Base</span>
                 )}
               </div>
               
@@ -365,7 +365,7 @@ function ProfilePageContent() {
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <div className={`
-                        w-8 h-8 rounded-lg bg-gradient-to-br ${stat.color} 
+                        w-8 h-8 rounded-lg bg-gradient-to-br from-[#00d4c4] to-[#3be6c1]
                         flex items-center justify-center shadow-lg flex-shrink-0
                       `}>
                         <span className="text-sm">{stat.icon}</span>
@@ -374,7 +374,7 @@ function ProfilePageContent() {
                         {stat.label}
                       </p>
                     </div>
-                    <p className={`text-lg font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
+                    <p className={`text-lg font-bold text-white`}>
                       {stat.value}
                     </p>
                   </div>
@@ -382,8 +382,8 @@ function ProfilePageContent() {
               </div>
               
               {Object.values(statsError).some(Boolean) && !loadingStats && (
-                <div className="p-3 rounded-2xl bg-red-500/10 border border-red-400/30">
-                  <p className="text-sm text-red-300 text-center">
+                <div className="p-3 rounded-2xl bg-white/10 border border-white/30">
+                  <p className="text-sm text-white text-center">
                     Some stats failed to load. Try refreshing the page.
                   </p>
                 </div>
@@ -402,16 +402,16 @@ function ProfilePageContent() {
         </div>
 
         {/* FAQ Section */}
-        <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl">
+        <div className="glass-card rounded-3xl p-6 shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
               <span className="text-xl">❓</span>
             </div>
             <div>
-              <h2 className="text-xl font-bold bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+              <h2 className="text-xl font-bold text-white">
                 Frequently Asked Questions
               </h2>
-              <p className="text-amber-300 text-sm">Learn about FarFISH features</p>
+              <p className="text-white/70 text-sm">Learn about FarFISH features</p>
             </div>
           </div>
 
@@ -453,8 +453,8 @@ function ProfilePageContent() {
           <div
             className={`rounded-2xl border px-6 py-4 text-sm shadow-2xl backdrop-blur-sm ${
               toast.type === "success"
-                ? "border-emerald-400/40 bg-emerald-500/20 text-emerald-100"
-                : "border-red-400/40 bg-red-500/20 text-red-100"
+                ? "border-white/40 bg-white/20 text-white"
+                : "border-white/40 bg-white/20 text-white"
             }`}
           >
             <div className="flex items-center gap-3">

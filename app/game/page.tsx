@@ -28,7 +28,7 @@ export default function Game() {
         padding: '20px', 
         textAlign: 'center', 
         fontFamily: 'Arial, sans-serif', 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
+        background: 'linear-gradient(180deg, #1C1C1E, #2C2C2E)', 
         minHeight: '100vh', 
         color: 'white' 
       }}> 
@@ -71,13 +71,14 @@ export default function Game() {
           <button onClick={catchFish} 
             style={{ 
               padding: '12px 30px', 
-              background: '#4CAF50', 
-              color: 'white', 
+              background: 'linear-gradient(to right, #00d4c4, #3be6c1)', 
+              color: 'black', 
               border: 'none', 
               borderRadius: '8px', 
               fontSize: '18px', 
               cursor: 'pointer', 
-              margin: '10px' 
+              margin: '10px',
+              fontWeight: 'bold'
             }}> 
             Cast Line! 🎣 
           </button> 

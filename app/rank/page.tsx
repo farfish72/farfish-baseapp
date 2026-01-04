@@ -90,7 +90,7 @@ export default function LeaderboardPage() {
         <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div>
-              <h2 className="text-xl font-bold bg-gradient-to-r from-[#00d4c4] to-[#80ffd1] bg-clip-text text-transparent">
+              <h2 className="text-xl font-bold text-white">
                 Leaderboard
               </h2>
             </div>
@@ -139,7 +139,7 @@ export default function LeaderboardPage() {
                     return (
                       <tr 
                         key={entry.rank} 
-                        className={`hover:bg-white/5 transition ${isUser ? "bg-[#00d4c4]/10" : ""}`}
+                        className={`hover:bg-white/5 transition ${isUser ? "bg-white/10" : ""}`}
                       >
                         <td className="py-2 pr-3 font-semibold">{entry.rank}</td>
                         <td className="py-2 pr-3 font-mono">{getUsername(entry.wallet)}</td>
@@ -156,7 +156,7 @@ export default function LeaderboardPage() {
           {userEntry && !entries.find((e) => e.wallet.toLowerCase() === address?.toLowerCase()) && (
             <div className="mt-4 pt-4 border-t border-white/10">
               <h3 className="text-sm font-semibold mb-2 text-white/80">You</h3>
-              <div className="rounded-lg border border-[#00d4c4]/30 bg-[#00d4c4]/5 p-3">
+              <div className="rounded-lg border border-white/30 bg-white/5 p-3">
                 <div className="grid grid-cols-4 gap-2 text-sm">
                   <div>
                     <p className="text-xs text-white/60 mb-1">Rank</p>
@@ -187,8 +187,8 @@ export default function LeaderboardPage() {
           <div
             className={`rounded-lg border px-4 py-3 text-sm shadow-lg ${
               toast.type === "success"
-                ? "border-emerald-400/40 bg-emerald-500/15 text-emerald-100"
-                : "border-red-400/40 bg-red-500/15 text-red-100"
+                ? "border-white/40 bg-white/15 text-white"
+                : "border-white/40 bg-white/15 text-white"
             }`}
           >
             {toast.message}

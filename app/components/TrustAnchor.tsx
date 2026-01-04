@@ -68,8 +68,8 @@ export default function TrustAnchor({
       icon: "📅", 
       label: "Days Active", 
       value: formatNumber(daysActive),
-      color: "from-blue-400 to-cyan-500",
-      bgColor: "from-blue-500/20 to-cyan-500/20"
+      color: "from-white to-white",
+      bgColor: "from-white/20 to-white/20"
     },
     { 
       icon: "🔥", 
@@ -103,25 +103,25 @@ export default function TrustAnchor({
       icon: tier === 'Premium' ? "👑" : "🥉", 
       label: "Tier", 
       value: tier,
-      color: tier === 'Premium' ? "from-cyan-400 to-blue-500" : "from-gray-400 to-slate-500",
-      bgColor: tier === 'Premium' ? "from-cyan-500/20 to-blue-500/20" : "from-gray-500/20 to-slate-500/20"
+      color: tier === 'Premium' ? "from-white to-white" : "from-gray-400 to-slate-500",
+      bgColor: tier === 'Premium' ? "from-white/20 to-white/20" : "from-gray-500/20 to-slate-500/20"
     }
   ];
 
   return (
     <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 via-slate-900/50 to-slate-800/50 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl shadow-slate-500/20">
       {/* Animated background elements */}
-      <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
       <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       
       <div className="relative z-10">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center shadow-lg shadow-blue-500/25">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-white to-white flex items-center justify-center shadow-lg shadow-white/25">
             <span className="text-2xl">📈</span>
           </div>
           <div>
-            <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h3 className="text-xl font-bold text-white">
               Trust Anchor
             </h3>
             <p className="text-sm text-white/70">Protocol-based activity tracking</p>
@@ -147,7 +147,7 @@ export default function TrustAnchor({
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs text-white/60 font-medium">{field.label}</p>
-                  <p className={`text-sm font-bold bg-gradient-to-r ${field.color} bg-clip-text text-transparent truncate`}>
+                  <p className="text-sm font-bold text-white truncate">
                     {isLoading ? '...' : field.value}
                   </p>
                 </div>
@@ -164,10 +164,10 @@ export default function TrustAnchor({
         </div>
 
         {error && (
-          <div className="mt-4 p-3 rounded-2xl bg-red-500/10 border border-red-400/30">
+          <div className="mt-4 p-3 rounded-2xl bg-white/10 border border-white/30">
             <div className="flex items-center gap-2">
-              <span className="text-red-400">⚠️</span>
-              <p className="text-sm text-red-300">{error}</p>
+              <span className="text-white">⚠️</span>
+              <p className="text-sm text-white">{error}</p>
             </div>
           </div>
         )}
