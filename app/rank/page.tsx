@@ -105,79 +105,80 @@ export default function LeaderboardPage() {
               </button>
             </div>
 
-          <p className="text-sm text-white/70 mb-4">
-            NFT rarity may boost your final rewards at distribution.
-          </p>
+            <p className="text-sm text-white/70 mb-4">
+              NFT rarity may boost your final rewards at distribution.
+            </p>
 
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="text-left text-xs uppercase tracking-wide text-white/60">
-                  <th className="py-2 pr-3">Rank</th>
-                  <th className="py-2 pr-3">Username</th>
-                  <th className="py-2 pr-3">Referrals</th>
-                  <th className="py-2">Rewards (FRH)</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {loading && (
-                  <tr>
-                    <td colSpan={4} className="py-4 text-center text-white/60 animate-pulse">
-                      Loading leaderboard…
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs uppercase tracking-wide text-white/60">
+                    <th className="py-2 pr-3">Rank</th>
+                    <th className="py-2 pr-3">Username</th>
+                    <th className="py-2 pr-3">Referrals</th>
+                    <th className="py-2">Rewards (FRH)</th>
                   </tr>
-                )}
-                {!loading && entries.length === 0 && (
-                  <tr>
-                    <td colSpan={4} className="py-4 text-center text-white/60">
-                      No referrals yet.
-                    </td>
-                  </tr>
-                )}
-                {!loading &&
-                  entries.map((entry) => {
-                    const isUser = address && entry.wallet.toLowerCase() === address.toLowerCase();
-                    return (
-                      <tr 
-                        key={entry.rank} 
-                        className={`hover:bg-white/5 transition ${isUser ? "bg-white/10" : ""}`}
-                      >
-                        <td className="py-2 pr-3 font-semibold">{entry.rank}</td>
-                        <td className="py-2 pr-3 font-mono">{getUsername(entry.wallet)}</td>
-                        <td className="py-2 pr-3">{entry.referrals_count}</td>
-                        <td className="py-2">{entry.rewards}</td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {loading && (
+                    <tr>
+                      <td colSpan={4} className="py-4 text-center text-white/60 animate-pulse">
+                        Loading leaderboard…
+                      </td>
+                    </tr>
+                  )}
+                  {!loading && entries.length === 0 && (
+                    <tr>
+                      <td colSpan={4} className="py-4 text-center text-white/60">
+                        No referrals yet.
+                      </td>
+                    </tr>
+                  )}
+                  {!loading &&
+                    entries.map((entry) => {
+                      const isUser = address && entry.wallet.toLowerCase() === address.toLowerCase();
+                      return (
+                        <tr 
+                          key={entry.rank} 
+                          className={`hover:bg-white/5 transition ${isUser ? "bg-white/10" : ""}`}
+                        >
+                          <td className="py-2 pr-3 font-semibold">{entry.rank}</td>
+                          <td className="py-2 pr-3 font-mono">{getUsername(entry.wallet)}</td>
+                          <td className="py-2 pr-3">{entry.referrals_count}</td>
+                          <td className="py-2">{entry.rewards}</td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
 
-          {/* Show user's own rank if outside top 100 */}
-          {userEntry && !entries.find((e) => e.wallet.toLowerCase() === address?.toLowerCase()) && (
-            <div className="mt-4 pt-4 border-t border-white/10">
-              <h3 className="text-sm font-semibold mb-2 text-white/80">You</h3>
-              <div className="rounded-lg border border-white/30 bg-white/5 p-3">
-                <div className="grid grid-cols-4 gap-2 text-sm">
-                  <div>
-                    <p className="text-xs text-white/60 mb-1">Rank</p>
-                    <p className="font-semibold">#{userEntry.rank}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-white/60 mb-1">Username</p>
-                    <p className="font-mono">{getUsername(userEntry.wallet)}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-white/60 mb-1">Referrals</p>
-                    <p>{userEntry.referrals_count}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-white/60 mb-1">Rewards (FRH)</p>
-                    <p>{userEntry.rewards}</p>
+            {/* Show user's own rank if outside top 100 */}
+            {userEntry && !entries.find((e) => e.wallet.toLowerCase() === address?.toLowerCase()) && (
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <h3 className="text-sm font-semibold mb-2 text-white/80">You</h3>
+                <div className="rounded-lg border border-white/30 bg-white/5 p-3">
+                  <div className="grid grid-cols-4 gap-2 text-sm">
+                    <div>
+                      <p className="text-xs text-white/60 mb-1">Rank</p>
+                      <p className="font-semibold">#{userEntry.rank}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/60 mb-1">Username</p>
+                      <p className="font-mono">{getUsername(userEntry.wallet)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/60 mb-1">Referrals</p>
+                      <p>{userEntry.referrals_count}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/60 mb-1">Rewards (FRH)</p>
+                      <p>{userEntry.rewards}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
       </div>
