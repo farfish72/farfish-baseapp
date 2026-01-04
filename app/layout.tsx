@@ -72,32 +72,22 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen flex flex-col relative items-center overflow-x-hidden text-white">
         <ErrorBoundary>
-          {/* Enhanced premium animated background elements */}
+          {/* Premium atmospheric elements - simplified */}
           <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-            {/* Primary atmospheric orbs - ANIMATIONS DISABLED */}
-            <div className="absolute -top-48 -right-48 w-[28rem] h-[28rem] bg-gradient-to-br from-primary-400/25 via-primary-500/20 to-primary-600/10 rounded-full blur-3xl opacity-80"></div>
-            <div className="absolute -bottom-48 -left-48 w-[32rem] h-[32rem] bg-gradient-to-tr from-accent-400/25 via-accent-500/20 to-accent-600/10 rounded-full blur-3xl opacity-80"></div>
-            <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-gradient-to-r from-blue-400/15 via-cyan-400/20 to-teal-400/10 rounded-full blur-3xl opacity-70"></div>
+            {/* Primary accent orb */}
+            <div className="absolute -top-48 -right-48 w-[28rem] h-[28rem] bg-primary/10 rounded-full blur-3xl opacity-60"></div>
             
-            {/* Secondary depth orbs - ANIMATIONS DISABLED */}
-            <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-gradient-to-bl from-primary-300/15 via-primary-400/10 to-transparent rounded-full blur-2xl opacity-60"></div>
-            <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-gradient-to-tl from-accent-300/15 via-accent-400/10 to-transparent rounded-full blur-2xl opacity-60"></div>
-            <div className="absolute top-2/3 left-1/6 w-64 h-64 bg-gradient-to-r from-emerald-400/12 via-green-400/8 to-transparent rounded-full blur-2xl opacity-50"></div>
+            {/* Secondary accent orb */}
+            <div className="absolute -bottom-48 -left-48 w-[32rem] h-[32rem] bg-secondary/8 rounded-full blur-3xl opacity-50"></div>
             
-            {/* Tertiary accent elements - ANIMATIONS DISABLED */}
-            <div className="absolute top-1/6 right-1/6 w-48 h-48 bg-gradient-to-br from-pink-400/10 via-rose-400/8 to-transparent rounded-full blur-xl opacity-40"></div>
-            <div className="absolute bottom-1/6 left-1/3 w-56 h-56 bg-gradient-to-tl from-indigo-400/12 via-purple-400/8 to-transparent rounded-full blur-xl opacity-45"></div>
+            {/* Success accent orb */}
+            <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-success/6 rounded-full blur-3xl opacity-40"></div>
             
-            {/* Enhanced floating particles - ANIMATIONS DISABLED */}
-            <div className="absolute top-20 left-20 w-3 h-3 bg-primary-400 rounded-full opacity-70 shadow-glow"></div>
-            <div className="absolute top-40 right-32 w-2 h-2 bg-accent-400 rounded-full opacity-50 shadow-glow-accent"></div>
-            <div className="absolute bottom-32 left-16 w-2.5 h-2.5 bg-blue-400 rounded-full opacity-60 shadow-soft"></div>
-            <div className="absolute bottom-20 right-20 w-1.5 h-1.5 bg-primary-300 rounded-full opacity-40"></div>
-            <div className="absolute top-3/4 left-1/2 w-2 h-2 bg-emerald-400 rounded-full opacity-50"></div>
-            <div className="absolute top-1/2 right-1/4 w-1 h-1 bg-pink-400 rounded-full opacity-35"></div>
-            
-            {/* Morphing background shapes - ANIMATIONS DISABLED */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-primary-500/5 via-accent-500/8 to-blue-500/5 opacity-30"></div>
+            {/* Subtle floating particles */}
+            <div className="absolute top-20 left-20 w-2 h-2 bg-primary rounded-full opacity-30"></div>
+            <div className="absolute top-40 right-32 w-1.5 h-1.5 bg-secondary rounded-full opacity-25"></div>
+            <div className="absolute bottom-32 left-16 w-2 h-2 bg-success rounded-full opacity-20"></div>
+            <div className="absolute bottom-20 right-20 w-1 h-1 bg-primary rounded-full opacity-15"></div>
           </div>
 
           <FarcasterMiniAppReady />

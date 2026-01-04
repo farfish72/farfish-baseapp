@@ -42,23 +42,23 @@ const pageIcons: Record<string, React.ReactElement> = {
 };
 
 const pageGradients: Record<string, string> = {
-  "Home": "from-primary-400 via-primary-300 to-blue-400",
-  "Chest": "from-amber-400 via-orange-400 to-red-400",
-  "Stake": "from-green-400 via-emerald-400 to-teal-400",
-  "Steam": "from-accent-400 via-purple-400 to-pink-400",
-  "Rank": "from-yellow-400 via-amber-400 to-orange-400",
-  "Profile": "from-accent-400 via-purple-400 to-indigo-400",
-  "Game": "from-red-400 via-pink-400 to-rose-400"
+  "Home": "primary",
+  "Chest": "secondary", 
+  "Stake": "success",
+  "Steam": "primary",
+  "Rank": "secondary",
+  "Profile": "success",
+  "Game": "primary"
 };
 
 const pageShadows: Record<string, string> = {
-  "Home": "shadow-glow",
-  "Chest": "shadow-[0_0_20px_rgba(251,191,36,0.3)]",
-  "Stake": "shadow-[0_0_20px_rgba(16,185,129,0.3)]",
-  "Steam": "shadow-glow-accent",
-  "Rank": "shadow-[0_0_20px_rgba(245,158,11,0.3)]",
-  "Profile": "shadow-glow-accent",
-  "Game": "shadow-[0_0_20px_rgba(244,63,94,0.3)]"
+  "Home": "shadow-primary",
+  "Chest": "shadow-secondary",
+  "Stake": "shadow-success",
+  "Steam": "shadow-primary",
+  "Rank": "shadow-secondary",
+  "Profile": "shadow-success",
+  "Game": "shadow-primary"
 };
 
 export default function Header({ title }: { title: string }) {
@@ -81,41 +81,38 @@ export default function Header({ title }: { title: string }) {
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
     </svg>
   );
-  const gradient = pageGradients[title] || "from-primary-400 via-primary-300 to-blue-400";
-  const shadow = pageShadows[title] || "shadow-glow";
+  const colorClass = pageGradients[title] || "primary";
+  const shadow = pageShadows[title] || "shadow-primary";
 
   return (
     <div className="w-full px-2 pt-3 pb-4 stable-layout">
       {/* Top section with app name - left aligned like premium apps */}
       <div className="flex items-start justify-start mb-3">
         <div className="flex flex-col">
-          <h1 className="text-2xl font-display font-bold text-premium-xl gradient-text-premium mb-1">
+          <h1 className="text-2xl font-display font-bold text-white mb-1">
             FarFISH
           </h1>
           <div className="flex items-center gap-2 mt-1">
             <div className="relative">
-              <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse shadow-soft"></div>
-              <div className="absolute inset-0 w-2.5 h-2.5 bg-green-400 rounded-full animate-ping opacity-60"></div>
-              <div className="absolute inset-0 w-2.5 h-2.5 bg-green-300 rounded-full animate-pulse opacity-40" style={{ animationDelay: '0.5s' }}></div>
+              <div className="w-2.5 h-2.5 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full"></div>
             </div>
-            <span className="text-sm font-semibold text-secondary tracking-wide">Live on Base</span>
+            <span className="text-sm font-semibold text-white/80 tracking-wide">Live on Base</span>
           </div>
         </div>
       </div>
 
       {/* Enhanced positioning message */}
       <div className="mb-4">
-        <div className="glass-card-hover rounded-2xl p-2.5 border border-white/15 shadow-glass group">
-          <div className="absolute inset-0 bg-premium-gradient opacity-50 rounded-2xl"></div>
+        <div className="glass-card rounded-2xl p-2.5 border border-primary/15">
           <div className="relative z-10">
-            <p className="text-sm font-semibold text-premium text-center leading-relaxed mb-2">
+            <p className="text-sm font-semibold text-white text-center leading-relaxed mb-2">
               Daily on-chain habits for future rewards on Base
             </p>
             <div className="flex justify-center">
               <div className="flex items-center gap-1.5">
-                <div className="w-1 h-1 bg-primary-400 rounded-full animate-pulse shadow-glow"></div>
-                <div className="w-1 h-1 bg-accent-400 rounded-full animate-pulse shadow-glow-accent" style={{ animationDelay: '0.7s' }}></div>
-                <div className="w-1 h-1 bg-blue-400 rounded-full animate-pulse shadow-soft" style={{ animationDelay: '1.4s' }}></div>
+                <div className="w-1 h-1 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full"></div>
+                <div className="w-1 h-1 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full"></div>
+                <div className="w-1 h-1 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full"></div>
               </div>
             </div>
           </div>
@@ -124,18 +121,16 @@ export default function Header({ title }: { title: string }) {
 
       {/* Enhanced page title with emoji and gradient */}
       <div className="flex items-center gap-3">
-        <div className={`relative w-10 h-10 rounded-3xl bg-gradient-to-br ${gradient} flex items-center justify-center ${shadow} transition-all duration-300 hover:scale-110 shadow-elevated group ${!isClient ? 'animate-none' : 'animate-bounce-gentle'}`}>
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/25 to-white/5"></div>
-          <div className="absolute inset-0 rounded-3xl bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <div className="text-white relative z-10 filter drop-shadow-lg">
+        <div className={`relative w-10 h-10 rounded-3xl bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] flex items-center justify-center ${shadow} transition-all duration-300 interactive-scale`}>
+          <div className="text-black relative z-10 filter drop-shadow-lg">
             {icon}
           </div>
         </div>
         <div className="flex-1">
-          <h2 className={`text-2xl font-display font-bold text-premium-xl bg-gradient-to-r ${gradient} bg-clip-text text-transparent mb-1 leading-tight`}>
+          <h2 className={`text-2xl font-display font-bold text-white mb-1 leading-tight`}>
             {title}
           </h2>
-          <p className="text-sm font-medium text-secondary leading-relaxed">
+          <p className="text-sm font-medium text-white/80 leading-relaxed">
             {title === "Home" && "Start your daily habit"}
             {title === "Chest" && "Claim daily rewards"}
             {title === "Stake" && "Lock & earn more"}
@@ -148,7 +143,7 @@ export default function Header({ title }: { title: string }) {
       </div>
 
       {/* Enhanced divider */}
-      <div className="mt-4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent shadow-soft"></div>
+      <div className="mt-4 h-px bg-gradient-to-r from-transparent via-border-primary to-transparent"></div>
     </div>
   );
 }
