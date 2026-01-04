@@ -109,7 +109,7 @@ export default function TrustAnchor({
   ];
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 via-slate-900/50 to-slate-800/50 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-2xl shadow-slate-500/20">
+    <div className="glass-card rounded-3xl p-6 shadow-2xl shadow-slate-500/20">
       {/* Animated background elements */}
       <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
       <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>

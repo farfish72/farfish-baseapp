@@ -18,46 +18,46 @@ type Props = {
 
 const variantStyles = {
   bronze: {
-    gradient: "from-amber-400/20 via-orange-400/15 to-red-400/8",
-    border: "border-amber-400/40",
+    gradient: "",
+    border: "",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
       </svg>
     ),
-    iconBg: "from-amber-400 via-orange-400 to-red-500",
-    button: "from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600",
-    progress: "from-amber-400 to-orange-500",
-    shadow: "shadow-[0_12px_40px_rgba(251,191,36,0.3)]",
-    glow: "shadow-[0_0_24px_rgba(251,191,36,0.4)]"
+    iconBg: "from-[#00d4c4] to-[#3be6c1]",
+    button: "from-[#00d4c4] to-[#3be6c1] hover:from-[#00b8a9] hover:to-[#32d4b8]",
+    progress: "from-[#00d4c4] to-[#3be6c1]",
+    shadow: "",
+    glow: ""
   },
   silver: {
-    gradient: "from-slate-400/20 via-gray-400/15 to-slate-500/8",
-    border: "border-slate-400/40",
+    gradient: "",
+    border: "",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
       </svg>
     ),
-    iconBg: "from-slate-400 via-gray-400 to-slate-600",
-    button: "from-slate-400 to-gray-500 hover:from-slate-500 hover:to-gray-600",
-    progress: "from-slate-400 to-gray-500",
-    shadow: "shadow-[0_12px_40px_rgba(148,163,184,0.3)]",
-    glow: "shadow-[0_0_24px_rgba(148,163,184,0.4)]"
+    iconBg: "from-[#00d4c4] to-[#3be6c1]",
+    button: "from-[#00d4c4] to-[#3be6c1] hover:from-[#00b8a9] hover:to-[#32d4b8]",
+    progress: "from-[#00d4c4] to-[#3be6c1]",
+    shadow: "",
+    glow: ""
   },
   default: {
-    gradient: "from-white/20 via-white/15 to-white/8",
-    border: "border-accent-400/40",
+    gradient: "",
+    border: "",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M6,2A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z M6,4H13V9H18V20H6V4Z"/>
       </svg>
     ),
-    iconBg: "from-white via-white to-white",
-    button: "from-accent-400 to-primary-500 hover:from-accent-500 hover:to-primary-600",
-    progress: "from-accent-400 to-primary-500",
-    shadow: "shadow-floating",
-    glow: "shadow-glow-accent"
+    iconBg: "from-[#00d4c4] to-[#3be6c1]",
+    button: "from-[#00d4c4] to-[#3be6c1] hover:from-[#00b8a9] hover:to-[#32d4b8]",
+    progress: "from-[#00d4c4] to-[#3be6c1]",
+    shadow: "",
+    glow: ""
   }
 };
 
@@ -142,10 +142,7 @@ export default function ChestCard({
   }, [isLoading, secondaryLoading]);
 
   return (
-    <article className={`
-      relative overflow-hidden rounded-4xl glass-card backdrop-blur-4xl transform-gpu chest-card-stable
-      bg-gradient-to-br ${styles.gradient} ${styles.border} ${styles.shadow} group
-    `}>
+    <article className="glass-card rounded-3xl backdrop-blur-4xl transform-gpu chest-card-stable group">
       {/* Enhanced animated background elements - ANIMATIONS DISABLED */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-white/8 to-transparent rounded-full blur-3xl opacity-60"></div>
       <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-gradient-to-tr from-white/8 to-transparent rounded-full blur-3xl opacity-60"></div>

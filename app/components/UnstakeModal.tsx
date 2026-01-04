@@ -118,7 +118,7 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#050e18] p-6 shadow-2xl max-h-[90vh] flex flex-col">
+      <div className="glass-card rounded-2xl max-w-md w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">Unstake NFT</h2>
           <button

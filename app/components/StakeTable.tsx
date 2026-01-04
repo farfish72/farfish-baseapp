@@ -18,7 +18,7 @@ export default function StakeTable() {
       color: "text-white" 
     },
     GoldRay: { 
-      gradient: "from-amber-400/20 to-yellow-400/10", 
+      gradient: "from-white/20 to-white/10", 
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -27,7 +27,7 @@ export default function StakeTable() {
       color: "text-white" 
     },
     RedSpike: { 
-      gradient: "from-red-400/20 to-orange-400/10", 
+      gradient: "from-white/20 to-white/10", 
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path d="M7.5,4A5.5,5.5 0 0,0 2,9.5C2,10 2,10.5 2,11H22C22,10.5 22,10 22,9.5A5.5,5.5 0 0,0 16.5,4C14.64,4 13.09,4.91 12,6.34C10.91,4.91 9.36,4 7.5,4Z"/>
@@ -36,7 +36,7 @@ export default function StakeTable() {
       color: "text-white" 
     },
     ShadowGill: { 
-      gradient: "from-purple-400/20 to-indigo-400/10", 
+      gradient: "from-white/20 to-white/10", 
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path d="M5,16L3,5H1V3H4L6,14L7,18H20V16H5Z M19,5V7H17V5H19Z M17,8H19V10H17V8Z M19,11V13H17V11H19Z"/>
@@ -47,13 +47,13 @@ export default function StakeTable() {
   };
 
   return (
-    <section className="glass-card rounded-4xl p-4 shadow-elevated backdrop-blur-4xl">
+    <section className="glass-card rounded-3xl p-4 shadow-elevated backdrop-blur-4xl">
       {/* Premium background elements - ANIMATIONS REMOVED */}
-      <div className="absolute inset-0 bg-premium-gradient opacity-40 rounded-4xl"></div>
+      <div className="absolute inset-0 bg-premium-gradient opacity-40 rounded-3xl"></div>
       
       <div className="relative z-10">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary-400 to-accent-400 flex items-center justify-center shadow-glow">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-glow">
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M7 14H5v5h2v-5zm3-7H8v12h2V7zm3-4h-2v16h2V3zm3 6h-2v10h2V9zm3-2h-2v12h2V7z"/>
             </svg>

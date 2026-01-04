@@ -401,250 +401,258 @@ export default function SteamPage() {
     <>
       <Header title="Steam" />
 
-      <div className="flex-1 space-y-4 mt-4">
+      <div className="flex-1 flex flex-col gap-6">
         {/* Page Header */}
-        <div className="glass-card rounded-3xl p-4 shadow-2xl">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
-              <span className="text-xl">⚡</span>
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-white">
-                Steam
-              </h2>
-              <p className="text-white/70 text-sm">Complete Base tasks to earn FRH</p>
+        <section className="glass-card rounded-3xl">
+          <div className="p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
+                <span className="text-xl">⚡</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">
+                  Steam
+                </h2>
+                <p className="text-white/70 text-sm">Complete Base tasks to earn FRH</p>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Wallet Connection Notice */}
         {!wallet && (
-          <div className="glass-card rounded-2xl p-4">
-            <div className="text-center">
-              <p className="text-white text-sm font-medium">
-                Connect wallet to verify & earn rewards
-              </p>
+          <section className="glass-card rounded-3xl">
+            <div className="p-4">
+              <div className="text-center">
+                <p className="text-white text-sm font-medium">
+                  Connect wallet to verify & earn rewards
+                </p>
+              </div>
             </div>
-          </div>
+          </section>
         )}
 
         {/* Task Progress Card */}
-        <div className="glass-card rounded-3xl p-4 shadow-2xl">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-xl font-bold text-white">
-                📊 Task Progress
-              </h3>
-              <p className="text-white/70 text-sm">Complete Base-native activities to earn verified FRH rewards</p>
-            </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-white">
-                {completedTasks}/{totalTasks}
+        <section className="glass-card rounded-3xl">
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-bold text-white">
+                  📊 Task Progress
+                </h3>
+                <p className="text-white/70 text-sm">Complete Base-native activities to earn verified FRH rewards</p>
               </div>
-              <div className="text-xs text-white/80">Tasks Completed</div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-white">
+                  {completedTasks}/{totalTasks}
+                </div>
+                <div className="text-xs text-white/80">Tasks Completed</div>
+              </div>
+            </div>
+            
+            <div className="mb-4">
+              <p className="text-sm text-white/80 mb-2">Total Earned:</p>
+              <div className="text-lg font-bold text-white">
+                {wallet ? totalRewards : 0} FRH
+              </div>
             </div>
           </div>
-          
-          <div className="mb-4">
-            <p className="text-sm text-white/80 mb-2">Total Earned:</p>
-            <div className="text-lg font-bold text-white">
-              {wallet ? totalRewards : 0} FRH
-            </div>
-          </div>
-        </div>
+        </section>
 
         {/* Base Tasks Section */}
-        <div className="glass-card rounded-3xl p-4 shadow-2xl">
-          <h3 className="text-xl font-bold text-white mb-6">
-            🎯 Base Tasks
-          </h3>
+        <section className="glass-card rounded-3xl">
+          <div className="p-4">
+            <h3 className="text-xl font-bold text-white mb-6">
+              🎯 Base Tasks
+            </h3>
 
-          <div className="space-y-4">
-            {/* Fishing */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-2xl">🎣</span>
-                    <h4 className="text-lg font-bold text-white">Fishing</h4>
-                  </div>
-                  <p className="text-white/70 text-sm mb-3">Perform one fishing action per 24 hours to earn rewards</p>
-                  <div className="text-xs text-white font-medium">Reward: 10 FRH</div>
-                  <div className="text-xs text-white/60 mt-1">Cooldown: 24 hours</div>
-                </div>
-                <div className="flex flex-col items-end gap-3">
-                  {fishingCooldown > 0 ? (
-                    <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
-                      {formatCooldownTime(fishingCooldown)}
+            <div className="space-y-4">
+              {/* Fishing */}
+              <div className="glass-card rounded-2xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">🎣</span>
+                      <h4 className="text-lg font-bold text-white">Fishing</h4>
                     </div>
-                  ) : (
-                    <button
-                      onClick={handleFishing}
-                      disabled={!wallet}
-                      className={`bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black px-4 py-2 rounded-xl font-medium text-sm ${
-                        !wallet ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
-                    >
-                      Fishing
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Activity Streak */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-2xl">🔥</span>
-                    <h4 className="text-lg font-bold text-white">Activity Streak</h4>
+                    <p className="text-white/70 text-sm mb-3">Perform one fishing action per 24 hours to earn rewards</p>
+                    <div className="text-xs text-white font-medium">Reward: 10 FRH</div>
+                    <div className="text-xs text-white/60 mt-1">Cooldown: 24 hours</div>
                   </div>
-                  <p className="text-white/70 text-sm mb-3">Maintain consecutive daily activity on Base</p>
-                  <div className="text-xs text-white font-medium">Increases only when claiming Daily Base Chest</div>
-                  {streak > 0 && (
-                    <div className="text-xs text-white mt-1">Current streak: {streak} days</div>
-                  )}
-                </div>
-                <div className="flex flex-col items-end gap-3">
-                  <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
-                    {streak > 0 ? `${streak} days` : "Start streak"}
+                  <div className="flex flex-col items-end gap-3">
+                    {fishingCooldown > 0 ? (
+                      <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
+                        {formatCooldownTime(fishingCooldown)}
+                      </div>
+                    ) : (
+                      <button
+                        onClick={handleFishing}
+                        disabled={!wallet}
+                        className={`bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black px-4 py-2 rounded-xl font-medium text-sm ${
+                          !wallet ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                      >
+                        Fishing
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Mint FarFISH NFT */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-2xl">🐟</span>
-                    <h4 className="text-lg font-bold text-white">Mint FarFISH NFT</h4>
+              {/* Activity Streak */}
+              <div className="glass-card rounded-2xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">🔥</span>
+                      <h4 className="text-lg font-bold text-white">Activity Streak</h4>
+                    </div>
+                    <p className="text-white/70 text-sm mb-3">Maintain consecutive daily activity on Base</p>
+                    <div className="text-xs text-white font-medium">Increases only when claiming Daily Base Chest</div>
+                    {streak > 0 && (
+                      <div className="text-xs text-white mt-1">Current streak: {streak} days</div>
+                    )}
                   </div>
-                  <p className="text-white/70 text-sm mb-3">Mint a FarFISH NFT on Base</p>
-                  <div className="text-xs text-white font-medium">Reward: 2500 FRH</div>
-                  {hasNFT && ownedTokenId !== undefined && (
-                    <div className="text-xs text-white mt-1">Token ID: {ownedTokenId}</div>
-                  )}
-                  {activeStakes.length > 0 && (
-                    <div className="text-xs text-white mt-1">Stake ID: {Number(activeStakes[0].stakeId)}</div>
-                  )}
-                </div>
-                <div className="flex flex-col items-end gap-3">
-                  {hasNFT ? (
+                  <div className="flex flex-col items-end gap-3">
                     <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
-                      ✅ Completed
+                      {streak > 0 ? `${streak} days` : "Start streak"}
                     </div>
-                  ) : (
-                    <div className="text-xs text-white/80 text-center">
-                      ⏳ Incomplete<br />
-                      <span className="text-white/60">Mint on Home page</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mint FarFISH NFT */}
+              <div className="glass-card rounded-2xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">🐟</span>
+                      <h4 className="text-lg font-bold text-white">Mint FarFISH NFT</h4>
                     </div>
-                  )}
+                    <p className="text-white/70 text-sm mb-3">Mint a FarFISH NFT on Base</p>
+                    <div className="text-xs text-white font-medium">Reward: 2500 FRH</div>
+                    {hasNFT && ownedTokenId !== undefined && (
+                      <div className="text-xs text-white mt-1">Token ID: {ownedTokenId}</div>
+                    )}
+                    {activeStakes.length > 0 && (
+                      <div className="text-xs text-white mt-1">Stake ID: {Number(activeStakes[0].stakeId)}</div>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-end gap-3">
+                    {hasNFT ? (
+                      <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
+                        ✅ Completed
+                      </div>
+                    ) : (
+                      <div className="text-xs text-white/80 text-center">
+                        ⏳ Incomplete<br />
+                        <span className="text-white/60">Mint on Home page</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Referral Rewards Section */}
-        <div className="glass-card rounded-3xl p-6 shadow-2xl">
-          <h3 className="text-xl font-bold text-white mb-6">
-            🤝 Referral Rewards (Base)
-          </h3>
+        <section className="glass-card rounded-3xl">
+          <div className="p-6">
+            <h3 className="text-xl font-bold text-white mb-6">
+              🤝 Referral Rewards (Base)
+            </h3>
 
-          {/* Invite Users */}
-          <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-white/10 rounded-2xl p-4 mb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <h4 className="text-lg font-bold text-white mb-1">Invite Users on Base</h4>
-                <p className="text-white/70 text-sm mb-2">Earn FRH when users join FarFISH through your invite.</p>
-                <div className="text-xs text-white font-medium mb-1">Reward: 40 FRH per referral</div>
-                <div className="text-xs text-white/60 mb-1">Current: {referralData.count} referrals · {referralData.count * 40} FRH earned</div>
-                <div className="text-xs text-white/60">
-                  Tracked securely via Base App embed.
+            {/* Invite Users */}
+            <div className="glass-card rounded-2xl p-4 mb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h4 className="text-lg font-bold text-white mb-1">Invite Users on Base</h4>
+                  <p className="text-white/70 text-sm mb-2">Earn FRH when users join FarFISH through your invite.</p>
+                  <div className="text-xs text-white font-medium mb-1">Reward: 40 FRH per referral</div>
+                  <div className="text-xs text-white/60 mb-1">Current: {referralData.count} referrals · {referralData.count * 40} FRH earned</div>
+                  <div className="text-xs text-white/60">
+                    Tracked securely via Base App embed.
+                  </div>
+                </div>
+                <div className="flex flex-col items-end gap-2">
+                  <button
+                    onClick={handleBaseAppInvite}
+                    disabled={!wallet}
+                    className={`bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black px-3 py-1.5 rounded-lg font-medium text-sm ${
+                      !wallet ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                  >
+                    Invite on Base
+                  </button>
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-2">
-                <button
-                  onClick={handleBaseAppInvite}
-                  disabled={!wallet}
-                  className={`bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black px-3 py-1.5 rounded-lg font-medium text-sm ${
-                    !wallet ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                >
-                  Invite on Base
-                </button>
+            </div>
+
+            {/* Referral Milestones */}
+            <div className="mb-4">
+              <h4 className="text-lg font-bold text-white mb-4">🏆 Referral Milestones</h4>
+              <div className="grid grid-cols-2 gap-3">
+                {REFERRAL_MILESTONES.map((milestone) => (
+                  <div
+                    key={milestone.count}
+                    className="glass-card rounded-xl p-4"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-lg">
+                        {milestone.count === 5 ? "🥉" : 
+                         milestone.count === 10 ? "🥈" : 
+                         milestone.count === 30 ? "🥇" : "👑"}
+                      </span>
+                      <div className="text-sm font-bold text-white">{milestone.count} Referrals</div>
+                    </div>
+                    <div className="text-xs text-white font-medium mb-2">Reward: {milestone.reward} FRH</div>
+                    <div className="text-xs text-white/70">
+                      Progress: {Math.min(referralData.count, milestone.count)} / {milestone.count}
+                    </div>
+                    <div className="w-full bg-white/20 rounded-full h-2 mt-2">
+                      <div 
+                        className="bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] h-2 rounded-full"
+                        style={{ 
+                          width: `${Math.min(100, (referralData.count / milestone.count) * 100)}%` 
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-
-          {/* Referral Milestones */}
-          <div className="mb-4">
-            <h4 className="text-lg font-bold text-white mb-4">🏆 Referral Milestones</h4>
-            <div className="grid grid-cols-2 gap-3">
-              {REFERRAL_MILESTONES.map((milestone) => (
-                <div
-                  key={milestone.count}
-                  className={`p-4 rounded-xl border ${
-                    referralData.count >= milestone.count
-                      ? "bg-white/20 border-white/30"
-                      : "bg-slate-500/20 border-slate-400/30"
-                  }`}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">
-                      {milestone.count === 5 ? "🥉" : 
-                       milestone.count === 10 ? "🥈" : 
-                       milestone.count === 30 ? "🥇" : "👑"}
-                    </span>
-                    <div className="text-sm font-bold text-white">{milestone.count} Referrals</div>
-                  </div>
-                  <div className="text-xs text-white font-medium mb-2">Reward: {milestone.reward} FRH</div>
-                  <div className="text-xs text-white/70">
-                    Progress: {Math.min(referralData.count, milestone.count)} / {milestone.count}
-                  </div>
-                  <div className="w-full bg-slate-700/50 rounded-full h-2 mt-2">
-                    <div 
-                      className="bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] h-2 rounded-full"
-                      style={{ 
-                        width: `${Math.min(100, (referralData.count / milestone.count) * 100)}%` 
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        </section>
 
         {/* How it works */}
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
-          <h3 className="text-lg font-semibold mb-3 text-white">ℹ️ How it works</h3>
-          <div className="space-y-2 text-white/80">
-            <div className="flex items-start gap-2">
-              <span>•</span>
-              <span>Complete Base App activities to earn FRH</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span>•</span>
-              <span>Tasks verify automatically on Base</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span>•</span>
-              <span>Referral rewards use secure domain-based tracking</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span>•</span>
-              <span>Invalid or manipulated activity is filtered automatically</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span>•</span>
-              <span>Rewards are finalized before token distribution</span>
+        <section className="glass-card rounded-3xl">
+          <div className="p-4">
+            <h3 className="text-lg font-semibold mb-3 text-white">ℹ️ How it works</h3>
+            <div className="space-y-2 text-white/80">
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Complete Base App activities to earn FRH</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Tasks verify automatically on Base</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Referral rewards use secure domain-based tracking</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Invalid or manipulated activity is filtered automatically</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Rewards are finalized before token distribution</span>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </>
   );

@@ -197,29 +197,29 @@ function ProfilePageContent() {
         label: "NFTs Owned",
         value: loadingStats ? "…" : statsError.nftsOwned ? "Error" : formatStatValue(liveStats.nftsOwned),
         icon: "🐟",
-        color: "from-white to-white",
+        color: "from-[#00d4c4] to-[#3be6c1]",
         bgColor: "from-white/20 to-white/20"
       },
       {
         label: "NFTs Staked",
         value: loadingStats ? "…" : formatStatValue(stakes.length),
         icon: "🔒",
-        color: "from-purple-400 to-pink-500",
-        bgColor: "from-purple-500/20 to-pink-500/20"
+        color: "from-[#00d4c4] to-[#3be6c1]",
+        bgColor: "from-white/20 to-white/20"
       },
       {
         label: "Chest Streak",
         value: loadingStats ? "…" : statsError.chestStreak ? "Error" : formatStatValue(liveStats.chestStreak, " days"),
         icon: "🔥",
-        color: "from-orange-400 to-red-500",
-        bgColor: "from-orange-500/20 to-red-500/20"
+        color: "from-[#00d4c4] to-[#3be6c1]",
+        bgColor: "from-white/20 to-white/20"
       },
       {
         label: "Rank",
         value: loadingStats ? "…" : statsError.rank ? "Error" : (liveStats.rank && liveStats.rank > 0 ? `#${liveStats.rank}` : "Not ranked yet"),
         icon: "🏆",
-        color: "from-yellow-400 to-amber-500",
-        bgColor: "from-yellow-500/20 to-amber-500/20"
+        color: "from-[#00d4c4] to-[#3be6c1]",
+        bgColor: "from-white/20 to-white/20"
       },
     ],
     [liveStats, loadingStats, statsError, stakes.length]
@@ -235,217 +235,223 @@ function ProfilePageContent() {
     <>
       <Header title="Profile" />
 
-      <div className="mt-4 space-y-6 flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col gap-6">
         {/* Profile Identity Section */}
-        <div className="glass-card rounded-3xl p-6 shadow-2xl">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
-              <span className="text-xl">👤</span>
+        <section className="glass-card rounded-3xl">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
+                <span className="text-xl">👤</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">
+                  Profile Identity
+                </h2>
+                <p className="text-white/70 text-sm">Wallet-based identity on Base</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-white">
-                Profile Identity
-              </h2>
-              <p className="text-white/70 text-sm">Wallet-based identity on Base</p>
-            </div>
-          </div>
 
-          <div className="flex items-start gap-6">
-            {/* Editable Profile Picture */}
-            <div className="relative">
-              <div className="relative h-24 w-24 rounded-2xl overflow-hidden border-2 border-white/20 shadow-lg">
-                <Image
-                  src={getAvatarUrl()}
-                  alt="Profile Avatar"
-                  width={96}
-                  height={96}
-                  className="object-cover w-full h-full"
-                  unoptimized
-                />
-                {/* Edit icon for custom avatar */}
-                <label className="absolute -top-2 -right-2 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full p-2 cursor-pointer border-2 border-white shadow-lg hover:from-[#00b8a9] hover:to-[#2dd4b8] transition-all duration-300 hover:scale-110">
+            <div className="flex items-start gap-6">
+              {/* Editable Profile Picture */}
+              <div className="relative">
+                <div className="relative h-24 w-24 rounded-2xl overflow-hidden border-2 border-white/20 shadow-lg">
+                  <Image
+                    src={getAvatarUrl()}
+                    alt="Profile Avatar"
+                    width={96}
+                    height={96}
+                    className="object-cover w-full h-full"
+                    unoptimized
+                  />
+                  {/* Edit icon for custom avatar */}
+                  <label className="absolute -top-2 -right-2 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full p-2 cursor-pointer border-2 border-white shadow-lg hover:from-[#00b8a9] hover:to-[#2dd4b8] transition-all duration-300 hover:scale-110">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            const result = event.target?.result as string;
+                            localStorage.setItem('profileImage', result);
+                            setToast({ type: "success", message: "Profile picture updated!" });
+                            // Force re-render
+                            window.location.reload();
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </label>
+                </div>
+              </div>
+
+              {/* Editable Username */}
+              <div className="flex-1">
+                <div className="flex items-center gap-2 group relative mb-4">
                   <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                          const result = event.target?.result as string;
-                          localStorage.setItem('profileImage', result);
-                          setToast({ type: "success", message: "Profile picture updated!" });
-                          // Force re-render
-                          window.location.reload();
-                        };
-                        reader.readAsDataURL(file);
+                    type="text"
+                    className="text-2xl font-bold bg-transparent border-b-2 border-transparent focus:border-white/40 focus:outline-none w-full pr-8 text-white placeholder-white/50"
+                    defaultValue={getUsername()}
+                    placeholder="Enter username"
+                    onBlur={(e) => {
+                      const newUsername = e.target.value.trim();
+                      if (newUsername) {
+                        localStorage.setItem('username', newUsername);
+                        setToast({ type: "success", message: "Username updated!" });
+                      } else {
+                        localStorage.removeItem('username');
                       }
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur();
+                    }}
                   />
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                  </svg>
-                </label>
-              </div>
-            </div>
-
-            {/* Editable Username */}
-            <div className="flex-1">
-              <div className="flex items-center gap-2 group relative mb-4">
-                <input
-                  type="text"
-                  className="text-2xl font-bold bg-transparent border-b-2 border-transparent focus:border-white/40 focus:outline-none w-full pr-8 text-white placeholder-white/50"
-                  defaultValue={getUsername()}
-                  placeholder="Enter username"
-                  onBlur={(e) => {
-                    const newUsername = e.target.value.trim();
-                    if (newUsername) {
-                      localStorage.setItem('username', newUsername);
-                      setToast({ type: "success", message: "Username updated!" });
-                    } else {
-                      localStorage.removeItem('username');
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') e.currentTarget.blur();
-                  }}
-                />
-                <div className="absolute right-2 text-white/50 group-focus-within:text-white/70 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                  </svg>
+                  <div className="absolute right-2 text-white/50 group-focus-within:text-white/70 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  <span className="text-sm text-white font-medium">Profile always accessible</span>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    <span className="text-sm text-white font-medium">Profile always accessible</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Wallet Connection & Stats Section */}
-        <div className="glass-card rounded-3xl p-6 shadow-2xl">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
-              <span className="text-xl">💳</span>
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-white">
-                Wallet Connection
-              </h2>
-              <p className="text-white/70 text-sm">Base network identity</p>
-            </div>
-          </div>
-          
-          {isConnected && address ? (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/20 border border-white/30">
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                <span className="text-white font-medium">Wallet Connected</span>
-                {!isBaseNetwork && (
-                  <span className="text-white/70 text-sm ml-auto">⚠️ Switch to Base</span>
-                )}
+        <section className="glass-card rounded-3xl">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
+                <span className="text-xl">💳</span>
               </div>
-              
-              {/* Wallet Stats Grid */}
-              <div className="grid grid-cols-2 gap-4">
-                {stats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className={`
-                      relative overflow-hidden bg-gradient-to-br ${stat.bgColor} backdrop-blur-sm 
-                      border border-white/10 rounded-2xl p-4 hover:scale-105 transition-all duration-300
-                      ${loadingStats ? "animate-pulse" : ""}
-                    `}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className={`
-                        w-8 h-8 rounded-lg bg-gradient-to-br from-[#00d4c4] to-[#3be6c1]
-                        flex items-center justify-center shadow-lg flex-shrink-0
-                      `}>
-                        <span className="text-sm">{stat.icon}</span>
-                      </div>
-                      <p className="text-xs uppercase tracking-wide text-white/60 font-medium">
-                        {stat.label}
-                      </p>
-                    </div>
-                    <p className={`text-lg font-bold text-white`}>
-                      {stat.value}
-                    </p>
-                  </div>
-                ))}
+              <div>
+                <h2 className="text-xl font-bold text-white">
+                  Wallet Connection
+                </h2>
+                <p className="text-white/70 text-sm">Base network identity</p>
               </div>
-              
-              {Object.values(statsError).some(Boolean) && !loadingStats && (
-                <div className="p-3 rounded-2xl bg-white/10 border border-white/30">
-                  <p className="text-sm text-white text-center">
-                    Some stats failed to load. Try refreshing the page.
-                  </p>
-                </div>
-              )}
             </div>
-          ) : (
-            <div className="text-center py-6">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
-                <span className="text-2xl">🔌</span>
-              </div>
-              <p className="text-white/70 mb-4 font-medium">Connect your wallet to view on-chain stats</p>
-              <p className="text-white/50 text-sm mb-6">Access your NFTs, staking data, and leaderboard rank</p>
-              <WalletConnect />
-            </div>
-          )}
-        </div>
-
-        {/* FAQ Section */}
-        <div className="glass-card rounded-3xl p-6 shadow-2xl">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
-              <span className="text-xl">❓</span>
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-white">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-white/70 text-sm">Learn about FarFISH features</p>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            {faqItems.map((faq, idx) => {
-              const open = openIdx === idx;
-              return (
-                <div
-                  key={faq.question}
-                  className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden hover:bg-white/10 transition-all duration-300"
-                >
-                  <button
-                    className="flex w-full items-center justify-between px-6 py-4 text-left hover:bg-white/5 transition-colors"
-                    onClick={() => setOpenIdx(open ? null : idx)}
-                  >
-                    <span className="font-medium text-sm text-white">{faq.question}</span>
-                    <div className={`
-                      w-6 h-6 rounded-full bg-white/10 border border-white/20
-                      flex items-center justify-center text-white/70 text-xs
-                      transition-all duration-300 ${open ? 'bg-white/20 text-white' : 'hover:bg-white/15'}
-                    `}>
-                      {open ? '−' : '+'}
-                    </div>
-                  </button>
-                  {open && (
-                    <div className="px-6 pb-4 text-sm text-white/80 leading-relaxed border-t border-white/10 pt-4 mt-2">
-                      {faq.answer}
-                    </div>
+            
+            {isConnected && address ? (
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/20 border border-white/30">
+                  <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                  <span className="text-white font-medium">Wallet Connected</span>
+                  {!isBaseNetwork && (
+                    <span className="text-white/70 text-sm ml-auto">⚠️ Switch to Base</span>
                   )}
                 </div>
-              );
-            })}
+                
+                {/* Wallet Stats Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  {stats.map((stat) => (
+                    <div
+                      key={stat.label}
+                      className={`
+                        relative overflow-hidden bg-gradient-to-br ${stat.bgColor} backdrop-blur-sm 
+                        border border-white/10 rounded-2xl p-4 hover:scale-105 transition-all duration-300
+                        ${loadingStats ? "animate-pulse" : ""}
+                      `}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className={`
+                          w-8 h-8 rounded-lg bg-gradient-to-br from-[#00d4c4] to-[#3be6c1]
+                          flex items-center justify-center shadow-lg flex-shrink-0
+                        `}>
+                          <span className="text-sm">{stat.icon}</span>
+                        </div>
+                        <p className="text-xs uppercase tracking-wide text-white/60 font-medium">
+                          {stat.label}
+                        </p>
+                      </div>
+                      <p className={`text-lg font-bold text-white`}>
+                        {stat.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                
+                {Object.values(statsError).some(Boolean) && !loadingStats && (
+                  <div className="p-3 rounded-2xl bg-white/10 border border-white/30">
+                    <p className="text-sm text-white text-center">
+                      Some stats failed to load. Try refreshing the page.
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-6">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
+                  <span className="text-2xl">🔌</span>
+                </div>
+                <p className="text-white/70 mb-4 font-medium">Connect your wallet to view on-chain stats</p>
+                <p className="text-white/50 text-sm mb-6">Access your NFTs, staking data, and leaderboard rank</p>
+                <WalletConnect />
+              </div>
+            )}
           </div>
-        </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="glass-card rounded-3xl">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00d4c4] to-[#3be6c1] flex items-center justify-center shadow-lg">
+                <span className="text-xl">❓</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">
+                  Frequently Asked Questions
+                </h2>
+                <p className="text-white/70 text-sm">Learn about FarFISH features</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {faqItems.map((faq, idx) => {
+                const open = openIdx === idx;
+                return (
+                  <div
+                    key={faq.question}
+                    className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden hover:bg-white/10 transition-all duration-300"
+                  >
+                    <button
+                      className="flex w-full items-center justify-between px-6 py-4 text-left hover:bg-white/5 transition-colors"
+                      onClick={() => setOpenIdx(open ? null : idx)}
+                    >
+                      <span className="font-medium text-sm text-white">{faq.question}</span>
+                      <div className={`
+                        w-6 h-6 rounded-full bg-white/10 border border-white/20
+                        flex items-center justify-center text-white/70 text-xs
+                        transition-all duration-300 ${open ? 'bg-white/20 text-white' : 'hover:bg-white/15'}
+                      `}>
+                        {open ? '−' : '+'}
+                      </div>
+                    </button>
+                    {open && (
+                      <div className="px-6 pb-4 text-sm text-white/80 leading-relaxed border-t border-white/10 pt-4 mt-2">
+                        {faq.answer}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
       </div>
 
       {toast && (

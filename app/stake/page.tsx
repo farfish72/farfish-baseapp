@@ -114,60 +114,65 @@ export default function StakingPage() {
     <>
       <Header title="Stake" />
 
-      {/* Staking Explanation */}
-      <div className="mt-4 mb-4 p-4 rounded-2xl bg-white/10 border border-white/30">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-xl">🔒</span>
-          <div>
-            <p className="font-semibold text-white">Staking Overview</p>
+      <div className="flex-1 flex flex-col gap-6">
+        {/* Staking Explanation */}
+        <section className="glass-card rounded-3xl">
+          <div className="p-4">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-xl">🔒</span>
+              <div>
+                <p className="font-semibold text-white">Staking Overview</p>
+              </div>
+            </div>
+            <p className="text-sm text-white/70 mb-2">Staking locks your NFT in a smart contract on Base.</p>
+            <p className="text-sm text-white/70">Locked NFTs increase your snapshot weight and unlock protocol rewards.</p>
           </div>
-        </div>
-        <p className="text-sm text-white/70 mb-2">Staking locks your NFT in a smart contract on Base.</p>
-        <p className="text-sm text-white/70">Locked NFTs increase your snapshot weight and unlock protocol rewards.</p>
-      </div>
+        </section>
 
-      <div className="space-y-4 flex-1 flex flex-col">
         {/* Actions */}
-        <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
-          <h2 className="text-xl font-bold mb-4">Stake Your NFTs</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => setIsStakeModalOpen(true)}
-              className="bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black font-bold py-3 rounded-lg"
-            >
-              Stake NFT
-            </button>
-            <button
-              onClick={() => setIsUnstakeModalOpen(true)}
-              className="bg-white/10 text-white font-bold py-3 rounded-lg border border-white/20"
-            >
-              Unstake NFT
-            </button>
-          </div>
-          <div className="mt-3 text-center">
-            <p className="text-xs text-white/60">On-chain action • Base Network</p>
-            <p className="text-xs text-white/60">Gas fees may apply</p>
+        <section className="glass-card rounded-3xl">
+          <div className="p-4">
+            <h2 className="text-xl font-bold mb-4">Stake Your NFTs</h2>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => setIsStakeModalOpen(true)}
+                className="bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black font-bold py-3 rounded-lg"
+              >
+                Stake NFT
+              </button>
+              <button
+                onClick={() => setIsUnstakeModalOpen(true)}
+                className="bg-white/10 text-white font-bold py-3 rounded-lg border border-white/20"
+              >
+                Unstake NFT
+              </button>
+            </div>
+            <div className="mt-3 text-center">
+              <p className="text-xs text-white/60">On-chain action • Base Network</p>
+              <p className="text-xs text-white/60">Gas fees may apply</p>
+            </div>
           </div>
         </section>
 
         <StakeTable />
 
         {/* My Stakes */}
-        <section className="bg-white/5 border border-white/10 rounded-2xl p-4">
-          <h3 className="font-semibold text-lg mb-4">My Staked NFTs</h3>
+        <section className="glass-card rounded-3xl">
+          <div className="p-4">
+            <h3 className="font-semibold text-lg mb-4">My Staked NFTs</h3>
 
-          {/* Staking Flow Explanation */}
-          <div className="mb-4 p-3 rounded-xl bg-white/5 border border-white/10">
-            <p className="text-sm text-white/80 mb-2">
-              <strong>Staking Flow:</strong>
-            </p>
-            <ul className="text-xs text-white/70 space-y-1">
-              <li>• Staking rewards accrue while your NFT is locked</li>
-              <li>• Rewards become claimable after the selected lock period</li>
-              <li>• Claiming finalizes rewards on-chain</li>
-              <li>• Unstaking becomes available after the claim window</li>
-            </ul>
-          </div>
+            {/* Staking Flow Explanation */}
+            <div className="mb-4 p-3 rounded-xl bg-white/5 border border-white/10">
+              <p className="text-sm text-white/80 mb-2">
+                <strong>Staking Flow:</strong>
+              </p>
+              <ul className="text-xs text-white/70 space-y-1">
+                <li>• Staking rewards accrue while your NFT is locked</li>
+                <li>• Rewards become claimable after the selected lock period</li>
+                <li>• Claiming finalizes rewards on-chain</li>
+                <li>• Unstaking becomes available after the claim window</li>
+              </ul>
+            </div>
 
           {!readEnabled && <p>Connect wallet.</p>}
           {isLoading && <p>Loading…</p>}
@@ -214,11 +219,12 @@ export default function StakingPage() {
                 );
               })}
 
-          {writeError && (
-            <p className="text-white text-sm mt-2">
-              {writeError.message}
-            </p>
-          )}
+            {writeError && (
+              <p className="text-white text-sm mt-2">
+                {writeError.message}
+              </p>
+            )}
+          </div>
         </section>
       </div>
 
