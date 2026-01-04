@@ -17,26 +17,26 @@
   --text-tertiary: rgba(255, 255, 255, 0.65);
   --text-quaternary: rgba(255, 255, 255, 0.45);
   
-  /* Background system */
-  --background-primary: #000000;
-  --background-secondary: #1C1C1E;
-  --background-tertiary: #2C2C2E;
-  --background-elevated: #3A3A3C;
+  /* Background system - Soft dark gray for comfortable viewing */
+  --background-primary: #1C1C1E;
+  --background-secondary: #2C2C2E;
+  --background-tertiary: #3A3A3C;
+  --background-elevated: #48484A;
   
-  /* Glass Morphism */
-  --glass-bg: rgba(28, 28, 30, 0.8);
+  /* Glass Morphism - Updated for softer background */
+  --glass-bg: rgba(44, 44, 46, 0.8);
   --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-hover-bg: rgba(44, 44, 46, 0.8);
+  --glass-hover-bg: rgba(58, 58, 60, 0.8);
   --glass-hover-border: rgba(255, 255, 255, 0.15);
   
   /* Borders */
   --border-primary: rgba(255, 255, 255, 0.12);
   --border-secondary: rgba(255, 255, 255, 0.08);
   
-  /* Shadows & Effects */
-  --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.2);
-  --shadow-large: 0 8px 32px rgba(0, 0, 0, 0.25);
+  /* Shadows & Effects - Adjusted for softer background */
+  --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-large: 0 8px 32px rgba(0, 0, 0, 0.35);
   
   /* Gradients */
   --gradient-background: linear-gradient(180deg, var(--background-primary), var(--background-secondary));
@@ -124,7 +124,7 @@ body, input, button, textarea, select {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background-secondary);
+  background: var(--background-tertiary);
   border-radius: 4px;
   margin: 2px;
 }
