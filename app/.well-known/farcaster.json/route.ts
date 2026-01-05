@@ -25,14 +25,14 @@ export async function GET() {
         "https://farfish-baseapp.vercel.app/s2.png",
         "https://farfish-baseapp.vercel.app/s3.png"
       ],
-      "primaryCategory": "games",
+      "primaryCategory": "onchain-utilities",
       "tags": [
-        "nft",
-        "staking",
-        "fish",
-        "game",
-        "rewards"
-      ],
+  "nft",
+  "staking",
+  "rewards",
+  "onchain",
+  "utility"
+],
       "heroImageUrl": "https://farfish-baseapp.vercel.app/og-image.png",
       "ogTitle": "FarFISH",
       "ogDescription": "Stake NFT • Earn Rewards • Dominate the Seas",
