@@ -41,32 +41,11 @@ const pageIcons: Record<string, React.ReactElement> = {
   )
 };
 
-const pageGradients: Record<string, string> = {
-  "Home": "primary",
-  "Chest": "secondary", 
-  "Stake": "success",
-  "Steam": "primary",
-  "Rank": "secondary",
-  "Profile": "success",
-  "Game": "primary"
-};
-
-const pageShadows: Record<string, string> = {
-  "Home": "shadow-primary",
-  "Chest": "shadow-secondary",
-  "Stake": "shadow-success",
-  "Steam": "shadow-primary",
-  "Rank": "shadow-secondary",
-  "Profile": "shadow-success",
-  "Game": "shadow-primary"
-};
-
 export default function Header({ title }: { title: string }) {
   const [isFarcaster, setIsFarcaster] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // Mark as client-side rendered
     setIsClient(true);
     
     try {
@@ -81,56 +60,43 @@ export default function Header({ title }: { title: string }) {
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
     </svg>
   );
-  const colorClass = pageGradients[title] || "primary";
-  const shadow = pageShadows[title] || "shadow-primary";
 
   return (
-    <div className="w-full px-2 pt-3 pb-4 stable-layout">
-      {/* Top section with app name - left aligned like premium apps */}
-      <div className="flex items-start justify-start mb-3">
+    <div className="w-full px-4 pt-6 pb-6">
+      {/* App branding - clean and minimal */}
+      <div className="flex items-start justify-start mb-6">
         <div className="flex flex-col">
-          <h1 className="text-2xl font-display font-bold text-white mb-1">
+          <h1 className="premium-heading text-3xl text-text-primary mb-2">
             FarFISH
           </h1>
-          <div className="flex items-center gap-2 mt-1">
-            <div className="relative">
-              <div className="w-2.5 h-2.5 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full"></div>
-            </div>
-            <span className="text-sm font-semibold text-white/80 tracking-wide">Live on Base</span>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-primary rounded-full"></div>
+            <span className="premium-caption text-text-secondary">Live on Base</span>
           </div>
         </div>
       </div>
 
-      {/* Enhanced positioning message */}
-      <div className="mb-4">
-        <div className="glass-card rounded-2xl p-2.5 border border-primary/15">
-          <div className="relative z-10">
-            <p className="text-sm font-semibold text-white text-center leading-relaxed mb-2">
-              Daily on-chain habits for future rewards on Base
-            </p>
-            <div className="flex justify-center">
-              <div className="flex items-center gap-1.5">
-                <div className="w-1 h-1 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full"></div>
-                <div className="w-1 h-1 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full"></div>
-                <div className="w-1 h-1 bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] rounded-full"></div>
-              </div>
-            </div>
-          </div>
+      {/* Value proposition - clean card */}
+      <div className="mb-6">
+        <div className="outlined-card rounded-2xl p-4">
+          <p className="premium-body text-sm text-text-primary text-center">
+            Daily on-chain habits for future rewards
+          </p>
         </div>
       </div>
 
-      {/* Enhanced page title with emoji and gradient */}
-      <div className="flex items-center gap-3">
-        <div className={`relative w-10 h-10 rounded-3xl bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] flex items-center justify-center ${shadow} transition-all duration-300 interactive-scale`}>
-          <div className="text-black relative z-10 filter drop-shadow-lg">
+      {/* Page title section - clean and focused */}
+      <div className="flex items-center gap-4 mb-6">
+        <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-primary">
+          <div className="text-black">
             {icon}
           </div>
         </div>
         <div className="flex-1">
-          <h2 className={`text-2xl font-display font-bold text-white mb-1 leading-tight`}>
+          <h2 className="premium-heading text-2xl text-text-primary mb-1">
             {title}
           </h2>
-          <p className="text-sm font-medium text-white/80 leading-relaxed">
+          <p className="premium-caption text-text-tertiary">
             {title === "Home" && "Start your daily habit"}
             {title === "Chest" && "Claim daily rewards"}
             {title === "Stake" && "Lock & earn more"}
@@ -142,8 +108,8 @@ export default function Header({ title }: { title: string }) {
         </div>
       </div>
 
-      {/* Enhanced divider */}
-      <div className="mt-4 h-px bg-gradient-to-r from-transparent via-border-primary to-transparent"></div>
+      {/* Clean separator */}
+      <div className="h-px bg-white/10"></div>
     </div>
   );
 }

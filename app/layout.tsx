@@ -74,22 +74,17 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col relative items-center overflow-x-hidden text-white">
         <ThemeProvider>
           <ErrorBoundary>
-          {/* Premium atmospheric elements - simplified */}
+          {/* Premium atmospheric elements - minimal and clean */}
           <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-            {/* Primary accent orb */}
-            <div className="absolute -top-48 -right-48 w-[28rem] h-[28rem] bg-primary/10 rounded-full blur-3xl opacity-60"></div>
+            {/* Primary accent orb - reduced opacity */}
+            <div className="absolute -top-48 -right-48 w-[24rem] h-[24rem] bg-primary/5 rounded-full blur-3xl opacity-40"></div>
             
-            {/* Secondary accent orb */}
-            <div className="absolute -bottom-48 -left-48 w-[32rem] h-[32rem] bg-secondary/8 rounded-full blur-3xl opacity-50"></div>
+            {/* Secondary accent orb - reduced opacity */}
+            <div className="absolute -bottom-48 -left-48 w-[28rem] h-[28rem] bg-primary/3 rounded-full blur-3xl opacity-30"></div>
             
-            {/* Success accent orb */}
-            <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-success/6 rounded-full blur-3xl opacity-40"></div>
-            
-            {/* Subtle floating particles */}
-            <div className="absolute top-20 left-20 w-2 h-2 bg-primary rounded-full opacity-30"></div>
-            <div className="absolute top-40 right-32 w-1.5 h-1.5 bg-secondary rounded-full opacity-25"></div>
-            <div className="absolute bottom-32 left-16 w-2 h-2 bg-success rounded-full opacity-20"></div>
-            <div className="absolute bottom-20 right-20 w-1 h-1 bg-primary rounded-full opacity-15"></div>
+            {/* Subtle floating elements - minimal */}
+            <div className="absolute top-20 left-20 w-1 h-1 bg-primary/20 rounded-full"></div>
+            <div className="absolute bottom-32 right-16 w-1 h-1 bg-primary/15 rounded-full"></div>
           </div>
 
           <FarcasterMiniAppReady />

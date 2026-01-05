@@ -10,71 +10,18 @@ module.exports = {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         display: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
-      colors: {
-        // Premium 4-color system - Primary changed from blue to white
-        primary: {
-          DEFAULT: '#FFFFFF',
-          50: '#FFFFFF',
-          100: '#FFFFFF',
-          200: '#F5F5F5',
-          300: '#E5E5E5',
-          400: '#D4D4D4',
-          500: '#FFFFFF',
-          600: '#E5E5E5',
-          700: '#D4D4D4',
-          800: '#A3A3A3',
-          900: '#737373',
-        },
-        secondary: {
-          DEFAULT: '#5856D6',
-          50: '#F0F0FE',
-          100: '#E1E1FD',
-          200: '#C3C3FB',
-          300: '#A5A5F9',
-          400: '#7B7BE7',
-          500: '#5856D6',
-          600: '#4645AB',
-          700: '#353480',
-          800: '#232255',
-          900: '#12112B',
-        },
-        success: {
-          DEFAULT: '#34C759',
-          50: '#EDFDF2',
-          100: '#DBFBE5',
-          200: '#B7F7CB',
-          300: '#93F3B1',
-          400: '#6FEF97',
-          500: '#34C759',
-          600: '#2A9F47',
-          700: '#1F7735',
-          800: '#154F23',
-          900: '#0A2712',
-        },
-        neutral: {
-          DEFAULT: '#8E8E93',
-          50: '#F7F7F8',
-          100: '#EFEFEF',
-          200: '#DFDFDF',
-          300: '#CFCFCF',
-          400: '#AFAFAF',
-          500: '#8E8E93',
-          600: '#727276',
-          700: '#555559',
-          800: '#39393C',
-          900: '#1C1C1E',
-        },
-        // Background system - REMOVED: Use CSS custom properties only
-        // All background colors now controlled via --app-background in globals.css
-        // Glass system
-        glass: {
-          50: 'rgba(28, 28, 30, 0.95)',
-          100: 'rgba(28, 28, 30, 0.9)',
-          200: 'rgba(28, 28, 30, 0.85)',
-          300: 'rgba(28, 28, 30, 0.8)',
-          400: 'rgba(28, 28, 30, 0.75)',
-          500: 'rgba(28, 28, 30, 0.7)',
-        }
+      fontSize: {
+        '2xs': ['0.625rem', { lineHeight: '0.75rem', letterSpacing: '0.025em' }],
+        'xs': ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.025em' }],
+        'sm': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0.01em' }],
+        'base': ['1rem', { lineHeight: '1.5rem', letterSpacing: '0.01em' }],
+        'lg': ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '0' }],
+        'xl': ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '-0.01em' }],
+        '2xl': ['1.5rem', { lineHeight: '2rem', letterSpacing: '-0.025em' }],
+        '3xl': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '-0.025em' }],
+        '4xl': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '-0.025em' }],
+        '5xl': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.025em' }],
+        '6xl': ['3.75rem', { lineHeight: '1.1', letterSpacing: '-0.025em' }],
       },
       spacing: {
         '18': '4.5rem',
@@ -100,6 +47,58 @@ module.exports = {
         '26': '6.5rem',
         '30': '7.5rem',
       },
+      colors: {
+        // Single accent color system - clean and minimal
+        primary: {
+          DEFAULT: '#00d4c4',
+          50: '#f0fdfc',
+          100: '#ccfbf1',
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#2dd4bf',
+          500: '#00d4c4',
+          600: '#0891b2',
+          700: '#0e7490',
+          800: '#155e75',
+          900: '#164e63',
+        },
+        // Clean grayscale system
+        gray: {
+          50: '#fafafa',
+          100: '#f5f5f5',
+          200: '#e5e5e5',
+          300: '#d4d4d4',
+          400: '#a3a3a3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#171717',
+          950: '#0a0a0a',
+        },
+        // Surface colors for dark theme
+        surface: {
+          DEFAULT: 'rgba(44, 44, 46, 0.8)',
+          secondary: 'rgba(58, 58, 60, 0.6)',
+          elevated: 'rgba(72, 72, 74, 0.4)',
+        },
+        // Text colors
+        text: {
+          primary: '#ffffff',
+          secondary: 'rgba(255, 255, 255, 0.85)',
+          tertiary: 'rgba(255, 255, 255, 0.65)',
+          quaternary: 'rgba(255, 255, 255, 0.45)',
+        },
+        // Glass system
+        glass: {
+          50: 'rgba(28, 28, 30, 0.95)',
+          100: 'rgba(28, 28, 30, 0.9)',
+          200: 'rgba(28, 28, 30, 0.85)',
+          300: 'rgba(28, 28, 30, 0.8)',
+          400: 'rgba(28, 28, 30, 0.75)',
+          500: 'rgba(28, 28, 30, 0.7)',
+        }
+      },
       borderRadius: {
         '4xl': '2rem',
         '5xl': '2.5rem',
@@ -107,20 +106,12 @@ module.exports = {
         '7xl': '3.5rem',
       },
       boxShadow: {
-        'primary': '0 4px 16px rgba(0, 122, 255, 0.25)',
-        'secondary': '0 4px 16px rgba(88, 86, 214, 0.25)',
-        'success': '0 4px 16px rgba(52, 199, 89, 0.25)',
+        'primary': '0 4px 16px rgba(0, 212, 196, 0.25)',
         'small': '0 2px 8px rgba(0, 0, 0, 0.15)',
         'medium': '0 4px 16px rgba(0, 0, 0, 0.2)',
         'large': '0 8px 32px rgba(0, 0, 0, 0.25)',
         'glass': '0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)',
         'glass-lg': '0 16px 48px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.12)',
-      },
-      animation: {
-        // All animations permanently removed for layout stability
-      },
-      keyframes: {
-        // All keyframes permanently removed for layout stability
       },
       backdropBlur: {
         xs: '2px',
@@ -130,19 +121,6 @@ module.exports = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'glass-gradient': 'linear-gradient(135deg, rgba(28,28,30,0.9) 0%, rgba(28,28,30,0.7) 100%)',
-      },
-      fontSize: {
-        '2xs': ['0.625rem', { lineHeight: '0.75rem', letterSpacing: '0.025em' }],
-        'xs': ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.025em' }],
-        'sm': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0.01em' }],
-        'base': ['1rem', { lineHeight: '1.5rem', letterSpacing: '0em' }],
-        'lg': ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '-0.01em' }],
-        'xl': ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '-0.015em' }],
-        '2xl': ['1.5rem', { lineHeight: '2rem', letterSpacing: '-0.025em' }],
-        '3xl': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '-0.035em' }],
-        '4xl': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '-0.045em' }],
-        '5xl': ['3rem', { lineHeight: '1', letterSpacing: '-0.055em' }],
-        '6xl': ['3.75rem', { lineHeight: '1', letterSpacing: '-0.065em' }],
       },
       scale: {
         '98': '0.98',

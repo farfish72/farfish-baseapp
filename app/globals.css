@@ -20,11 +20,6 @@
   --text-tertiary: rgba(255, 255, 255, 0.65);
   --text-quaternary: rgba(255, 255, 255, 0.45);
   
-  /* PREMIUM TEXT COLORS - All white variants */
-  --text-premium: #FFFFFF;
-  --text-premium-lg: #FFFFFF;
-  --text-accent: #FFFFFF;
-  
   /* FIXED SURFACE COLORS - Derived from background but not directly controllable */
   --surface-primary: rgba(44, 44, 46, 0.8);
   --surface-secondary: rgba(58, 58, 60, 0.6);
@@ -65,7 +60,7 @@ body {
 }
 
 /* ------------------------------------------------------
-   Enhanced Noise Texture for Premium Feel - ANIMATIONS DISABLED
+   Premium Static Texture for Clean Feel
 ------------------------------------------------------- */
 body::before {
   content: "";
@@ -73,24 +68,9 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image: 
-    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.025) 1px, transparent 0);
-  background-size: 24px 24px;
-  opacity: 0.6;
-  z-index: 1;
-}
-
-/* ------------------------------------------------------
-   Subtle Animated Grain Overlay - ANIMATIONS DISABLED
-------------------------------------------------------- */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image: 
-    radial-gradient(circle at 2px 2px, rgba(255,255,255,0.015) 1px, transparent 0);
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.015) 1px, transparent 0);
   background-size: 32px 32px;
-  opacity: 0.4;
+  opacity: 0.3;
   z-index: 1;
 }
 
@@ -101,533 +81,280 @@ body::after {
   color: inherit;
 }
 
-/* Ensure all text is white by default */
-body, html {
-  color: var(--text-primary);
-}
-
-/* Override any potential blue text from Tailwind or other sources */
-.text-blue-50,
-.text-blue-100,
-.text-blue-200,
-.text-blue-300,
-.text-blue-400,
-.text-blue-500,
-.text-blue-600,
-.text-blue-700,
-.text-blue-800,
-.text-blue-900,
-.text-sky-50,
-.text-sky-100,
-.text-sky-200,
-.text-sky-300,
-.text-sky-400,
-.text-sky-500,
-.text-sky-600,
-.text-sky-700,
-.text-sky-800,
-.text-sky-900,
-.text-indigo-50,
-.text-indigo-100,
-.text-indigo-200,
-.text-indigo-300,
-.text-indigo-400,
-.text-indigo-500,
-.text-indigo-600,
-.text-indigo-700,
-.text-indigo-800,
-.text-indigo-900,
-.text-cyan-50,
-.text-cyan-100,
-.text-cyan-200,
-.text-cyan-300,
-.text-cyan-400,
-.text-cyan-500,
-.text-cyan-600,
-.text-cyan-700,
-.text-cyan-800,
-.text-cyan-900 {
+/* Force white text on all elements */
+h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, label {
   color: var(--text-primary) !important;
 }
 
-/* ------------------------------------------------------
-   Enhanced Font Rendering & Typography
-------------------------------------------------------- */
-body, input, button, textarea, select {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-variant-ligatures: common-ligatures;
-}
-
-/* Enhanced text selection */
-::selection {
-  background: rgba(0, 122, 255, 0.25);
-  color: white;
-  text-shadow: none;
-}
-
-::-moz-selection {
-  background: rgba(0, 122, 255, 0.25);
-  color: white;
-  text-shadow: none;
+/* Exception for button text that should be black */
+button.primary-button, .primary-button {
+  color: var(--button-text) !important;
 }
 
 /* ------------------------------------------------------
-   Premium Scrollbar Styling
+   PREMIUM COMPONENT CLASSES - Static & Clean
 ------------------------------------------------------- */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+
+/* Enhanced Glass Card */
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-::-webkit-scrollbar-track {
-  background: var(--background-tertiary);
-  border-radius: 4px;
-  margin: 2px;
+.glass-card:hover {
+  background: var(--glass-hover-bg);
+  border-color: var(--glass-hover-border);
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 4px;
-  border: 1px solid var(--border-primary);
-  transition: all 0.3s ease;
+/* Premium Button Styles */
+.premium-button {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  box-shadow: 
+    0 2px 4px rgba(0, 212, 196, 0.2),
+    0 1px 2px rgba(0, 212, 196, 0.1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-hover);
-  border-color: var(--border-accent);
+.premium-button:hover {
+  background: linear-gradient(to right, #00b8a9, #32d4b8);
+  box-shadow: 
+    0 4px 8px rgba(0, 212, 196, 0.25),
+    0 2px 4px rgba(0, 212, 196, 0.15);
+  transform: translateY(-1px);
 }
 
-::-webkit-scrollbar-corner {
-  background: transparent;
+.premium-button:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 4px rgba(0, 212, 196, 0.2),
+    0 1px 2px rgba(0, 212, 196, 0.1);
 }
 
-/* ------------------------------------------------------
-   Enhanced Focus States & Accessibility
-------------------------------------------------------- */
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible,
-[tabindex]:focus-visible {
-  outline: 2px solid var(--primary);
+.premium-button:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.4);
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* Clean Interactive Scale */
+.interactive-scale {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-scale:hover {
+  transform: scale(1.02);
+}
+
+.interactive-scale:active {
+  transform: scale(0.98);
+}
+
+/* Premium Typography */
+.premium-heading {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.premium-subheading {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text-secondary);
+}
+
+.premium-body {
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+.premium-caption {
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--text-tertiary);
+}
+
+/* Enhanced Focus States */
+.focus-ring:focus-visible {
+  outline: 2px solid rgba(0, 212, 196, 0.6);
   outline-offset: 2px;
-  border-radius: 12px;
-  box-shadow: var(--shadow-primary);
+  border-radius: 0.5rem;
+}
+
+/* Clean Loading Spinner */
+.premium-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid var(--text-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Premium Card Variants */
+.elevated-card {
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.outlined-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* Clean Progress Bar */
+.premium-progress {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.premium-progress-fill {
+  background: var(--button-bg);
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* Premium Input Styles */
+.premium-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  backdrop-filter: blur(10px);
   transition: all 0.2s ease;
 }
 
-/* Enhanced focus for interactive elements */
-a:focus-visible,
-button:focus-visible {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-primary), var(--shadow-medium);
+.premium-input:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 212, 196, 0.5);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 212, 196, 0.1);
 }
 
-/* ------------------------------------------------------
-   Premium Component Classes
-------------------------------------------------------- */
-@layer components {
-  /* Button Styles - All buttons use same color as Stake NFT button */
-  .btn-primary,
-  .btn-secondary,
-  .btn-success {
-    @apply relative overflow-hidden transition-all duration-300 ease-out;
-    @apply transform-gpu will-change-transform;
-    background: var(--button-bg);
-    color: var(--button-text);
-    border: none;
+.premium-input::placeholder {
+  color: var(--text-quaternary);
+}
+
+/* Clean Stats Display */
+.stat-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+  padding: 1.5rem;
+  border-radius: 1rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  margin-top: 0.25rem;
+}
+
+/* Premium Table Styles */
+.premium-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.premium-table th {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.premium-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.premium-table tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Clean Badge Styles */
+.premium-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: rgba(0, 212, 196, 0.1);
+  color: #00d4c4;
+  border: 1px solid rgba(0, 212, 196, 0.2);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+/* Responsive Typography Scale */
+@media (max-width: 640px) {
+  .premium-heading {
+    font-size: 1.5rem;
   }
   
-  .btn-primary:hover,
-  .btn-secondary:hover,
-  .btn-success:hover {
-    background: var(--button-hover);
-    transform: translateY(-1px);
-  }
-
-  .btn-premium::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-      transparent, 
-      rgba(255,255,255,0.15), 
-      rgba(255,255,255,0.1), 
-      transparent
-    );
-    transition: left 0.6s ease;
-    z-index: 1;
+  .premium-subheading {
+    font-size: 1.125rem;
   }
   
-  .btn-premium:hover::before {
-    left: 100%;
-  }
-
-  .btn-premium:active {
-    @apply scale-95;
-  }
-
-  /* STANDARDIZED GLASS CARDS - Based on HomeClient.tsx */
-  .glass-card {
-    @apply backdrop-blur-xl border;
-    background: var(--glass-bg);
-    border-color: var(--glass-border);
-    box-shadow: var(--shadow-medium);
-  }
-
-  .glass-card-hover {
-    @apply glass-card transition-all duration-300 transform-gpu will-change-transform;
-  }
-
-  .glass-card-hover:hover {
-    background: var(--glass-hover-bg);
-    border-color: var(--glass-hover-border);
-    box-shadow: var(--shadow-large);
-    transform: translateY(-2px);
-  }
-
-  .glass-card-interactive {
-    @apply glass-card-hover cursor-pointer;
-  }
-
-  /* STANDARDIZED SURFACE CLASSES - Based on HomeClient.tsx patterns */
-  .surface-primary {
-    background-color: var(--surface-primary);
-    border-color: var(--border-primary);
-  }
-
-  .surface-secondary {
-    background-color: var(--surface-secondary);
-    border-color: var(--border-secondary);
-  }
-
-  .surface-elevated {
-    background-color: var(--surface-elevated);
-    border-color: var(--border-primary);
-  }
-
-  /* Common surface patterns from HomeClient.tsx */
-  .surface-badge {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-
-  .surface-info {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .surface-subtle {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  /* Enhanced Gradient Text - All text is white/off-white */
-  .gradient-text-primary,
-  .gradient-text-success {
-    color: var(--text-primary);
-    font-weight: 700;
-  }
-
-  /* Enhanced Loading States */
-  .loading-shimmer {
-    background: var(--background-tertiary);
-  }
-
-  .loading-skeleton {
-    @apply loading-shimmer rounded-2xl;
-    background: var(--background-elevated);
-  }
-
-  /* Enhanced Typography Classes */
-  .text-primary {
-    color: var(--text-primary);
-  }
-
-  .text-secondary {
-    color: var(--text-secondary);
-  }
-
-  .text-tertiary {
-    color: var(--text-tertiary);
-  }
-
-  .text-quaternary {
-    color: var(--text-quaternary);
-  }
-
-  /* PREMIUM TEXT CLASSES - All white */
-  .text-premium {
-    color: var(--text-premium);
-  }
-
-  .text-premium-lg {
-    color: var(--text-premium-lg);
-  }
-
-  .text-accent {
-    color: var(--text-accent);
-  }
-
-  /* FORCE ALL TEXT TO BE WHITE - Override any blue text */
-  th, td, p, span, h1, h2, h3, h4, h5, h6 {
-    color: inherit;
-  }
-
-  /* Ensure table headers are white */
-  th {
-    color: var(--text-secondary) !important;
-  }
-
-  /* Ensure all text elements use white colors */
-  .text-secondary {
-    color: var(--text-secondary) !important;
-  }
-
-  .text-primary {
-    color: var(--text-primary) !important;
-  }
-
-  .text-premium {
-    color: var(--text-premium) !important;
-  }
-
-  .text-premium-lg {
-    color: var(--text-premium-lg) !important;
-  }
-
-  /* Enhanced Interactive States */
-  .interactive-scale {
-    @apply transition-transform duration-200 ease-out transform-gpu will-change-transform;
-  }
-
-  .interactive-scale:hover {
-    @apply scale-105;
-  }
-
-  .interactive-scale:active {
-    @apply scale-95;
-  }
-
-  .interactive-lift {
-    @apply transition-all duration-300 ease-out transform-gpu will-change-transform;
-  }
-
-  .interactive-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-large);
-  }
-
-  .interactive-lift:active {
-    transform: translateY(-1px);
-  }
-
-  /* Enhanced Effects - All using white text */
-  .shadow-primary,
-  .shadow-success {
-    box-shadow: var(--shadow-medium);
-  }
-
-  .border-primary,
-  .border-accent {
-    border-color: var(--border-primary);
-  }
-
-  .bg-primary,
-  .bg-secondary,
-  .bg-success,
-  .bg-neutral {
-    background: var(--button-bg);
-    color: var(--button-text);
-  }
-
-  /* FIXED SURFACE COLORS - No direct background control allowed */
-  .bg-elevated {
-    background-color: var(--surface-elevated);
-  }
-
-  .bg-surface {
-    background-color: var(--surface-primary);
-  }
-
-  .bg-tertiary {
-    background-color: var(--surface-secondary);
-  }
-
-  .bg-primary-hover,
-  .bg-secondary-hover,
-  .bg-success-hover {
-    background-color: var(--button-hover);
+  .stat-value {
+    font-size: 1.5rem;
   }
 }
 
-/* ------------------------------------------------------
-   All animations permanently removed for layout stability
-------------------------------------------------------- */
-
-/* ------------------------------------------------------
-   Responsive Enhancements
-------------------------------------------------------- */
-@media (max-width: 375px) {
-  body {
-    font-size: 14px;
-  }
-  
-  .glass-card {
-    backdrop-filter: blur(12px);
-  }
+/* Clean Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-@media (min-width: 768px) {
-  body {
-    font-size: 16px;
-  }
-  
-  .glass-card {
-    backdrop-filter: blur(20px);
-  }
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
 }
 
-@media (min-width: 1024px) {
-  .glass-card {
-    backdrop-filter: blur(24px);
-  }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
 }
 
-/* ------------------------------------------------------
-   Performance Optimizations & Layout Stability
-------------------------------------------------------- */
-.transform-gpu {
-  transform: translateZ(0);
-  will-change: transform;
-}
-
-.will-change-transform {
-  will-change: transform;
-}
-
-.will-change-opacity {
-  will-change: opacity;
-}
-
-/* FIXED: Prevent layout shifts during async loading */
-.stable-layout {
-  contain: layout style;
-  min-height: 0;
-}
-
-.stable-content {
-  contain: layout;
-  transform: translateZ(0);
-}
-
-/* FIXED: Reduce animation conflicts during data loading */
-.loading-stable {
-  animation-play-state: paused;
-}
-
-.loading-stable * {
-  animation-play-state: paused;
-}
-
-/* FIXED: Timer and layout stability for Chest page */
-.timer-stable {
-  font-variant-numeric: tabular-nums;
-  min-width: 6ch;
-  text-align: center;
-  display: inline-block;
-}
-
-.chest-card-stable {
-  contain: layout;
-  min-height: 200px;
-}
-
-.button-text-stable {
-  min-width: 280px;
-  display: inline-block;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-
-/* DISABLE ALL ANIMATIONS FOR LAYOUT STABILITY */
-*,
-*::before,
-*::after {
-  animation-duration: 0s !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0s !important;
-  animation-play-state: paused !important;
-}
-
-/* Override all custom animations */
-.animate-float,
-.animate-float-slow,
-.animate-float-delayed,
-.animate-pulse-slow,
-.animate-pulse-slower,
-.animate-bounce-subtle,
-.animate-bounce-gentle,
-.animate-rotate-slow,
-.animate-breathe,
-.animate-glow-pulse,
-.animate-morph,
-.animate-spin,
-.animate-pulse,
-.animate-bounce,
-.animate-scale-in,
-.animate-slide-up,
-.animate-fade-in,
-.animate-shimmer,
-.animate-shimmer-slow,
-.animate-gradient,
-.animate-gradient-slow {
-  animation: none !important;
-}
-
-/* Disable gradient text animations */
-.gradient-text,
-.gradient-text-accent,
-.gradient-text-premium {
-  background-size: 100% 100% !important;
-  animation: none !important;
-}
-
-/* Disable shimmer effects */
-.loading-shimmer,
-.loading-skeleton {
-  background-size: 100% 100% !important;
-  animation: none !important;
-}
-
-/* ------------------------------------------------------
-   Reduced Motion Support
-------------------------------------------------------- */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  
-  .animate-float,
-  .animate-float-slow,
-  .animate-float-delayed,
-  .animate-pulse-slow,
-  .animate-pulse-slower,
-  .animate-bounce-subtle,
-  .animate-bounce-gentle,
-  .animate-rotate-slow,
-  .animate-breathe,
-  .animate-glow-pulse,
-  .animate-morph {
-    animation: none !important;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }

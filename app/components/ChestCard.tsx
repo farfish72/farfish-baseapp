@@ -18,46 +18,25 @@ type Props = {
 
 const variantStyles = {
   bronze: {
-    gradient: "",
-    border: "",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
       </svg>
-    ),
-    iconBg: "from-[#00d4c4] to-[#3be6c1]",
-    button: "from-[#00d4c4] to-[#3be6c1] hover:from-[#00b8a9] hover:to-[#32d4b8]",
-    progress: "from-[#00d4c4] to-[#3be6c1]",
-    shadow: "",
-    glow: ""
+    )
   },
   silver: {
-    gradient: "",
-    border: "",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
       </svg>
-    ),
-    iconBg: "from-[#00d4c4] to-[#3be6c1]",
-    button: "from-[#00d4c4] to-[#3be6c1] hover:from-[#00b8a9] hover:to-[#32d4b8]",
-    progress: "from-[#00d4c4] to-[#3be6c1]",
-    shadow: "",
-    glow: ""
+    )
   },
   default: {
-    gradient: "",
-    border: "",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M6,2A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z M6,4H13V9H18V20H6V4Z"/>
       </svg>
-    ),
-    iconBg: "from-[#00d4c4] to-[#3be6c1]",
-    button: "from-[#00d4c4] to-[#3be6c1] hover:from-[#00b8a9] hover:to-[#32d4b8]",
-    progress: "from-[#00d4c4] to-[#3be6c1]",
-    shadow: "",
-    glow: ""
+    )
   }
 };
 
@@ -90,11 +69,9 @@ export default function ChestCard({
     try {
       await onAction();
     } catch (error) {
-      // FIXED: Always clear loading state and show error without blocking navigation
       setLocalError('Action failed. Please try again.');
       console.error('ChestCard action error:', error);
     } finally {
-      // FIXED: Always clear loading state to prevent UI freeze
       setIsLoading(false);
     }
   };
@@ -108,18 +85,15 @@ export default function ChestCard({
     try {
       await onSecondaryAction();
     } catch (error) {
-      // FIXED: Always clear loading state and show error without blocking navigation
       setLocalError('Action failed. Please try again.');
       console.error('ChestCard secondary action error:', error);
     } finally {
-      // FIXED: Always clear loading state to prevent UI freeze
       setSecondaryLoading(false);
     }
   };
 
   const displayError = error || localError;
 
-  // FIXED: Clear loading states on component unmount to prevent navigation freeze
   useEffect(() => {
     return () => {
       setIsLoading(false);
@@ -128,174 +102,127 @@ export default function ChestCard({
     };
   }, []);
 
-  // FIXED: Auto-clear loading states after timeout to prevent stuck UI
   useEffect(() => {
     if (isLoading || secondaryLoading) {
       const timeout = setTimeout(() => {
         setIsLoading(false);
         setSecondaryLoading(false);
         setLocalError('Operation timed out. Please try again.');
-      }, 30000); // 30 second timeout
+      }, 30000);
 
       return () => clearTimeout(timeout);
     }
   }, [isLoading, secondaryLoading]);
 
   return (
-    <article className="glass-card rounded-3xl backdrop-blur-4xl transform-gpu chest-card-stable group">
-      {/* Enhanced animated background elements - ANIMATIONS DISABLED */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-white/8 to-transparent rounded-full blur-3xl opacity-60"></div>
-      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-gradient-to-tr from-white/8 to-transparent rounded-full blur-3xl opacity-60"></div>
-      <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-white/5 rounded-full blur-2xl opacity-40"></div>
-      
-      {/* Enhanced shimmer overlay - DISABLED */}
-      <div className="absolute inset-0 bg-shimmer opacity-0 rounded-5xl"></div>
-      
-      {/* Premium inner gradient */}
-      <div className="absolute inset-0 bg-premium-gradient opacity-30 rounded-5xl"></div>
-      
-      <div className="relative z-10 p-4">
-        {/* Enhanced Header */}
-        <div className="flex items-start justify-between gap-4 mb-5">
-          <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className={`
-              relative w-12 h-12 rounded-3xl bg-gradient-to-br ${styles.iconBg} 
-              flex items-center justify-center ${styles.glow} backdrop-blur-sm group/icon flex-shrink-0
-              shadow-inner-glow
-            `}>
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/30 to-white/5"></div>
-              <div className="absolute inset-0 rounded-3xl bg-shimmer opacity-0"></div>
-              <div className="text-white relative z-10 filter drop-shadow-lg">
-                {styles.icon}
-              </div>
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-lg font-display font-bold text-premium-lg text-premium leading-tight">{title}</h3>
-              {description && (
-                <p className="text-sm font-medium text-secondary leading-relaxed mt-1">{description}</p>
-              )}
+    <article className="glass-card rounded-3xl p-6">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-4 mb-6">
+        <div className="flex items-center gap-4 min-w-0 flex-1">
+          <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-primary flex-shrink-0">
+            <div className="text-black">
+              {styles.icon}
             </div>
           </div>
-
-          {badge && (
-            <div className={`
-              px-3 py-2 rounded-2xl glass-card text-xs font-bold tracking-wide backdrop-blur-xl shadow-soft flex-shrink-0
-              ${badge === "Ready" 
-                ? "bg-white/25 border-white/50 text-white shadow-[0_0_12px_rgba(255,255,255,0.4)]" 
-                : badge === "Cooling" 
-                  ? "bg-white/15 border-white/30 text-white/70 shadow-[0_0_12px_rgba(255,255,255,0.2)]"
-                  : badge === "Stake required"
-                    ? "bg-white/10 border-white/20 text-white/60 shadow-[0_0_12px_rgba(255,255,255,0.1)]"
-                    : "bg-white/15 border-white/25 text-white/95"
-              }
-            `}>
-              {badge}
-            </div>
-          )}
+          <div className="min-w-0 flex-1">
+            <h3 className="premium-heading text-lg text-text-primary">{title}</h3>
+            {description && (
+              <p className="premium-caption text-text-secondary mt-1">{description}</p>
+            )}
+          </div>
         </div>
 
-        {/* Enhanced Progress Bar */}
-        {typeof progress === "number" && (
-          <div className="mb-5">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-bold text-secondary">Progress</span>
-              <span className="text-sm font-bold text-premium">{progress}%</span>
-            </div>
-            <div className="relative h-4 w-full rounded-full bg-white/15 overflow-hidden shadow-inner backdrop-blur-sm">
-              <div className="absolute inset-0 bg-gradient-to-r from-white/8 to-transparent rounded-full"></div>
-              <div
-                className={`
-                  h-full bg-gradient-to-r ${styles.progress} shadow-lg relative overflow-hidden rounded-full
-                `}
-                style={{ width: `${progress}%` }}
-              >
-                <div className="absolute inset-0 bg-shimmer"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full"></div>
-              </div>
-            </div>
+        {badge && (
+          <div className={`premium-badge ${
+            badge === "Ready" 
+              ? "bg-primary/20 text-primary border-primary/30" 
+              : badge === "Cooling" 
+                ? "bg-white/10 text-text-tertiary border-white/20"
+                : badge === "Stake required"
+                  ? "bg-white/5 text-text-quaternary border-white/10"
+                  : "bg-white/10 text-text-secondary border-white/20"
+          }`}>
+            {badge}
           </div>
         )}
+      </div>
 
-        {/* Enhanced Error Display */}
-        {displayError && (
-          <div className="mb-5 glass-card bg-white/15 border-white/40 backdrop-blur-xl rounded-3xl">
-            <div className="flex items-center gap-3 px-4 py-3">
-              <span className="text-white text-lg flex-shrink-0">⚠️</span>
-              <p className="text-sm font-medium text-white flex-1 leading-relaxed">{displayError}</p>
-            </div>
+      {/* Progress Bar */}
+      {typeof progress === "number" && (
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-3">
+            <span className="premium-caption text-text-secondary">Progress</span>
+            <span className="premium-caption text-text-primary font-semibold">{progress}%</span>
           </div>
-        )}
-
-        {/* Enhanced Action Buttons */}
-        <div className="space-y-3">
-          {actionLabel && onAction && (
-            <button
-              type="button"
-              onClick={handleAction}
-              disabled={actionDisabled || isLoading}
-              className={`
-                w-full min-h-[44px] rounded-3xl font-bold text-base shadow-elevated
-                btn-premium relative overflow-hidden group transform-gpu
-                flex items-center justify-center px-6 py-3
-                ${actionDisabled || isLoading
-                  ? "bg-white/15 text-white/50 cursor-not-allowed"
-                  : `bg-gradient-to-r ${styles.button} text-black ${styles.glow}`
-                }
-              `}
-              style={{ minWidth: '280px' }} // FIXED: Reserve consistent width to prevent layout shift
-            >
-              <div className="absolute inset-0 bg-shimmer opacity-0 rounded-3xl"></div>
-              
-              <span className="relative z-10 text-center leading-tight">
-                {isLoading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"></div>
-                    Processing...
-                  </div>
-                ) : (
-                  actionLabel
-                )}
-              </span>
-            </button>
-          )}
-          
-          {secondaryActionLabel && onSecondaryAction && (
-            <button
-              type="button"
-              onClick={handleSecondaryAction}
-              disabled={secondaryActionDisabled || secondaryLoading}
-              className={`
-                w-full min-h-[44px] rounded-3xl glass-card text-sm font-bold transition-all duration-300
-                btn-premium relative overflow-hidden group backdrop-blur-xl transform-gpu will-change-transform
-                flex items-center justify-center px-6 py-2.5 gap-2
-                ${secondaryActionDisabled || secondaryLoading
-                  ? "border-white/25 text-white/50 cursor-not-allowed"
-                  : "border-white/40 text-premium hover:bg-white/15 hover:border-white/50 hover:scale-[1.02] shadow-soft hover:shadow-elevated"
-                }
-              `}
-            >
-              {!secondaryActionDisabled && !secondaryLoading && (
-                <div className="absolute inset-0 bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
-              )}
-              
-              <span className="relative z-10 flex items-center gap-2">
-                {secondaryLoading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                    Loading...
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21C5,22.11 5.89,23 7,23H17C18.11,23 19,22.11 19,21V3C19,1.89 18.11,1 17,1Z"/>
-                    </svg>
-                    {secondaryActionLabel}
-                  </>
-                )}
-              </span>
-            </button>
-          )}
+          <div className="premium-progress h-2">
+            <div
+              className="premium-progress-fill"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
+      )}
+
+      {/* Error Display */}
+      {displayError && (
+        <div className="mb-6 outlined-card rounded-2xl p-4 border-red-500/20 bg-red-500/5">
+          <div className="flex items-center gap-3">
+            <span className="text-red-400 text-lg flex-shrink-0">⚠️</span>
+            <p className="premium-caption text-red-300 flex-1">{displayError}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Action Buttons */}
+      <div className="space-y-3">
+        {actionLabel && onAction && (
+          <button
+            type="button"
+            onClick={handleAction}
+            disabled={actionDisabled || isLoading}
+            className={`premium-button w-full py-3 px-6 rounded-2xl font-semibold focus-ring ${
+              actionDisabled || isLoading
+                ? "premium-button:disabled"
+                : ""
+            }`}
+          >
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="premium-spinner w-4 h-4"></div>
+                Processing...
+              </div>
+            ) : (
+              actionLabel
+            )}
+          </button>
+        )}
+        
+        {secondaryActionLabel && onSecondaryAction && (
+          <button
+            type="button"
+            onClick={handleSecondaryAction}
+            disabled={secondaryActionDisabled || secondaryLoading}
+            className={`outlined-card w-full py-3 px-6 rounded-2xl font-semibold text-text-primary focus-ring interactive-scale ${
+              secondaryActionDisabled || secondaryLoading
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-white/5"
+            }`}
+          >
+            {secondaryLoading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="premium-spinner w-4 h-4"></div>
+                Loading...
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21C5,22.11 5.89,23 7,23H17C18.11,23 19,22.11 19,21V3C19,1.89 18.11,1 17,1Z"/>
+                </svg>
+                {secondaryActionLabel}
+              </div>
+            )}
+          </button>
+        )}
       </div>
     </article>
   );
