@@ -21,7 +21,9 @@ export async function GET() {
       "tagline": "Earn Rewards Daily",
       "description": "Mint. Stake. Earn. Dominate the Seas. Premium NFT collection built for Farcaster. NFT Staking • Leaderboard • Monthly Rewards.",
       "screenshotUrls": [
-        "https://farfish-baseapp.vercel.app/frame-image.png"
+        "https://farfish-baseapp.vercel.app/s1.png",
+        "https://farfish-baseapp.vercel.app/s2.png",
+        "https://farfish-baseapp.vercel.app/s3.png"
       ],
       "primaryCategory": "games",
       "tags": [
