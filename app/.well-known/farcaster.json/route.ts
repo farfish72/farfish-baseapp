@@ -25,7 +25,7 @@ export async function GET() {
         "https://farfish-baseapp.vercel.app/s2.png",
         "https://farfish-baseapp.vercel.app/s3.png"
       ],
-      "primaryCategory": "onchain-utilities",
+      "primaryCategory": "utility",
       "tags": [
   "nft",
   "staking",
