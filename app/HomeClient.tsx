@@ -100,7 +100,6 @@ export default function HomeClient() {
   // State
   const [supplyInfo, setSupplyInfo] = useState<SupplyInfo[]>([]);
   const [loadingSupplies, setLoadingSupplies] = useState(false);
-  const [hasMinted, setHasMinted] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const [lastMintedTokenId, setLastMintedTokenId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -277,56 +276,6 @@ export default function HomeClient() {
     }
   }, []);
 
-  // Check if wallet has already minted (balanceOf > 0 for any tokenId)
-  const checkHasMinted = useCallback(async () => {
-    if (typeof window === "undefined" || !address || !NFT_CONTRACT_ADDRESS) {
-      setHasMinted(false);
-      return;
-    }
-
-    try {
-      const publicClient = getPublicClient(wagmiConfig, { chainId: base.id });
-      if (!publicClient) {
-        return;
-      }
-
-      const balancePromises = TOKEN_IDS.map((id) =>
-        (publicClient.readContract as any)({
-          address: NFT_CONTRACT_ADDRESS as `0x${string}`,
-          abi: nftDropAbi as any,
-          functionName: "balanceOf",
-          args: [address as `0x${string}`, BigInt(id)],
-        }) as Promise<bigint>
-      );
-
-      const balances = await Promise.all(balancePromises);
-      const hasAnyBalance = balances.some((balance) => balance > BigInt(0));
-      setHasMinted(hasAnyBalance);
-
-      // If user has minted, find which tokenId and fetch its URI
-      if (hasAnyBalance) {
-        const mintedId = balances.findIndex((balance) => balance > BigInt(0));
-        if (mintedId >= 0) {
-          setLastMintedTokenId(mintedId);
-          try {
-            const uri = (await (publicClient.readContract as any)({
-              address: NFT_CONTRACT_ADDRESS as `0x${string}`,
-              abi: nftDropAbi as any,
-              functionName: "uri",
-              args: [BigInt(mintedId)],
-            })) as string;
-            if (uri) {
-              setMintedTokenUri(uri);
-            }
-          } catch {
-            // URI fetch failed, continue without it
-          }
-        }
-      }
-    } catch (error) {
-    }
-  }, [address]);
-
 
   // Fetch supply info and claim conditions on mount and when contract address changes
   useEffect(() => {
@@ -339,27 +288,24 @@ export default function HomeClient() {
   // Check mint status when wallet connects or address changes
   useEffect(() => {
     if (typeof window !== "undefined" && isConnected && address) {
-      checkHasMinted();
       setJustMinted(false); // Reset justMinted when wallet changes
     } else {
-      setHasMinted(false);
       setLastMintedTokenId(null);
       setMintedTokenUri(null);
       setJustMinted(false);
     }
-  }, [isConnected, address, checkHasMinted]);
+  }, [isConnected, address]);
 
   // Handle mint success
   useEffect(() => {
     if (isMintConfirmed && mintTxHash) {
       fetchSupplyInfo();
       fetchAllClaimConditions();
-      checkHasMinted();
       setIsMinting(false);
       setJustMinted(true);
       showSuccess("NFT minted successfully!");
     }
-  }, [isMintConfirmed, mintTxHash, fetchSupplyInfo, fetchAllClaimConditions, checkHasMinted, showSuccess]);
+  }, [isMintConfirmed, mintTxHash, fetchSupplyInfo, fetchAllClaimConditions, showSuccess]);
 
   // Handle mint errors
   useEffect(() => {
@@ -418,11 +364,6 @@ export default function HomeClient() {
       return;
     }
 
-    if (hasMinted) {
-      showError("You have already minted an NFT.");
-      return;
-    }
-
     // Build candidates with remaining supply > 0 and valid claim conditions
     const candidates = supplyInfo.filter((info) => {
       if (info.remaining <= BigInt(0)) return false;
@@ -455,7 +396,7 @@ export default function HomeClient() {
       }
 
       const { pricePerToken, currency, quantityLimitPerWallet } = claim.condition;
-      const quantity = BigInt(1);
+      const quantity = BigInt(1); // Always mint exactly 1
 
       // Verify mint has started
       const now = BigInt(Math.floor(Date.now() / 1000));
@@ -517,7 +458,7 @@ export default function HomeClient() {
       const appError = handleTransactionError(error);
       showError(appError.message);
     }
-  }, [address, isConnected, chainId, hasMinted, supplyInfo, claimInfo, writeMint, showError]);
+  }, [address, isConnected, chainId, supplyInfo, claimInfo, writeMint, showError]);
 
   // Calculate total minted and remaining across all tokenIds
   const totalMinted = useMemo(() => {
@@ -538,11 +479,6 @@ export default function HomeClient() {
   }, [totalMinted, totalMaxSupply]);
 
   // Get representative price from claim conditions (use first available token's price)
-  // Only returns price if:
-  // 1. Claim condition exists and is valid
-  // 2. Token has remaining supply
-  // 3. Mint has started (startTimestamp <= now)
-  // 4. Claim condition has remaining supply (supplyClaimed < maxClaimableSupply)
   const representativePrice = useMemo(() => {
     for (const info of supplyInfo) {
       const claim = claimInfo.get(info.id);
@@ -593,11 +529,8 @@ export default function HomeClient() {
     if (!address || !isConnected) {
       return "w-full py-4 text-lg font-semibold rounded-xl bg-white/15 text-white hover:bg-white/25 transition";
     }
-    if (hasMinted) {
-      return "w-full py-4 text-lg font-semibold rounded-xl bg-white/10 text-white/50 cursor-not-allowed";
-    }
     return "w-full py-4 text-lg font-semibold rounded-xl bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black transition disabled:opacity-60";
-  }, [address, isConnected, hasMinted]);
+  }, [address, isConnected]);
 
   const primaryButtonDisabled =
     isConnecting ||
@@ -605,7 +538,6 @@ export default function HomeClient() {
     isMintPending ||
     isMintConfirming ||
     !NFT_CONTRACT_ADDRESS ||
-    hasMinted ||
     loadingSupplies ||
     loadingClaimConditions ||
     representativePrice === null;
@@ -828,9 +760,7 @@ export default function HomeClient() {
                   w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-medium
                   ${primaryButtonDisabled 
                     ? "bg-neutral/20 text-neutral cursor-not-allowed" 
-                    : hasMinted 
-                      ? "bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black"
-                      : "bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black interactive-scale"
+                    : "bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black interactive-scale"
                   }
                 `}
               >
@@ -840,17 +770,15 @@ export default function HomeClient() {
                     {isMinting ? "Preparing..." : isMintPending ? "Confirming..." : "Processing..."}
                   </div>
                 ) : (
-                  hasMinted ? "Minted" : "Early Access Mint"
+                  "Mint Premium Pass"
                 )}
               </button>
 
               {/* Transaction Transparency */}
-              {!hasMinted && (
-                <div className="text-center">
-                  <p className="text-xs text-white/60 mb-1">On-chain action • Base Network</p>
-                  <p className="text-xs text-white/60">Gas fees apply</p>
-                </div>
-              )}
+              <div className="text-center">
+                <p className="text-xs text-white/60 mb-1">On-chain action • Base Network</p>
+                <p className="text-xs text-white/60">Gas fees apply</p>
+              </div>
 
               {lastMintedDisplay && (
                 <div className="p-4 rounded-2xl bg-white/10 border border-white/30">
