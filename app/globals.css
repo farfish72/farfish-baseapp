@@ -1,360 +1,60 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* ------------------------------------------------------
-   GLOBAL THEME SYSTEM - Only Background Color Controllable
-------------------------------------------------------- */
-:root {
-  /* GLOBAL BACKGROUND CONTROL - Change this to update entire app background */
-  --app-background: linear-gradient(180deg, #1C1C1E, #2C2C2E);
-  
-  /* FIXED BUTTON COLORS - Based on HomeClient.tsx reference */
-  --button-bg: linear-gradient(to right, #00d4c4, #3be6c1);
-  --button-text: #000000;
-  --button-hover: #00b8a9;
-  
-  /* FIXED TEXT COLORS - Based on HomeClient.tsx reference */
-  --text-primary: #FFFFFF;
-  --text-secondary: rgba(255, 255, 255, 0.85);
-  --text-tertiary: rgba(255, 255, 255, 0.65);
-  --text-quaternary: rgba(255, 255, 255, 0.45);
-  
-  /* FIXED SURFACE COLORS - Derived from background but not directly controllable */
-  --surface-primary: rgba(44, 44, 46, 0.8);
-  --surface-secondary: rgba(58, 58, 60, 0.6);
-  --surface-elevated: rgba(72, 72, 74, 0.4);
-  
-  /* FIXED GLASS MORPHISM - Based on HomeClient.tsx reference */
-  --glass-bg: rgba(44, 44, 46, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-hover-bg: rgba(58, 58, 60, 0.8);
-  --glass-hover-border: rgba(255, 255, 255, 0.15);
-  
-  /* FIXED BORDERS - Based on HomeClient.tsx reference */
-  --border-primary: rgba(255, 255, 255, 0.12);
-  --border-secondary: rgba(255, 255, 255, 0.08);
-  
-  /* FIXED SHADOWS - Based on HomeClient.tsx reference */
-  --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.3);
-  --shadow-large: 0 8px 32px rgba(0, 0, 0, 0.35);
-}
-
-/* ------------------------------------------------------
-   GLOBAL BACKGROUND APPLICATION
-------------------------------------------------------- */
-body {
-  min-height: 100vh;
-  margin: 0;
-  background: var(--app-background);
-  background-attachment: fixed;
-  color: var(--text-primary);
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01", "ss02";
-  font-variant-numeric: tabular-nums;
-  font-optical-sizing: auto;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* ------------------------------------------------------
-   Premium Static Texture for Clean Feel
-------------------------------------------------------- */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image: 
-    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.015) 1px, transparent 0);
-  background-size: 32px 32px;
-  opacity: 0.3;
-  z-index: 1;
-}
-
-/* ------------------------------------------------------
-   FORCE ALL TEXT TO WHITE - Override any blue text
-------------------------------------------------------- */
-* {
-  color: inherit;
-}
-
-/* Force white text on all elements */
-h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, label {
-  color: var(--text-primary) !important;
-}
-
-/* Exception for button text that should be black */
-button.primary-button, .primary-button {
-  color: var(--button-text) !important;
-}
-
-/* ------------------------------------------------------
-   PREMIUM COMPONENT CLASSES - Static & Clean
-------------------------------------------------------- */
-
-/* Enhanced Glass Card */
-.glass-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 
-    0 1px 3px rgba(0, 0, 0, 0.12),
-    0 1px 2px rgba(0, 0, 0, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.glass-card:hover {
-  background: var(--glass-hover-bg);
-  border-color: var(--glass-hover-border);
-  box-shadow: 
-    0 4px 6px rgba(0, 0, 0, 0.15),
-    0 2px 4px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-}
-
-/* Premium Button Styles */
-.premium-button {
-  background: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  font-weight: 600;
-  letter-spacing: 0.025em;
-  box-shadow: 
-    0 2px 4px rgba(0, 212, 196, 0.2),
-    0 1px 2px rgba(0, 212, 196, 0.1);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.premium-button:hover {
-  background: linear-gradient(to right, #00b8a9, #32d4b8);
-  box-shadow: 
-    0 4px 8px rgba(0, 212, 196, 0.25),
-    0 2px 4px rgba(0, 212, 196, 0.15);
-  transform: translateY(-1px);
-}
-
-.premium-button:active {
-  transform: translateY(0);
-  box-shadow: 
-    0 2px 4px rgba(0, 212, 196, 0.2),
-    0 1px 2px rgba(0, 212, 196, 0.1);
-}
-
-.premium-button:disabled {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.4);
-  box-shadow: none;
-  transform: none;
-  cursor: not-allowed;
-}
-
-/* Clean Interactive Scale */
-.interactive-scale {
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.interactive-scale:hover {
-  transform: scale(1.02);
-}
-
-.interactive-scale:active {
-  transform: scale(0.98);
-}
-
-/* Premium Typography */
-.premium-heading {
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
-}
-
-.premium-subheading {
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-  color: var(--text-secondary);
-}
-
-.premium-body {
-  font-weight: 400;
-  line-height: 1.6;
-  letter-spacing: 0.01em;
-}
-
-.premium-caption {
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  color: var(--text-tertiary);
-}
-
-/* Enhanced Focus States */
-.focus-ring:focus-visible {
-  outline: 2px solid rgba(0, 212, 196, 0.6);
-  outline-offset: 2px;
-  border-radius: 0.5rem;
-}
-
-/* Clean Loading Spinner */
-.premium-spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-top: 2px solid var(--text-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Premium Card Variants */
-.elevated-card {
-  box-shadow: 
-    0 4px 6px rgba(0, 0, 0, 0.1),
-    0 2px 4px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.outlined-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-/* Clean Progress Bar */
-.premium-progress {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 9999px;
-  overflow: hidden;
-}
-
-.premium-progress-fill {
-  background: var(--button-bg);
-  height: 100%;
-  border-radius: 9999px;
-  transition: width 0.3s ease;
-}
-
-/* Premium Input Styles */
-.premium-input {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
-  backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
-}
-
-.premium-input:focus {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(0, 212, 196, 0.5);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 212, 196, 0.1);
-}
-
-.premium-input::placeholder {
-  color: var(--text-quaternary);
-}
-
-/* Clean Stats Display */
-.stat-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(15px);
-  padding: 1.5rem;
-  border-radius: 1rem;
-}
-
-.stat-value {
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--text-primary);
-}
-
-.stat-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-tertiary);
-  margin-top: 0.25rem;
-}
-
-/* Premium Table Styles */
-.premium-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
-.premium-table th {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-secondary);
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.premium-table td {
-  padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: var(--text-primary);
-}
-
-.premium-table tr:hover {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-/* Clean Badge Styles */
-.premium-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  background: rgba(0, 212, 196, 0.1);
-  color: #00d4c4;
-  border: 1px solid rgba(0, 212, 196, 0.2);
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.025em;
-}
-
-/* Responsive Typography Scale */
-@media (max-width: 640px) {
-  .premium-heading {
-    font-size: 1.5rem;
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
   }
-  
-  .premium-subheading {
-    font-size: 1.125rem;
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: #0a0a0a;
+      --foreground: #ededed;
+    }
   }
-  
-  .stat-value {
-    font-size: 1.5rem;
+
+  html,
+  body {
+    max-width: 100vw;
+    overflow-x: hidden;
   }
-}
 
-/* Clean Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: var(--font-inter), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-}
+  code {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-family: var(--font-source-code-pro), monospace;
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem calc(0.25rem + 2px);
+  }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-}
+  @media (prefers-color-scheme: dark) {
+    code {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html {
+      color-scheme: dark;
+    }
+  }
 }
