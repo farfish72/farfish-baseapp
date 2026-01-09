@@ -57,4 +57,16 @@
       color-scheme: dark;
     }
   }
+
+  /* Mobile App Shell Styles */
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Ensure mobile-first responsive behavior */
+  @media (max-width: 768px) {
+    body {
+      font-size: 16px; /* Prevent zoom on iOS */
+    }
+  }
 }

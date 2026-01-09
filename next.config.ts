@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   turbopack: {
-    // Empty config to silence the warning
+    root: __dirname,
   },
 };
 
