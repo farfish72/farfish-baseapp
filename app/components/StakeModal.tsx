@@ -167,6 +167,19 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
     }
   }, [isOpen]);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   // Refetch approval status when modal opens
   useEffect(() => {
     if (isOpen && readEnabled) {

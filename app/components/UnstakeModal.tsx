@@ -68,6 +68,19 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
     }
   }, [isOpen]);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   // Handle transaction success
   useEffect(() => {
     if (isTxSuccess && txHash) {

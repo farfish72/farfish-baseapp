@@ -116,21 +116,6 @@ export default function ChestCard({
 
   return (
     <article className="glass-card rounded-3xl p-6 relative">
-      {/* Badge */}
-      {badge && (
-        <div className={`absolute top-4 right-4 px-2 py-1 rounded-full text-xs font-medium ${
-          badge === "Ready" 
-            ? "bg-green-500/20 text-green-400 border border-green-500/30" 
-            : badge === "Cooling" 
-              ? "bg-white/10 text-white/60 border border-white/20"
-              : badge === "Stake required"
-                ? "bg-white/5 text-white/50 border border-white/10"
-                : "bg-gray-500/20 text-gray-400 border border-gray-500/30"
-        }`}>
-          {badge}
-        </div>
-      )}
-
       {/* Header */}
       <div className="flex items-start gap-4 mb-6">
         <div className="flex items-center gap-4 min-w-0 flex-1">
@@ -146,6 +131,22 @@ export default function ChestCard({
             )}
           </div>
         </div>
+        {/* Badge */}
+        {badge && (
+          <div className={`px-3 py-1 rounded-lg text-xs font-medium flex-shrink-0 whitespace-nowrap min-w-fit ${
+            badge === "Ready" 
+              ? "bg-green-500/20 text-green-400 border border-green-500/30" 
+              : badge === "Cooling" 
+                ? "bg-white/10 text-white/60 border border-white/20"
+                : badge === "Stake required"
+                  ? "bg-white/5 text-white/50 border border-white/10"
+                  : badge === "Coming Soon"
+                    ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                    : "bg-gray-500/20 text-gray-400 border border-gray-500/30"
+          }`}>
+            {badge}
+          </div>
+        )}
       </div>
 
       {/* Progress Bar */}
