@@ -22,6 +22,10 @@ export function handleTransactionError(error: any): AppError {
     return { message: 'Insufficient funds for transaction', shouldShow: true };
   }
   if (error?.message?.includes('execution reverted')) {
+    // Check for specific revert reasons that indicate already minted
+    if (error?.message?.includes('!Qty') || error?.message?.includes('quantity') || error?.message?.includes('limit')) {
+      return { message: 'Already minted', shouldShow: true };
+    }
     return { message: 'Transaction failed. Please check conditions and try again.', shouldShow: true };
   }
   return { message: 'Transaction error occurred. Please try again.', shouldShow: true };

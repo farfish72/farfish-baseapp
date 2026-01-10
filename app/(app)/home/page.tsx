@@ -98,6 +98,7 @@ function HomeClient() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [claimInfo, setClaimInfo] = useState<Map<number, TokenClaimInfo>>(new Map());
   const [loadingClaimConditions, setLoadingClaimConditions] = useState(false);
+  const [mintMessage, setMintMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
   const {
     writeContract: writeMint,
@@ -284,9 +285,9 @@ function HomeClient() {
       fetchSupplyInfo();
       fetchAllClaimConditions();
       setIsMinting(false);
-      showSuccess("NFT minted successfully!");
+      setMintMessage({ type: 'success', text: 'Mint successful' });
     }
-  }, [isMintConfirmed, mintTxHash, fetchSupplyInfo, fetchAllClaimConditions, showSuccess]);
+  }, [isMintConfirmed, mintTxHash, fetchSupplyInfo, fetchAllClaimConditions]);
 
   // Handle mint errors
   useEffect(() => {
@@ -295,16 +296,17 @@ function HomeClient() {
       const appError = handleWalletError(mintError);
       // Only show error if it's not a user cancellation
       if (appError.shouldShow) {
-        showError(appError.message);
+        setMintMessage({ type: 'error', text: appError.message });
       }
     }
-  }, [mintError, showError]);
+  }, [mintError]);
 
   // Clear transaction states on component unmount
   useEffect(() => {
     return () => {
       setIsMinting(false);
       setErrorMessage(null);
+      setMintMessage(null);
       clearAll(); // Clear any remaining toasts
     };
   }, []); // Remove clearAll from dependencies to prevent infinite loop
@@ -316,24 +318,25 @@ function HomeClient() {
   }, [connect, connectors]);
 
   const handleMint = useCallback(async () => {
-    // Clear previous errors
+    // Clear previous errors and messages
     setErrorMessage(null);
+    setMintMessage(null);
 
     // Pre-flight checks
     const walletError = checkWalletConnection(address, isConnected);
     if (walletError) {
-      showError(walletError.message);
+      setMintMessage({ type: 'error', text: walletError.message });
       return;
     }
 
     const networkError = checkNetwork(chainId);
     if (networkError) {
-      showError(networkError.message);
+      setMintMessage({ type: 'error', text: networkError.message });
       return;
     }
 
     if (!NFT_CONTRACT_ADDRESS) {
-      showError("Contract not configured. Mint is disabled.");
+      setMintMessage({ type: 'error', text: 'Contract not configured. Mint is disabled.' });
       return;
     }
 
@@ -354,7 +357,7 @@ function HomeClient() {
     });
 
     if (candidates.length === 0) {
-      showError("No tokens available for minting at this time.");
+      setMintMessage({ type: 'error', text: 'No tokens available for minting at this time.' });
       return;
     }
 
@@ -364,7 +367,7 @@ function HomeClient() {
       const claim = claimInfo.get(tokenId);
 
       if (!claim || !claim.condition) {
-        showError("Mint conditions not available. Please try again.");
+        setMintMessage({ type: 'error', text: 'Mint conditions not available. Please try again.' });
         return;
       }
 
@@ -374,13 +377,13 @@ function HomeClient() {
       // Verify mint has started
       const now = BigInt(Math.floor(Date.now() / 1000));
       if (claim.condition.startTimestamp > now) {
-        showError("Mint has not started yet. Please wait.");
+        setMintMessage({ type: 'error', text: 'Mint has not started yet. Please wait.' });
         return;
       }
 
       // Verify claim condition has remaining supply
       if (claim.condition.supplyClaimed >= claim.condition.maxClaimableSupply) {
-        showError("This token type is sold out. Please try again.");
+        setMintMessage({ type: 'error', text: 'This token type is sold out. Please try again.' });
         return;
       }
 
@@ -407,6 +410,7 @@ function HomeClient() {
       };
 
       setIsMinting(true);
+      setMintMessage({ type: 'info', text: 'Mint started' });
 
       // Call claim function
       await writeMint({
@@ -431,10 +435,10 @@ function HomeClient() {
       const appError = handleTransactionError(error);
       // Only show error if it's not a user cancellation
       if (appError.shouldShow) {
-        showError(appError.message);
+        setMintMessage({ type: 'error', text: appError.message });
       }
     }
-  }, [address, isConnected, chainId, supplyInfo, claimInfo, writeMint, showError]);
+  }, [address, isConnected, chainId, supplyInfo, claimInfo, writeMint]);
 
   // Calculate total minted and remaining across all tokenIds
   const totalMinted = useMemo(() => {
@@ -617,7 +621,7 @@ function HomeClient() {
                     {isMinting ? "Preparing..." : isMintPending ? "Confirming..." : "Processing..."}
                   </div>
                 ) : (
-                  "Mint NFT"
+                  "Mint Premium Pass"
                 )}
               </button>
 
@@ -626,6 +630,29 @@ function HomeClient() {
                 <p className="text-xs text-white/60 mb-1">On-chain action • Base Network</p>
                 <p className="text-xs text-white/60">Price shown in wallet confirmation</p>
               </div>
+
+              {/* Mint Messages */}
+              {mintMessage && (
+                <div className={`p-4 rounded-2xl border ${
+                  mintMessage.type === 'success' 
+                    ? 'bg-green-500/20 border-green-500/30 text-green-100' 
+                    : mintMessage.type === 'error'
+                    ? 'bg-red-500/20 border-red-500/30 text-red-100'
+                    : 'bg-blue-500/20 border-blue-500/30 text-blue-100'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">
+                      {mintMessage.type === 'success' ? '✅' : mintMessage.type === 'error' ? '❌' : 'ℹ️'}
+                    </span>
+                    <div>
+                      <p className="font-semibold">{mintMessage.text}</p>
+                      {mintMessage.type === 'success' && (
+                        <p className="text-xs opacity-80 mt-1">Premium Pass minted successfully!</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {lastMintedDisplay && (
                 <div className="p-4 rounded-2xl bg-white/10 border border-white/30">
