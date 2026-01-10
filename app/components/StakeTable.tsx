@@ -64,52 +64,50 @@ export default function StakeTable() {
           </div>
         </div>
         
-        {/* Responsive Table Container */}
-        <div className="mb-6 -mx-2">
-          <div className="overflow-x-auto px-2">
-            <div className="inline-block min-w-full">
-              <div className="rounded-2xl bg-slate-800/30 border border-white/10 overflow-hidden">
-                <table className="min-w-full text-sm">
-                  <thead className="bg-slate-700/50">
-                    <tr className="text-secondary border-b border-white/15">
-                      <th className="text-left py-4 px-3 font-bold text-xs whitespace-nowrap">Name</th>
-                      <th className="text-left py-4 px-3 font-bold text-xs whitespace-nowrap">Rarity</th>
-                      <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">30d<br/>FRH</th>
-                      <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">90d<br/>FRH</th>
-                      <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">180d<br/>FRH</th>
-                      <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">360d<br/>FRH</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rarities.map((rarity, index) => {
-                      const rewards = STAKING_REWARDS[rarity];
-                      const display = RARITY_DISPLAY[rarity];
-                      const style = rarityStyles[rarity as keyof typeof rarityStyles];
+        {/* Reward Parameters Table with Horizontal Scroll */}
+        <div className="mb-6">
+          <div className="rounded-2xl bg-slate-800/30 border border-white/10 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm" style={{ minWidth: '500px' }}>
+                <thead className="bg-slate-700/50">
+                  <tr className="text-secondary border-b border-white/15">
+                    <th className="text-left py-4 px-4 font-bold text-xs whitespace-nowrap">Name</th>
+                    <th className="text-left py-4 px-3 font-bold text-xs whitespace-nowrap">Rarity</th>
+                    <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">30d<br/>FRH</th>
+                    <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">90d<br/>FRH</th>
+                    <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">180d<br/>FRH</th>
+                    <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">360d<br/>FRH</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rarities.map((rarity, index) => {
+                    const rewards = STAKING_REWARDS[rarity];
+                    const display = RARITY_DISPLAY[rarity];
+                    const style = rarityStyles[rarity as keyof typeof rarityStyles];
 
-                      return (
-                        <tr 
-                          key={rarity} 
-                          className="border-b border-white/5 hover:bg-white/5 transition-colors"
-                        >
-                          <td className="py-4 px-3">
-                            <span className="font-bold text-premium text-xs whitespace-nowrap">{display.name}</span>
+                    return (
+                      <tr 
+                        key={rarity} 
+                        className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                      >
+                        <td className="py-4 px-4">
+                          <span className="font-bold text-premium text-xs whitespace-nowrap">{display.name}</span>
+                        </td>
+                        <td className="py-4 px-3">
+                          <span className={`font-semibold ${style.color} text-xs whitespace-nowrap`}>{display.rarityLabel}</span>
+                        </td>
+                        {lockDurations.map((duration) => (
+                          <td key={duration} className="py-4 px-3 text-center">
+                            <span className="font-bold text-premium text-xs whitespace-nowrap">
+                              {rewards[duration].toLocaleString()}
+                            </span>
                           </td>
-                          <td className="py-4 px-3">
-                            <span className={`font-semibold ${style.color} text-xs whitespace-nowrap`}>{display.rarityLabel}</span>
-                          </td>
-                          {lockDurations.map((duration) => (
-                            <td key={duration} className="py-4 px-3 text-center">
-                              <span className="font-bold text-premium text-xs whitespace-nowrap">
-                                {rewards[duration].toLocaleString()}
-                              </span>
-                            </td>
-                          ))}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

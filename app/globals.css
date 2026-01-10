@@ -503,6 +503,11 @@ button:disabled {
   overflow: hidden;
 }
 
+.overflow-x-auto {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 .relative {
   position: relative;
 }
