@@ -112,9 +112,6 @@ export default function StakeTable() {
         
         <div className="mt-4 glass-card rounded-3xl p-4 space-y-3">
           <div className="flex items-center gap-2 mb-2">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z"/>
-            </svg>
             <h4 className="font-bold text-sm text-premium">Staking Information</h4>
           </div>
           <div className="text-xs text-secondary space-y-2 leading-relaxed">

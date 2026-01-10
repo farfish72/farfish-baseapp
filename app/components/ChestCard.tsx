@@ -115,9 +115,24 @@ export default function ChestCard({
   }, [isLoading, secondaryLoading]);
 
   return (
-    <article className="glass-card rounded-3xl p-6">
+    <article className="glass-card rounded-3xl p-6 relative">
+      {/* Badge */}
+      {badge && (
+        <div className={`absolute top-4 right-4 px-2 py-1 rounded-full text-xs font-medium ${
+          badge === "Ready" 
+            ? "bg-green-500/20 text-green-400 border border-green-500/30" 
+            : badge === "Cooling" 
+              ? "bg-white/10 text-white/60 border border-white/20"
+              : badge === "Stake required"
+                ? "bg-white/5 text-white/50 border border-white/10"
+                : "bg-gray-500/20 text-gray-400 border border-gray-500/30"
+        }`}>
+          {badge}
+        </div>
+      )}
+
       {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-6">
+      <div className="flex items-start gap-4 mb-6">
         <div className="flex items-center gap-4 min-w-0 flex-1">
           <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-primary flex-shrink-0">
             <div className="text-black">
@@ -131,20 +146,6 @@ export default function ChestCard({
             )}
           </div>
         </div>
-
-        {badge && (
-          <div className={`px-3 py-1 rounded-lg text-xs font-medium border ${
-            badge === "Ready" 
-              ? "bg-primary/20 text-primary border-primary/30" 
-              : badge === "Cooling" 
-                ? "bg-white/10 text-text-tertiary border-white/20 shadow-none"
-                : badge === "Stake required"
-                  ? "bg-white/5 text-text-quaternary border-white/10"
-                  : "bg-white/10 text-text-secondary border-white/20"
-          }`}>
-            {badge}
-          </div>
-        )}
       </div>
 
       {/* Progress Bar */}
@@ -180,10 +181,10 @@ export default function ChestCard({
             type="button"
             onClick={handleAction}
             disabled={actionDisabled || isLoading}
-            className={`premium-button w-full py-3 px-6 rounded-2xl font-semibold focus-ring ${
+            className={`w-full py-3 px-6 rounded-2xl font-semibold focus-ring ${
               actionDisabled || isLoading
-                ? "premium-button:disabled"
-                : ""
+                ? "bg-neutral/20 text-neutral cursor-not-allowed"
+                : "bg-gradient-primary text-black hover:shadow-lg"
             }`}
           >
             {isLoading ? (
