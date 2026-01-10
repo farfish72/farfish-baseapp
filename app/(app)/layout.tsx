@@ -1,5 +1,6 @@
 import { BottomNav } from "@/app/components/BottomNav";
 import Footer from "@/app/components/Footer";
+import { ToastProvider } from "@/app/(app)/home/providers/ToastProvider";
 
 export default function AppLayout({
   children,
@@ -7,9 +8,9 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      {/* Page content with padding for footer and nav */}
-      <div style={{ paddingBottom: "120px" }}>
+    <ToastProvider>
+      {/* Page content with optimized padding */}
+      <div style={{ paddingBottom: "140px" }}>
         {children}
       </div>
 
@@ -18,6 +19,6 @@ export default function AppLayout({
 
       {/* Fixed Bottom Navigation */}
       <BottomNav />
-    </>
+    </ToastProvider>
   );
 }

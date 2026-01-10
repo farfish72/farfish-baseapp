@@ -1,5 +1,6 @@
 "use client";
-import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 interface Toast {
   id: number;
@@ -18,22 +19,28 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const pathname = usePathname();
 
-  const showSuccess = (message: string) => {
+  // Clear toasts when navigating to a different page
+  useEffect(() => {
+    setToasts([]);
+  }, [pathname]);
+
+  const showSuccess = useCallback((message: string) => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, message, type: 'success' }]);
     setTimeout(() => {
       setToasts(prev => prev.filter(toast => toast.id !== id));
-    }, 5000);
-  };
+    }, 3000); // Reduced from 5000 to 3000ms
+  }, []);
 
-  const showError = (message: string) => {
+  const showError = useCallback((message: string) => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, message, type: 'error' }]);
     setTimeout(() => {
       setToasts(prev => prev.filter(toast => toast.id !== id));
-    }, 5000);
-  };
+    }, 3000); // Reduced from 5000 to 3000ms
+  }, []);
 
   const clearAll = useCallback(() => {
     setToasts([]);
@@ -56,6 +63,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   ? 'bg-green-500 text-white' 
                   : 'bg-red-500 text-white'
               }`}
+              style={{
+                zIndex: 1000,
+                backdropFilter: 'blur(8px)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+              }}
             >
               <span className="flex-1">{toast.message}</span>
               <button

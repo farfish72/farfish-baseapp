@@ -688,9 +688,5 @@ function HomeClient() {
 }
 
 export default function HomePage() {
-  return (
-    <ToastProvider>
-      <HomeClient />
-    </ToastProvider>
-  );
+  return <HomeClient />;
 }
