@@ -68,15 +68,14 @@ export default function StakeTable() {
         <div className="mb-6">
           <div className="rounded-2xl bg-slate-800/30 border border-white/10 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm" style={{ minWidth: '500px' }}>
+              <table className="w-full text-sm table-fixed" style={{ minWidth: '480px' }}>
                 <thead className="bg-slate-700/50">
                   <tr className="text-secondary border-b border-white/15">
-                    <th className="text-left py-4 px-4 font-bold text-xs whitespace-nowrap">Name</th>
-                    <th className="text-left py-4 px-3 font-bold text-xs whitespace-nowrap">Rarity</th>
-                    <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">30d<br/>FRH</th>
-                    <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">90d<br/>FRH</th>
-                    <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">180d<br/>FRH</th>
-                    <th className="text-center py-4 px-3 font-bold text-xs whitespace-nowrap">360d<br/>FRH</th>
+                    <th className="text-left py-3 px-3 font-bold text-xs" style={{ width: '140px' }}>Name</th>
+                    <th className="text-center py-3 px-2 font-bold text-xs" style={{ width: '85px' }}>30d<br/>FRH</th>
+                    <th className="text-center py-3 px-2 font-bold text-xs" style={{ width: '85px' }}>90d<br/>FRH</th>
+                    <th className="text-center py-3 px-2 font-bold text-xs" style={{ width: '85px' }}>180d<br/>FRH</th>
+                    <th className="text-center py-3 px-2 font-bold text-xs" style={{ width: '85px' }}>360d<br/>FRH</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -90,17 +89,17 @@ export default function StakeTable() {
                         key={rarity} 
                         className="border-b border-white/5 hover:bg-white/5 transition-colors"
                       >
-                        <td className="py-4 px-4">
-                          <span className="font-bold text-premium text-xs whitespace-nowrap">{display.name}</span>
-                        </td>
-                        <td className="py-4 px-3">
-                          <span className={`font-semibold ${style.color} text-xs whitespace-nowrap`}>{display.rarityLabel}</span>
+                        <td className="py-3 px-3" style={{ width: '140px' }}>
+                          <div className="text-left">
+                            <div className="font-bold text-premium text-xs leading-tight">{display.name}</div>
+                            <div className={`font-normal ${style.color} text-xs leading-tight`}>({display.rarityLabel})</div>
+                          </div>
                         </td>
                         {lockDurations.map((duration) => (
-                          <td key={duration} className="py-4 px-3 text-center">
-                            <span className="font-bold text-premium text-xs whitespace-nowrap">
+                          <td key={duration} className="py-3 px-2 text-center" style={{ width: '85px' }}>
+                            <div className="font-bold text-premium text-xs">
                               {rewards[duration].toLocaleString()}
-                            </span>
+                            </div>
                           </td>
                         ))}
                       </tr>

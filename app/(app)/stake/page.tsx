@@ -174,6 +174,7 @@ export default function StakingPage() {
               </div>
             </section>
 
+            {/* StakeTable - same width as other sections */}
             <StakeTable />
 
             {/* My Stakes */}
@@ -271,11 +272,6 @@ export default function StakingPage() {
                           <div>
                             <p className="font-semibold text-white">Stake #{s.stakeId.toString()}</p>
                             <p className="text-xs text-white/60 mt-1">
-                              Reward: {
-                                isNaN(Number(s.rewardAmount)) || Number(s.rewardAmount) === 0 
-                                  ? "-- FRH" 
-                                  : `${Number(s.rewardAmount)} FRH`
-                              }
                             </p>
                           </div>
                           <button
