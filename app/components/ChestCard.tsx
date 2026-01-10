@@ -133,7 +133,7 @@ export default function ChestCard({
         </div>
         {/* Badge */}
         {badge && (
-          <div className={`px-2 py-1 rounded text-xs font-medium flex-shrink-0 whitespace-nowrap ${
+          <div className={`inline-block px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap ${
             badge === "Ready" 
               ? "bg-green-500/20 text-green-400 border border-green-500/30" 
               : badge === "Cooling" 

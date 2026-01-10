@@ -83,6 +83,11 @@ body {
   padding-bottom: 0.25rem;
 }
 
+.py-0\.5 {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+}
+
 .px-6 {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
@@ -384,6 +389,10 @@ button:disabled {
 
 .whitespace-nowrap {
   white-space: nowrap;
+}
+
+.inline-block {
+  display: inline-block;
 }
 
 .min-w-0 {
