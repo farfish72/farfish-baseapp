@@ -88,7 +88,7 @@ const TOKEN_IDS = Array.from({ length: 16 }, (_, i) => i); // 0-15
 function HomeClient() {
   const { address, isConnected, chainId } = useAccount();
   const { connect, connectors, isPending: isConnecting } = useConnect();
-  const { showError, showSuccess } = useToast();
+  const { showError, showSuccess, clearAll } = useToast();
 
   // State
   const [supplyInfo, setSupplyInfo] = useState<SupplyInfo[]>([]);
@@ -293,7 +293,10 @@ function HomeClient() {
     if (mintError) {
       setIsMinting(false);
       const appError = handleWalletError(mintError);
-      showError(appError.message);
+      // Only show error if it's not a user cancellation
+      if (appError.shouldShow) {
+        showError(appError.message);
+      }
     }
   }, [mintError, showError]);
 
@@ -302,8 +305,9 @@ function HomeClient() {
     return () => {
       setIsMinting(false);
       setErrorMessage(null);
+      clearAll(); // Clear any remaining toasts
     };
-  }, []);
+  }, []); // Remove clearAll from dependencies to prevent infinite loop
 
   const handleConnect = useCallback(() => {
     const connector = connectors[0];
@@ -425,7 +429,10 @@ function HomeClient() {
       setIsMinting(false);
       
       const appError = handleTransactionError(error);
-      showError(appError.message);
+      // Only show error if it's not a user cancellation
+      if (appError.shouldShow) {
+        showError(appError.message);
+      }
     }
   }, [address, isConnected, chainId, supplyInfo, claimInfo, writeMint, showError]);
 
@@ -478,7 +485,7 @@ function HomeClient() {
       <Header title="Home" />
 
       <main className="container mx-auto px-4 py-6 max-w-lg">
-        <div className="flex flex-col gap-6 pb-20">
+        <div className="flex flex-col gap-6">
           {/* How FarFISH Works */}
           <section className="glass-card rounded-3xl">
             <div className="p-6">
