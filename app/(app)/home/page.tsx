@@ -7,16 +7,16 @@
 "use client";
 
 import Image from "next/image";
-import Header from "@/app/(app)/home/components/Header";
+import Header from "@/app/components/Header";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useConnect } from "wagmi";
 import { getPublicClient } from "@wagmi/core";
-import { wagmiConfig } from "@/app/(app)/home/lib/wagmi";
-import { NFT_CONTRACT_ADDRESS, getNameFromTokenId } from "@/app/(app)/home/constants";
-import nftDropAbi from "@/app/(app)/home/abi/nftDrop.json";
+import { wagmiConfig } from "@/app/lib/wagmi";
+import { NFT_CONTRACT_ADDRESS, getNameFromTokenId } from "@/app/constants";
+import nftDropAbi from "@/app/abi/nftDrop.json";
 import { base } from "viem/chains";
-import { useToast, ToastProvider } from "@/app/(app)/home/providers/ToastProvider";
-import { handleWalletError, handleTransactionError, checkWalletConnection, checkNetwork } from "@/app/(app)/home/utils/errorHandling";
+import { useToast, ToastProvider } from "@/app/providers/ToastProvider";
+import { handleWalletError, handleTransactionError, checkWalletConnection, checkNetwork } from "@/app/utils/errorHandling";
 
 interface SupplyInfo {
   id: number;
