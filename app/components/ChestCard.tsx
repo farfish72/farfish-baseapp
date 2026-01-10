@@ -117,7 +117,7 @@ export default function ChestCard({
   return (
     <article className="glass-card rounded-3xl p-6 relative">
       {/* Header */}
-      <div className="flex items-start gap-4 mb-6">
+      <div className="flex items-start justify-between gap-4 mb-6">
         <div className="flex items-center gap-4 min-w-0 flex-1">
           <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-primary flex-shrink-0">
             <div className="text-black">
@@ -133,7 +133,7 @@ export default function ChestCard({
         </div>
         {/* Badge */}
         {badge && (
-          <div className={`inline-block px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap ${
+          <div className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium whitespace-nowrap flex-shrink-0 ${
             badge === "Ready" 
               ? "bg-green-500/20 text-green-400 border border-green-500/30" 
               : badge === "Cooling" 

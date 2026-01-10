@@ -128,10 +128,10 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+      className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/80 px-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="glass-card rounded-2xl max-w-md w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
+      <div className="bg-slate-800 border border-white/20 rounded-2xl max-w-md w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">Unstake NFT</h2>
           <button
@@ -144,12 +144,12 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
         </div>
 
         {/* Irreversible Action Warning */}
-        <div className="mb-4 p-3 bg-white/10 border border-white/30 rounded-lg">
+        <div className="mb-4 p-3 bg-slate-700 border border-white/20 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-white">⚠️</span>
             <p className="text-sm font-semibold text-white">Warning</p>
           </div>
-          <div className="text-xs text-white/70 space-y-1">
+          <div className="text-xs text-white/80 space-y-1">
             <p>• Unstaking removes your NFT from the protocol</p>
             <p>• You will stop earning rewards after unstaking</p>
           </div>
@@ -213,7 +213,7 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
           <button
             onClick={onClose}
             disabled={isPending}
-            className="flex-1 rounded-lg border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition disabled:opacity-50"
+            className="flex-1 rounded-lg border border-white/20 bg-white/10 py-3 text-sm font-semibold text-white hover:bg-white/20 transition disabled:opacity-50"
           >
             Cancel
           </button>
@@ -222,7 +222,7 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
             disabled={!isButtonEnabled}
             className={`flex-1 rounded-lg py-3 text-sm font-semibold transition ${
               isButtonEnabled
-                ? "bg-gradient-to-r from-[#00d4c4] to-[#3be6c1] text-black hover:opacity-90"
+                ? "bg-gradient-primary text-black hover:shadow-lg"
                 : "bg-white/10 text-white/40 cursor-not-allowed"
             }`}
           >
