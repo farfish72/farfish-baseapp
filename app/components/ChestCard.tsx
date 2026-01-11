@@ -142,7 +142,7 @@ export default function ChestCard({
                   ? "bg-white/5 text-white/50 border border-white/10"
                   : badge === "Coming Soon"
                     ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                    : "bg-gray-500/20 text-gray-400 border border-gray-500/30"
+                    : "bg-white/10 text-white/60 border border-white/20"
           }`}>
             {badge}
           </div>

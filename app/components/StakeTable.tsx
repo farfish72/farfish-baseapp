@@ -66,11 +66,11 @@ export default function StakeTable() {
         
         {/* Reward Parameters Table with Horizontal Scroll */}
         <div className="mb-6">
-          <div className="rounded-2xl bg-slate-800/30 border border-white/10 overflow-hidden">
+          <div className="rounded-2xl bg-surface border border-white/10 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm table-fixed" style={{ minWidth: '480px' }}>
-                <thead className="bg-slate-700/50">
-                  <tr className="text-secondary border-b border-white/15">
+                <thead className="bg-elevated">
+                  <tr className="text-white/60 border-b border-white/15">
                     <th className="text-left py-3 px-3 font-bold text-xs" style={{ width: '140px' }}>Name</th>
                     <th className="text-center py-3 px-2 font-bold text-xs" style={{ width: '85px' }}>30d<br/>FRH</th>
                     <th className="text-center py-3 px-2 font-bold text-xs" style={{ width: '85px' }}>90d<br/>FRH</th>
@@ -111,7 +111,7 @@ export default function StakeTable() {
           </div>
         </div>
         
-        <div className="rounded-2xl bg-slate-800/30 border border-white/10 p-4 space-y-3">
+        <div className="rounded-2xl bg-surface border border-white/10 p-4 space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <h4 className="font-bold text-sm text-premium">Staking Information</h4>
           </div>

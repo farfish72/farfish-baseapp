@@ -333,7 +333,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
       className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/80 px-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-slate-800 border border-white/20 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
+      <div className="glass-card rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">Stake NFT</h2>
           <button
@@ -346,7 +346,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
         </div>
 
         {/* Transaction Disclosure */}
-        <div className="mb-4 p-3 bg-slate-700 border border-white/20 rounded-lg">
+        <div className="mb-4 p-3 bg-elevated border border-white/20 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-white">ℹ️</span>
             <p className="text-sm font-semibold text-white">Transaction Notice</p>

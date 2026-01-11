@@ -17,8 +17,7 @@ import { NFT_CONTRACT_ADDRESS, getNameFromTokenId } from "@/app/constants";
 import nftDropAbi from "@/app/abi/nftDrop.json";
 import { base } from "viem/chains";
 import { useToast, ToastProvider } from "@/app/providers/ToastProvider";
-import { handleWalletError, handleTransactionError, checkWalletConnection, checkNetwork } from "@/app/utils/errorHandling";
-import { useBaseAuth } from "@/app/contexts/BaseAuthContext";
+import { handleTransactionError } from "@/app/utils/errorHandling";
 
 interface SupplyInfo {
   id: number;
@@ -88,8 +87,7 @@ function pickWeightedTokenId(candidates: SupplyInfo[]): number {
 const TOKEN_IDS = Array.from({ length: 16 }, (_, i) => i); // 0-15
 
 function HomeClient() {
-  const { address, isConnected, chainId } = useAccount();
-  const { user: baseUser, isAuthenticated } = useBaseAuth();
+  const { address } = useAccount();
   const { showError, showSuccess, clearAll } = useToast();
 
   // State
@@ -272,15 +270,6 @@ function HomeClient() {
     }
   }, [fetchSupplyInfo, fetchAllClaimConditions]);
 
-  // Reset state when wallet changes
-  useEffect(() => {
-    if (typeof window !== "undefined" && isConnected && address) {
-      // Reset mint state when wallet changes
-    } else {
-      setLastMintedTokenId(null);
-    }
-  }, [isConnected, address]);
-
   // Handle mint success
   useEffect(() => {
     if (isMintConfirmed && mintTxHash) {
@@ -295,7 +284,7 @@ function HomeClient() {
   useEffect(() => {
     if (mintError) {
       setIsMinting(false);
-      const appError = handleWalletError(mintError);
+      const appError = handleTransactionError(mintError);
       // Only show error if it's not a user cancellation
       if (appError.shouldShow) {
         setMintMessage({ type: 'error', text: appError.message });
@@ -311,29 +300,12 @@ function HomeClient() {
       setMintMessage(null);
       clearAll(); // Clear any remaining toasts
     };
-  }, []); // Remove clearAll from dependencies to prevent infinite loop
-
-  const handleConnect = useCallback(() => {
-    // This is now handled by OnchainKit ConnectWallet component
   }, []);
 
   const handleMint = useCallback(async () => {
     // Clear previous errors and messages
     setErrorMessage(null);
     setMintMessage(null);
-
-    // Pre-flight checks
-    const walletError = checkWalletConnection(address, isConnected);
-    if (walletError) {
-      setMintMessage({ type: 'error', text: walletError.message });
-      return;
-    }
-
-    const networkError = checkNetwork(chainId);
-    if (networkError) {
-      setMintMessage({ type: 'error', text: networkError.message });
-      return;
-    }
 
     if (!NFT_CONTRACT_ADDRESS) {
       setMintMessage({ type: 'error', text: 'Contract not configured. Mint is disabled.' });
@@ -412,7 +384,7 @@ function HomeClient() {
       setIsMinting(true);
       setMintMessage({ type: 'info', text: 'Mint started' });
 
-      // Call claim function
+      // Call claim function - Base App will handle wallet connection automatically
       await writeMint({
         address: NFT_CONTRACT_ADDRESS as `0x${string}`,
         abi: nftDropAbi as any,
@@ -438,7 +410,7 @@ function HomeClient() {
         setMintMessage({ type: 'error', text: appError.message });
       }
     }
-  }, [address, isConnected, chainId, supplyInfo, claimInfo, writeMint]);
+  }, [address, supplyInfo, claimInfo, writeMint]);
 
   // Calculate total minted and remaining across all tokenIds
   const totalMinted = useMemo(() => {
@@ -458,7 +430,7 @@ function HomeClient() {
     return Math.min(100, Math.max(0, (totalMinted / totalMaxSupply) * 100));
   }, [totalMinted, totalMaxSupply]);
 
-  // Button states and labels
+  // Button states and labels - Always show mint button
   const primaryButtonDisabled =
     isMinting ||
     isMintPending ||
@@ -592,42 +564,7 @@ function HomeClient() {
                 </div>
               </div>
 
-          {/* Action Button */}
-          {!isAuthenticated ? (
-            <div className="p-4 rounded-2xl bg-white/10 border border-white/20 text-center">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-gradient-primary flex items-center justify-center">
-                <span className="text-xl text-black">🔗</span>
-              </div>
-              <p className="text-white font-medium mb-2">Base App Authentication Required</p>
-              <p className="text-white/70 text-sm">Please authenticate with Base App to continue</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {/* User Info - No Wallet Address */}
-              <div className="flex items-center justify-between p-3 rounded-xl bg-elevated border border-white/20">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20">
-                    <Image
-                      src={baseUser?.pfpUrl || '/farfish-logo.png'}
-                      alt="Profile"
-                      width={32}
-                      height={32}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-white font-medium text-sm">
-                      {baseUser?.displayName || baseUser?.username || 'Base User'}
-                    </p>
-                    <p className="text-white/60 text-xs">Base App Connected</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-success rounded-full"></div>
-                  <span className="text-xs text-white/60">Ready</span>
-                </div>
-              </div>
-
+              {/* Mint Premium Pass Button - Always Visible */}
               <button
                 type="button"
                 onClick={handleMint}
@@ -690,8 +627,6 @@ function HomeClient() {
                   </div>
                 </div>
               )}
-            </div>
-          )}
           </div>
           </div>
 
@@ -740,9 +675,5 @@ function HomeClient() {
 }
 
 export default function HomePage() {
-  return (
-    <BaseAuthGuard>
-      <HomeClient />
-    </BaseAuthGuard>
-  );
+  return <HomeClient />;
 }

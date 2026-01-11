@@ -72,7 +72,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <span className="flex-1">{toast.message}</span>
               <button
                 onClick={() => dismissToast(toast.id)}
-                className="ml-2 text-white hover:text-gray-200 font-bold text-lg"
+                className="ml-2 text-white hover:text-white/70 font-bold text-lg"
               >
                 ×
               </button>
