@@ -226,6 +226,10 @@ body {
   width: 0.75rem;
 }
 
+.w-2 {
+  width: 0.5rem;
+}
+
 .h-12 {
   height: 3rem;
 }
@@ -240,6 +244,10 @@ body {
 
 .h-3 {
   height: 0.75rem;
+}
+
+.h-2 {
+  height: 0.5rem;
 }
 
 .aspect-square {

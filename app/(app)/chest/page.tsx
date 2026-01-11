@@ -10,7 +10,6 @@ import {
 } from "wagmi";
 import { base } from "viem/chains";
 
-import Header from "@/app/components/Header";
 import ChestCard from "@/app/components/ChestCard";
 import TrustAnchor from "@/app/components/TrustAnchor";
 
@@ -146,8 +145,6 @@ export default function ChestPage() {
   /* ================= UI ================= */
   return (
     <div className="min-h-screen bg-gradient-to-br">
-      <Header title="Chest" />
-
       <main className="container mx-auto px-4 py-6 max-w-lg">
         <div className="flex flex-col gap-6">
         {/* Transparency Notice */}

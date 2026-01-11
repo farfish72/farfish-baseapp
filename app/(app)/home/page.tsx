@@ -7,7 +7,6 @@
 "use client";
 
 import Image from "next/image";
-import Header from "@/app/components/Header";
 import BaseAuthGuard from "@/app/components/BaseAuthGuard";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
@@ -457,10 +456,27 @@ function HomeClient() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br">
-      <Header title="Home" />
-
       <main className="container mx-auto px-4 py-6 max-w-lg">
         <div className="flex flex-col gap-6">
+          {/* Home Section - As specified in requirements */}
+          <section className="glass-card rounded-3xl">
+            <div className="p-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center flex-shrink-0">
+                  <span className="text-xl">🏠</span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-xl font-bold text-white leading-tight">
+                    Home
+                  </h2>
+                  <p className="text-white/70 text-sm mt-1">
+                    Start your daily habit
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* How FarFISH Works */}
           <section className="glass-card rounded-3xl">
             <div className="p-6">

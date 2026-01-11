@@ -35,9 +35,17 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<BaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
-  // Auto sign-in on app load
+  // Set client flag after hydration
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Auto sign-in on app load - only run on client side
+  useEffect(() => {
+    if (!isClient) return;
+
     const autoSignIn = async () => {
       setIsLoading(true);
       setError(null);
@@ -50,19 +58,23 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        // Check if user is already saved in localStorage
-        const savedUser = localStorage.getItem('base_auth_user');
-        if (savedUser) {
-          try {
+        // Check if user is already saved in localStorage - only on client
+        try {
+          const savedUser = localStorage.getItem('base_auth_user');
+          if (savedUser) {
             const parsedUser = JSON.parse(savedUser);
             if (parsedUser && parsedUser.fid) {
               setUser(parsedUser);
               setIsLoading(false);
               return;
             }
-          } catch (err) {
-            console.error('Failed to parse saved user:', err);
+          }
+        } catch (err) {
+          console.error('Failed to parse saved user:', err);
+          try {
             localStorage.removeItem('base_auth_user');
+          } catch (e) {
+            // Ignore localStorage errors
           }
         }
 
@@ -76,7 +88,7 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
     };
 
     autoSignIn();
-  }, [context]);
+  }, [context, isClient]);
 
   const loadUserProfile = async (fid: string) => {
     try {
@@ -104,8 +116,14 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
 
       setUser(baseUser);
       
-      // Store in localStorage for persistence
-      localStorage.setItem('base_auth_user', JSON.stringify(baseUser));
+      // Store in localStorage for persistence - only on client
+      if (isClient) {
+        try {
+          localStorage.setItem('base_auth_user', JSON.stringify(baseUser));
+        } catch (err) {
+          console.warn('Failed to save user to localStorage:', err);
+        }
+      }
     } catch (err) {
       console.error('Failed to load user profile:', err);
       setError('Failed to load profile');
@@ -147,8 +165,14 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setError(null);
     
-    // Clear localStorage
-    localStorage.removeItem('base_auth_user');
+    // Clear localStorage - only on client
+    if (isClient) {
+      try {
+        localStorage.removeItem('base_auth_user');
+      } catch (err) {
+        console.warn('Failed to clear localStorage:', err);
+      }
+    }
     
     // Clear any cached data
     if (typeof window !== 'undefined') {
@@ -156,12 +180,6 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
       window.location.reload();
     }
   };
-
-  // Load user from localStorage on mount (for persistence across page reloads)
-  useEffect(() => {
-    // This is now handled in the autoSignIn effect above
-    // to avoid duplicate loading logic
-  }, []);
 
   const value: BaseAuthContextType = {
     user,

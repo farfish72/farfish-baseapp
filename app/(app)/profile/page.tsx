@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useMemo, useState, useEffect, useCallback, Suspense } from "react";
-import Header from "@/app/components/Header";
 import BaseAuthGuard from "@/app/components/BaseAuthGuard";
 import { useBaseAuth } from "@/app/contexts/BaseAuthContext";
 
@@ -49,8 +48,6 @@ function ProfilePageContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br">
-      <Header title="Profile" />
-
       <main className="container mx-auto px-4 py-6 max-w-lg">
         <div className="flex flex-col gap-6">
           {/* Base App Profile Identity Section */}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Header from "@/app/components/Header";
 import StakeModal from "@/app/components/StakeModal";
 import UnstakeModal from "@/app/components/UnstakeModal";
 import StakeTable from "@/app/components/StakeTable";
@@ -112,8 +111,6 @@ export default function StakingPage() {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br">
-        <Header title="Stake" />
-
         <main className="container mx-auto px-4 py-6 max-w-lg">
           <div className="flex flex-col gap-6">
             {/* Staking Explanation */}

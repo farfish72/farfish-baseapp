@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useAccount, useReadContract } from "wagmi";
-import Header from "@/app/components/Header";
 import useUserStakes from "@/app/hooks/useUserStakes";
 import { NFT_CONTRACT_ADDRESS, STAKING_CONTRACT_ADDRESS } from "@/app/constants";
 import nftAbi from "@/app/abi/nftDrop.json";
@@ -374,7 +373,6 @@ export default function SteamPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br">
-        <Header title="Steam" />
         <main className="container mx-auto px-4 py-6 max-w-lg">
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
@@ -389,8 +387,6 @@ export default function SteamPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br">
-      <Header title="Steam" />
-
       <main className="container mx-auto px-4 py-6 max-w-lg">
         <div className="flex flex-col gap-6">
           {/* Page Header */}
