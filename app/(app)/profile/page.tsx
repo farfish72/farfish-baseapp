@@ -59,10 +59,10 @@ function ProfilePageContent() {
               <div className="space-y-6">
                 {/* Base App Identity Display */}
                 <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/10 border border-white/20">
-                  <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-white/20">
+                  <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-white/20 bg-white/10">
                     <Image
-                      src={baseUser?.pfpUrl || '/farfish-logo.png'}
-                      alt="Base App Avatar"
+                      src="/pfp.png"
+                      alt="Profile Avatar"
                       width={48}
                       height={48}
                       className="w-full h-full object-cover"

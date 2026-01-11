@@ -88,6 +88,20 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
         pfpUrl: context?.user?.pfpUrl || '/farfish-logo.png',
       };
 
+      // Validate profile photo URL if it exists
+      if (context?.user?.pfpUrl) {
+        try {
+          // Test if the profile photo URL is accessible
+          const response = await fetch(context.user.pfpUrl, { method: 'HEAD' });
+          if (!response.ok) {
+            baseUser.pfpUrl = '/farfish-logo.png';
+          }
+        } catch (err) {
+          console.warn('Profile photo URL not accessible, using fallback:', err);
+          baseUser.pfpUrl = '/farfish-logo.png';
+        }
+      }
+
       setUser(baseUser);
       
       // Store in localStorage for persistence
