@@ -18,7 +18,7 @@ export default function BaseAuthGuard({ children, fallback }: BaseAuthGuardProps
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-primary flex items-center justify-center">
             <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
           </div>
-          <p className="text-white font-medium">Connecting to Base App...</p>
+          <p className="text-white font-medium">Connected</p>
           <p className="text-white/60 text-sm mt-2">Authenticating your identity</p>
         </div>
       </div>
