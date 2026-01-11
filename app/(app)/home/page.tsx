@@ -600,14 +600,14 @@ function HomeClient() {
           {!isConnected ? (
             <div className="w-full">
               <ConnectWallet className="w-full">
-                <div className="w-full py-4 rounded-2xl bg-gradient-primary text-black font-bold text-lg transition-all duration-300 hover:shadow-lg text-center cursor-pointer">
+                <div className="w-full py-3 px-6 rounded-2xl bg-gradient-primary text-black font-semibold transition-all duration-300 hover:shadow-lg text-center cursor-pointer">
                   Connect Wallet
                 </div>
               </ConnectWallet>
             </div>
           ) : (
             <div className="space-y-4">
-              {/* Wallet Info */}
+              {/* Wallet Info - No Disconnect Option */}
               <div className="flex items-center justify-between p-3 rounded-xl bg-elevated border border-white/20">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
@@ -620,19 +620,10 @@ function HomeClient() {
                     <p className="text-white/60 text-xs">Base Network</p>
                   </div>
                 </div>
-                <Wallet>
-                  <WalletDropdown>
-                    <WalletDropdownLink 
-                      icon="wallet" 
-                      href="https://wallet.coinbase.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Wallet
-                    </WalletDropdownLink>
-                    <WalletDropdownDisconnect />
-                  </WalletDropdown>
-                </Wallet>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-success rounded-full"></div>
+                  <span className="text-xs text-white/60">Connected</span>
+                </div>
               </div>
 
               <button

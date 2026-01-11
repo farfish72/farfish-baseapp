@@ -10,6 +10,20 @@ import Header from "@/app/components/Header";
 import { NFT_CONTRACT_ADDRESS } from "@/app/constants";
 import nftDropAbi from "@/app/abi/nftDrop.json";
 import useUserStakes from "@/app/hooks/useUserStakes";
+import { 
+  ConnectWallet,
+  Wallet,
+  WalletDropdown,
+  WalletDropdownLink,
+  WalletDropdownDisconnect,
+} from '@coinbase/onchainkit/wallet';
+import {
+  Address,
+  Avatar,
+  Name,
+  Identity,
+  EthBalance,
+} from '@coinbase/onchainkit/identity';
 
 type ToastState = { type: "error" | "success"; message: string } | null;
 
@@ -214,115 +228,128 @@ function ProfilePageContent() {
                   <h2 className="text-xl font-bold text-white leading-tight">
                     Profile Identity
                   </h2>
-                  <p className="text-white/70 text-sm">Wallet-based identity on Base</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-6">
-                {/* Editable Profile Picture */}
-                <div className="relative">
-                  <div className="relative h-24 w-24 rounded-2xl overflow-hidden border-2 border-white/20 shadow-lg">
-                    <Image
-                      src={getAvatarUrl()}
-                      alt="Profile Avatar"
-                      width={96}
-                      height={96}
-                      className="object-cover w-full h-full"
-                      unoptimized
-                    />
-                    {/* Edit icon for custom avatar */}
-                    <label className="absolute -top-2 -right-2 bg-gradient-primary rounded-full p-2 cursor-pointer border-2 border-white shadow-lg hover:shadow-lg transition-all duration-300 hover:scale-110">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            const reader = new FileReader();
-                            reader.onload = (event) => {
-                              const result = event.target?.result as string;
-                              localStorage.setItem('profileImage', result);
-                              setToast({ type: "success", message: "Profile picture updated!" });
-                              // Force re-render
-                              window.location.reload();
-                            };
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                      />
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-black" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                      </svg>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Editable Username */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 group relative mb-4">
-                    <input
-                      type="text"
-                      className="text-2xl font-bold bg-transparent border-b-2 border-transparent focus:border-white/40 focus:outline-none w-full pr-8 text-white placeholder-white/50"
-                      defaultValue={getUsername()}
-                      placeholder="Enter username"
-                      onBlur={(e) => {
-                        const newUsername = e.target.value.trim();
-                        if (newUsername) {
-                          localStorage.setItem('username', newUsername);
-                          setToast({ type: "success", message: "Username updated!" });
-                        } else {
-                          localStorage.removeItem('username');
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') e.currentTarget.blur();
-                      }}
-                    />
-                    <div className="absolute right-2 text-white/50 group-focus-within:text-white/70 transition-colors">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                      </svg>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-success rounded-full"></div>
-                      <span className="text-sm text-white font-medium">Profile always accessible</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Wallet Connection & Stats Section */}
-          <section className="glass-card rounded-3xl">
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center flex-shrink-0">
-                  <span className="text-xl">💳</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h2 className="text-xl font-bold text-white leading-tight">
-                    Wallet Connection
-                  </h2>
                   <p className="text-white/70 text-sm">Base network identity</p>
                 </div>
               </div>
-              
+
               {isConnected && address ? (
                 <div className="space-y-6">
-                  <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/10 border border-white/20">
-                    <div className="w-3 h-3 bg-success rounded-full"></div>
-                    <span className="text-white font-medium">Wallet Connected</span>
-                    {!isBaseNetwork && (
-                      <span className="text-white/70 text-sm ml-auto">⚠️ Switch to Base</span>
-                    )}
+                  {/* Base Identity Display */}
+                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/10 border border-white/20">
+                    <Identity address={address} className="flex items-center gap-3">
+                      <Avatar className="h-16 w-16 rounded-2xl border-2 border-white/20" />
+                      <div className="flex-1">
+                        <Name className="text-white font-bold text-lg" />
+                        <Address className="text-white/70 text-sm font-mono" />
+                        <EthBalance className="text-white/60 text-xs mt-1" />
+                      </div>
+                    </Identity>
                   </div>
+
+                  {/* Custom Profile Settings */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 group relative">
+                      <input
+                        type="text"
+                        className="text-lg font-bold bg-transparent border-b-2 border-transparent focus:border-white/40 focus:outline-none w-full pr-8 text-white placeholder-white/50"
+                        defaultValue={getUsername()}
+                        placeholder="Custom display name"
+                        onBlur={(e) => {
+                          const newUsername = e.target.value.trim();
+                          if (newUsername) {
+                            localStorage.setItem('username', newUsername);
+                            setToast({ type: "success", message: "Display name updated!" });
+                          } else {
+                            localStorage.removeItem('username');
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') e.currentTarget.blur();
+                        }}
+                      />
+                      <div className="absolute right-2 text-white/50 group-focus-within:text-white/70 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-success rounded-full"></div>
+                        <span className="text-sm text-white/70">Connected to Base • Identity verified</span>
+                      </div>
+                      <Wallet>
+                        <WalletDropdown>
+                          <Identity
+                            address={address}
+                            className="px-4 pt-3 pb-2 hover:bg-white/10 rounded-xl"
+                            hasCopyAddressOnClick
+                          >
+                            <Avatar className="h-8 w-8" />
+                            <Name className="text-white font-medium" />
+                            <Address className="text-white/70 text-sm" />
+                            <EthBalance className="text-white/60 text-xs" />
+                          </Identity>
+                          <WalletDropdownLink
+                            className="hover:bg-white/10 rounded-xl mx-2 my-1"
+                            icon="wallet"
+                            href="https://wallet.coinbase.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Wallet
+                          </WalletDropdownLink>
+                          <WalletDropdownDisconnect className="mx-2 mb-2 py-2 px-4 rounded-xl bg-gradient-primary text-black font-semibold text-sm transition-all duration-300 hover:shadow-lg text-center cursor-pointer" />
+                        </WalletDropdown>
+                      </Wallet>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
+                    <span className="text-2xl">🔐</span>
+                  </div>
+                  <p className="text-white/70 mb-4 font-medium">Sign in with Base to access your profile</p>
+                  <p className="text-white/50 text-sm mb-6">Connect your wallet to view your Base identity, ENS name, and avatar</p>
+                  <ConnectWallet className="w-full">
+                    <div className="w-full py-3 px-6 rounded-2xl bg-gradient-primary text-black font-semibold transition-all duration-300 hover:shadow-lg text-center cursor-pointer">
+                      Connect Wallet
+                    </div>
+                  </ConnectWallet>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* Wallet Stats Section */}
+          {isConnected && address && (
+            <section className="glass-card rounded-3xl">
+              <div className="p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl">📊</span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-xl font-bold text-white leading-tight">
+                      On-chain Stats
+                    </h2>
+                    <p className="text-white/70 text-sm">Your activity and assets</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-6">
+                  {!isBaseNetwork && (
+                    <div className="p-3 rounded-2xl bg-yellow-500/20 border border-yellow-500/30">
+                      <div className="flex items-center gap-3">
+                        <span className="text-yellow-400 text-lg">⚠️</span>
+                        <p className="text-yellow-100 text-sm">Switch to Base network to view stats</p>
+                      </div>
+                    </div>
+                  )}
                   
-                  {/* Wallet Stats Grid */}
+                  {/* Stats Grid */}
                   <div className="grid grid-cols-2 gap-4">
                     {stats.map((stat) => (
                       <div
@@ -356,20 +383,9 @@ function ProfilePageContent() {
                     </div>
                   )}
                 </div>
-              ) : (
-                <div className="text-center py-6">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
-                    <span className="text-2xl">🔌</span>
-                  </div>
-                  <p className="text-white/70 mb-4 font-medium">Connect your wallet to view on-chain stats</p>
-                  <p className="text-white/50 text-sm mb-6">Access your NFTs, staking data, and leaderboard rank</p>
-                  <button className="bg-gradient-primary text-black px-6 py-3 rounded-2xl font-bold text-lg transition-all duration-300 hover:shadow-lg">
-                    Connect Wallet
-                  </button>
-                </div>
-              )}
-            </div>
-          </section>
+              </div>
+            </section>
+          )}
 
           {/* FAQ Section */}
           <section className="glass-card rounded-3xl">
