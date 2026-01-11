@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   width: 100%;
-  height: 64px;
+  height: var(--bottom-nav-height);
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -17,7 +17,7 @@
   justify-content: space-around;
   align-items: center;
   height: 100%;
-  padding: 0 8px;
+  padding: 0 var(--spacing-sm);
 }
 
 .navItem {
@@ -26,7 +26,7 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 8px 4px;
+  padding: var(--spacing-sm) var(--spacing-xs);
   text-decoration: none;
   color: rgba(255, 255, 255, 0.6);
   transition: color 0.2s;
@@ -43,7 +43,7 @@
 
 .navIcon {
   font-size: 18px;
-  margin-bottom: 4px;
+  margin-bottom: var(--spacing-xs);
 }
 
 .navLabel {

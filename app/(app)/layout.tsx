@@ -9,8 +9,8 @@ export default function AppLayout({
 }) {
   return (
     <ToastProvider>
-      {/* Page content with optimized padding */}
-      <div style={{ paddingBottom: "140px" }}>
+      {/* Page content with content-driven padding */}
+      <div style={{ paddingBottom: "var(--content-bottom-padding)" }}>
         {children}
       </div>
 

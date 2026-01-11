@@ -3,7 +3,7 @@ export default function Footer() {
     <div 
       style={{ 
         position: 'fixed',
-        bottom: '80px', // Adjusted for better spacing above bottom nav
+        bottom: 'var(--footer-offset)', // Uses CSS variable for dynamic positioning
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 998, // Below toasts but above content
@@ -12,12 +12,13 @@ export default function Footer() {
       }}
     >
       <div 
-        className="glass-card rounded-xl p-4 shadow-medium"
+        className="glass-card rounded-xl shadow-medium"
         style={{
           background: 'rgba(255, 255, 255, 0.08)',
           backdropFilter: 'blur(12px)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+          padding: 'var(--spacing-lg)' // Content-driven padding
         }}
       >
         <div className="text-center">
