@@ -158,7 +158,7 @@ export default function TrustAnchor({
 
         {/* Explanation */}
         <div className="p-4 rounded-2xl bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-sm border border-white/10">
-          <p className="text-sm text-white/80 text-center">
+          <p className="text-sm text-center text-black font-bold">
             Activity is measured per wallet and finalized during snapshots.
           </p>
         </div>
