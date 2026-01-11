@@ -9,7 +9,7 @@
 import Image from "next/image";
 import Header from "@/app/components/Header";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useConnect } from "wagmi";
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { getPublicClient } from "@wagmi/core";
 import { wagmiConfig } from "@/app/lib/wagmi";
 import { NFT_CONTRACT_ADDRESS, getNameFromTokenId } from "@/app/constants";
@@ -17,6 +17,13 @@ import nftDropAbi from "@/app/abi/nftDrop.json";
 import { base } from "viem/chains";
 import { useToast, ToastProvider } from "@/app/providers/ToastProvider";
 import { handleWalletError, handleTransactionError, checkWalletConnection, checkNetwork } from "@/app/utils/errorHandling";
+import { 
+  ConnectWallet,
+  Wallet,
+  WalletDropdown,
+  WalletDropdownLink,
+  WalletDropdownDisconnect,
+} from '@coinbase/onchainkit/wallet';
 
 interface SupplyInfo {
   id: number;
@@ -87,7 +94,6 @@ const TOKEN_IDS = Array.from({ length: 16 }, (_, i) => i); // 0-15
 
 function HomeClient() {
   const { address, isConnected, chainId } = useAccount();
-  const { connect, connectors, isPending: isConnecting } = useConnect();
   const { showError, showSuccess, clearAll } = useToast();
 
   // State
@@ -312,10 +318,8 @@ function HomeClient() {
   }, []); // Remove clearAll from dependencies to prevent infinite loop
 
   const handleConnect = useCallback(() => {
-    const connector = connectors[0];
-    if (!connector) return;
-    connect({ connector });
-  }, [connect, connectors]);
+    // This is now handled by OnchainKit ConnectWallet component
+  }, []);
 
   const handleMint = useCallback(async () => {
     // Clear previous errors and messages
@@ -460,7 +464,6 @@ function HomeClient() {
 
   // Button states and labels
   const primaryButtonDisabled =
-    isConnecting ||
     isMinting ||
     isMintPending ||
     isMintConfirming ||
@@ -595,14 +598,43 @@ function HomeClient() {
 
           {/* Action Button */}
           {!isConnected ? (
-            <button
-              onClick={handleConnect}
-              className="w-full py-4 rounded-2xl bg-gradient-primary text-black font-bold text-lg transition-all duration-300 hover:shadow-lg"
-            >
-              Connect Wallet
-            </button>
+            <div className="w-full">
+              <ConnectWallet className="w-full">
+                <div className="w-full py-4 rounded-2xl bg-gradient-primary text-black font-bold text-lg transition-all duration-300 hover:shadow-lg text-center cursor-pointer">
+                  Connect Wallet
+                </div>
+              </ConnectWallet>
+            </div>
           ) : (
             <div className="space-y-4">
+              {/* Wallet Info */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-elevated border border-white/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
+                    <span className="text-sm font-bold text-black">W</span>
+                  </div>
+                  <div>
+                    <p className="text-white font-medium text-sm">
+                      {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Connected'}
+                    </p>
+                    <p className="text-white/60 text-xs">Base Network</p>
+                  </div>
+                </div>
+                <Wallet>
+                  <WalletDropdown>
+                    <WalletDropdownLink 
+                      icon="wallet" 
+                      href="https://wallet.coinbase.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Wallet
+                    </WalletDropdownLink>
+                    <WalletDropdownDisconnect />
+                  </WalletDropdown>
+                </Wallet>
+              </div>
+
               <button
                 type="button"
                 onClick={handleMint}

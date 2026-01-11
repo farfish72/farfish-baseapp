@@ -51,51 +51,12 @@ export default function useUser() {
   const [farcasterProfile, setFarcasterProfile] = useState<FarcasterProfile | null>(null);
   const [stakedCount, setStakedCount] = useState(0);
 
-  // Fetch Farcaster display data (PFP + username only) via server-side API
+  // For Base miniapp, we don't need Farcaster profile fetching
   useEffect(() => {
-    let cancelled = false;
-    
-    const fetchFarcasterDisplayData = async () => {
-      if (!address) {
-        if (!cancelled) {
-          setFarcasterProfile(null);
-        }
-        return;
-      }
-
-      setLoadingFarcaster(true);
-      try {
-        // Call server-side API that has access to NEYNAR_API_KEY
-        const response = await fetch(`/api/farcaster/profile?wallet=${address}`, {
-          cache: "no-store",
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          if (!cancelled) {
-            setFarcasterProfile(data.profile);
-          }
-        } else {
-          if (!cancelled) {
-            setFarcasterProfile(null);
-          }
-        }
-      } catch (error) {
-        if (!cancelled) {
-          setFarcasterProfile(null);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoadingFarcaster(false);
-        }
-      }
-    };
-
-    fetchFarcasterDisplayData();
-    
-    return () => {
-      cancelled = true;
-    };
+    if (!address) {
+      setFarcasterProfile(null);
+    }
+    setLoadingFarcaster(false);
   }, [address]);
 
   useEffect(() => {
@@ -124,7 +85,7 @@ export default function useUser() {
     [rarityBreakdown]
   );
 
-  // Display name priority: localStorage override > Farcaster display name > Farcaster username > default
+  // Display name priority: localStorage override > default
   const displayName = useMemo(() => {
     const localUsername = typeof window !== "undefined" ? localStorage.getItem('username') : null;
     
@@ -133,19 +94,10 @@ export default function useUser() {
       return localUsername.trim();
     }
     
-    // Otherwise use Farcaster data if available
-    if (farcasterProfile?.displayName) {
-      return farcasterProfile.displayName;
-    }
-    
-    if (farcasterProfile?.username) {
-      return farcasterProfile.username;
-    }
-    
     return "FarFISH Captain";
-  }, [farcasterProfile]);
+  }, []);
 
-  // Profile picture priority: localStorage override > Farcaster PFP > default
+  // Profile picture priority: localStorage override > default
   const pfpUrl = useMemo(() => {
     const localImage = typeof window !== "undefined" ? localStorage.getItem('profileImage') : null;
     
@@ -154,13 +106,8 @@ export default function useUser() {
       return localImage;
     }
     
-    // Otherwise use Farcaster PFP if available
-    if (farcasterProfile?.pfpUrl) {
-      return farcasterProfile.pfpUrl;
-    }
-    
     return "/farfish-logo.png";
-  }, [farcasterProfile]);
+  }, []);
 
   const fid = farcasterProfile?.fid ?? 0;
 
