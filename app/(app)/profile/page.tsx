@@ -77,7 +77,7 @@ function ProfilePageContent() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-success rounded-full"></div>
-                    <span className="text-sm text-white/70">Connected to Base App</span>
+                    <span className="text-sm text-white/70">Connected</span>
                   </div>
                   <button
                     onClick={signOut}

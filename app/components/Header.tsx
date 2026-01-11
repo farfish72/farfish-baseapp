@@ -1,7 +1,7 @@
 export default function Header() {
   return (
     <header className="sticky top-0 z-10 bg-surface backdrop-blur-md border-b border-white/10">
-      <div className="container mx-auto px-4 py-4 max-w-lg">
+      <div className="container mx-auto px-4 py-1 max-w-lg">
         <div className="text-left">
           {/* App Name */}
           <h1 className="text-2xl font-bold text-primary mb-1">
