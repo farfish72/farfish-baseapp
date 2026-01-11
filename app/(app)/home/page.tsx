@@ -8,6 +8,7 @@
 
 import Image from "next/image";
 import Header from "@/app/components/Header";
+import BaseAuthGuard from "@/app/components/BaseAuthGuard";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { getPublicClient } from "@wagmi/core";
@@ -17,13 +18,7 @@ import nftDropAbi from "@/app/abi/nftDrop.json";
 import { base } from "viem/chains";
 import { useToast, ToastProvider } from "@/app/providers/ToastProvider";
 import { handleWalletError, handleTransactionError, checkWalletConnection, checkNetwork } from "@/app/utils/errorHandling";
-import { 
-  ConnectWallet,
-  Wallet,
-  WalletDropdown,
-  WalletDropdownLink,
-  WalletDropdownDisconnect,
-} from '@coinbase/onchainkit/wallet';
+import { useBaseAuth } from "@/app/contexts/BaseAuthContext";
 
 interface SupplyInfo {
   id: number;
@@ -94,6 +89,7 @@ const TOKEN_IDS = Array.from({ length: 16 }, (_, i) => i); // 0-15
 
 function HomeClient() {
   const { address, isConnected, chainId } = useAccount();
+  const { user: baseUser, isAuthenticated } = useBaseAuth();
   const { showError, showSuccess, clearAll } = useToast();
 
   // State
@@ -597,32 +593,38 @@ function HomeClient() {
               </div>
 
           {/* Action Button */}
-          {!isConnected ? (
-            <div className="w-full">
-              <ConnectWallet className="w-full">
-                <div className="w-full py-3 px-6 rounded-2xl bg-gradient-primary text-black font-semibold transition-all duration-300 hover:shadow-lg text-center cursor-pointer">
-                  Connect Wallet
-                </div>
-              </ConnectWallet>
+          {!isAuthenticated ? (
+            <div className="p-4 rounded-2xl bg-white/10 border border-white/20 text-center">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-gradient-primary flex items-center justify-center">
+                <span className="text-xl text-black">🔗</span>
+              </div>
+              <p className="text-white font-medium mb-2">Base App Authentication Required</p>
+              <p className="text-white/70 text-sm">Please authenticate with Base App to continue</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {/* Wallet Info - No Disconnect Option */}
+              {/* User Info - No Wallet Address */}
               <div className="flex items-center justify-between p-3 rounded-xl bg-elevated border border-white/20">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
-                    <span className="text-sm font-bold text-black">W</span>
+                  <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20">
+                    <Image
+                      src={baseUser?.pfpUrl || '/farfish-logo.png'}
+                      alt="Profile"
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div>
                     <p className="text-white font-medium text-sm">
-                      {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Connected'}
+                      {baseUser?.displayName || baseUser?.username || 'Base User'}
                     </p>
-                    <p className="text-white/60 text-xs">Base Network</p>
+                    <p className="text-white/60 text-xs">Base App Connected</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-success rounded-full"></div>
-                  <span className="text-xs text-white/60">Connected</span>
+                  <span className="text-xs text-white/60">Ready</span>
                 </div>
               </div>
 
@@ -738,5 +740,9 @@ function HomeClient() {
 }
 
 export default function HomePage() {
-  return <HomeClient />;
+  return (
+    <BaseAuthGuard>
+      <HomeClient />
+    </BaseAuthGuard>
+  );
 }

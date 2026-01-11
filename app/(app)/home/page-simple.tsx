@@ -1,10 +1,10 @@
 "use client";
 
-import { useAccount } from "wagmi";
-import { ConnectWallet } from '@coinbase/onchainkit/wallet';
+import { useBaseAuth } from "@/app/contexts/BaseAuthContext";
+import BaseAuthGuard from "@/app/components/BaseAuthGuard";
 
-export default function SimpleHomePage() {
-  const { address, isConnected } = useAccount();
+function SimpleHomePageContent() {
+  const { user, isAuthenticated } = useBaseAuth();
 
   return (
     <div style={{ 
@@ -21,36 +21,36 @@ export default function SimpleHomePage() {
         FarFISH - Simple Test
       </h1>
       
-      {!isConnected ? (
-        <div style={{ marginBottom: '2rem' }}>
-          <ConnectWallet>
-            <div style={{
-              padding: '1rem 2rem',
-              background: 'linear-gradient(to right, #00d4c4, #3be6c1)',
-              color: 'black',
-              borderRadius: '1rem',
-              fontWeight: 'bold',
-              cursor: 'pointer'
-            }}>
-              Connect Wallet
-            </div>
-          </ConnectWallet>
+      {isAuthenticated && user ? (
+        <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
+          <p>✅ Base App Connected!</p>
+          <p style={{ fontSize: '0.875rem', opacity: 0.7, marginTop: '0.5rem' }}>
+            {user.displayName || user.username || 'Base User'}
+          </p>
+          <p style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.25rem' }}>
+            FID: {user.fid}
+          </p>
         </div>
       ) : (
         <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-          <p>✅ Wallet Connected!</p>
-          <p style={{ fontSize: '0.875rem', opacity: 0.7, marginTop: '0.5rem' }}>
-            {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Connected'}
-          </p>
+          <p>🔐 Base App Authentication Required</p>
         </div>
       )}
       
       <div style={{ textAlign: 'center', opacity: 0.7 }}>
-        <p>If you see this page, the wallet connection is working!</p>
+        <p>If you see this page, the Base App authentication is working!</p>
         <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
-          Try connecting your wallet above.
+          Authentication happens automatically via Base App.
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SimpleHomePage() {
+  return (
+    <BaseAuthGuard>
+      <SimpleHomePageContent />
+    </BaseAuthGuard>
   );
 }

@@ -5,6 +5,7 @@ import { OnchainKitProvider } from "@coinbase/onchainkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "@/app/lib/wagmi";
+import { BaseAuthProvider } from "@/app/contexts/BaseAuthContext";
 import "@coinbase/onchainkit/styles.css";
 
 const queryClient = new QueryClient();
@@ -31,7 +32,9 @@ export function RootProvider({ children }: { children: ReactNode }) {
             enabled: true,
           }}
         >
-          {children}
+          <BaseAuthProvider>
+            {children}
+          </BaseAuthProvider>
         </OnchainKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
