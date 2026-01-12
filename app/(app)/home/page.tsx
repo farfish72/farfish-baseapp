@@ -498,14 +498,16 @@ function HomeClient() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-4 mb-6">
+            <div className="grid grid-cols-2 gap-4 mb-6">
               {/* Basic Tier */}
-              <div className="bg-slate-800/50 border border-slate-600/30 rounded-2xl p-6">
-                <div className="flex flex-col items-center text-center mb-6">
-                  <span className="text-4xl mb-3">🥕</span>
-                  <h3 className="text-2xl font-bold text-white">Basic</h3>
+              <div className="bg-slate-800/50 border border-slate-600/30 rounded-2xl p-4">
+                <div className="flex flex-col items-center text-center mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-gray-500 flex items-center justify-center mb-3">
+                    <span className="text-2xl">🥕</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-white">Basic</h3>
                 </div>
-                <div className="space-y-3 text-white/80">
+                <div className="space-y-2 text-white/80 text-sm">
                   <p className="text-center">• Claim daily rewards</p>
                   <p className="text-center">• Build your activity streak</p>
                   <p className="text-center">• Appear on the leaderboard</p>
@@ -513,12 +515,14 @@ function HomeClient() {
               </div>
 
               {/* Premium Tier */}
-              <div className="bg-slate-800/50 border border-slate-600/30 rounded-2xl p-6">
-                <div className="flex flex-col items-center text-center mb-6">
-                  <span className="text-4xl mb-3">👑</span>
-                  <h3 className="text-2xl font-bold text-cyan-300">Premium</h3>
+              <div className="bg-slate-800/50 border border-cyan-400/30 rounded-2xl p-4">
+                <div className="flex flex-col items-center text-center mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center mb-3">
+                    <span className="text-2xl">👑</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-cyan-300">Premium</h3>
                 </div>
-                <div className="space-y-3 text-white/80">
+                <div className="space-y-2 text-white/80 text-sm">
                   <p className="text-center">• Earn rewards faster</p>
                   <p className="text-center">• Boost your leaderboard rank</p>
                   <p className="text-center">• Priority snapshot inclusion</p>
