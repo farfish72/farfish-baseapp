@@ -1,7 +1,6 @@
 "use client";
 
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { useEffect } from 'react';
 import { useBaseAuth } from '@/app/contexts/BaseAuthContext';
 
 export default function WalletConnection() {
@@ -9,20 +8,6 @@ export default function WalletConnection() {
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
   const { signOut } = useBaseAuth();
-
-  // Auto-connect with Coinbase Smart Wallet immediately on component mount
-  useEffect(() => {
-    if (!isConnected && !isConnecting && connectors.length > 0) {
-      const coinbaseConnector = connectors.find(
-        connector => connector.id === 'coinbaseWalletSDK'
-      );
-      
-      if (coinbaseConnector) {
-        // Connect immediately without delay
-        connect({ connector: coinbaseConnector });
-      }
-    }
-  }, [isConnected, isConnecting, connect, connectors]);
 
   const handleConnect = () => {
     const coinbaseConnector = connectors.find(
