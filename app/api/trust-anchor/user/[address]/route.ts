@@ -15,23 +15,34 @@ export async function GET(
       );
     }
 
-    const userKey = getUserKey(address);
-    const userData = await redis.get<UserTrustData>(userKey);
+    const normalizedAddress = address.toLowerCase();
+    const userKey = getUserKey(normalizedAddress);
+    
+    // Get user data from our Trust Anchor structure
+    let userData = await redis.get<UserTrustData>(userKey);
+    
+    // Get real referral count from Upstash refcount system
+    const refcountKey = `refcount:${normalizedAddress}`;
+    const realReferralCount = await redis.get(refcountKey);
+    const referrals = realReferralCount ? (typeof realReferralCount === 'number' ? realReferralCount : parseInt(String(realReferralCount)) || 0) : 0;
 
     if (!userData) {
-      // Return default data for new users
+      // Return default data for new users, but with real referral count
       const defaultData: UserTrustData = {
-        address: address.toLowerCase(),
+        address: normalizedAddress,
         daysActive: 0,
         currentStreak: 0,
         lastClaimDate: null,
-        referrals: 0,
+        referrals: referrals, // Use real referral count from Upstash
         referredBy: null,
         firstClaimDate: null,
       };
       
       return NextResponse.json(defaultData);
     }
+
+    // Update existing user data with real referral count
+    userData.referrals = referrals;
 
     return NextResponse.json(userData);
   } catch (error) {

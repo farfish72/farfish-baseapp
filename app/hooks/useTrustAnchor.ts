@@ -15,7 +15,6 @@ export interface TrustAnchorData {
 
 export function useTrustAnchor() {
   const { address, isConnected } = useAccount();
-  const [isClient, setIsClient] = useState(false);
   const [data, setData] = useState<TrustAnchorData>({
     daysActive: 0,
     currentStreak: 0,
@@ -26,13 +25,13 @@ export function useTrustAnchor() {
     error: null,
   });
 
-  // Set client flag after hydration
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   const fetchTrustData = useCallback(async () => {
-    if (!address || !isConnected || !isClient) {
+    // Don't fetch if not on client side
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    if (!address || !isConnected) {
       setData(prev => ({
         ...prev,
         isLoading: false,
@@ -69,7 +68,7 @@ export function useTrustAnchor() {
         daysActive: userData.daysActive || 0,
         currentStreak: userData.currentStreak || 0,
         referrals: userData.referrals || 0,
-        rank: rankData.rank,
+        rank: rankData.rank || 1,
         isActive,
         isLoading: false,
         error: null,
@@ -82,10 +81,10 @@ export function useTrustAnchor() {
         error: error instanceof Error ? error.message : 'Unknown error',
       }));
     }
-  }, [address, isConnected, isClient]);
+  }, [address, isConnected]);
 
   const recordClaim = useCallback(async (txHash: string) => {
-    if (!address || !isClient) return false;
+    if (!address || typeof window === 'undefined') return false;
 
     try {
       const response = await fetch('/api/trust-anchor/claim', {
@@ -126,10 +125,10 @@ export function useTrustAnchor() {
       }));
       return false;
     }
-  }, [address, fetchTrustData, isClient]);
+  }, [address, fetchTrustData]);
 
   const processReferral = useCallback(async (referrerAddress: string) => {
-    if (!address || !isClient) return false;
+    if (!address || typeof window === 'undefined') return false;
 
     try {
       const response = await fetch('/api/trust-anchor/referral', {
@@ -155,14 +154,12 @@ export function useTrustAnchor() {
       console.error('Error processing referral:', error);
       return false;
     }
-  }, [address, fetchTrustData, isClient]);
+  }, [address, fetchTrustData]);
 
-  // Fetch data when address changes - only on client
+  // Fetch data when address changes
   useEffect(() => {
-    if (isClient) {
-      fetchTrustData();
-    }
-  }, [fetchTrustData, isClient]);
+    fetchTrustData();
+  }, [fetchTrustData]);
 
   return {
     ...data,

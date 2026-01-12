@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { redis, UserTrustData } from '@/app/lib/upstash';
+import { redis } from '@/app/lib/upstash';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,10 +13,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get all user keys
-    const userKeys = await redis.keys('user:*');
+    const normalizedAddress = address.toLowerCase();
+
+    // Get all refcount keys (real referral data from Upstash)
+    const allRefcountKeys = await redis.keys('refcount:*');
     
-    if (userKeys.length === 0) {
+    if (allRefcountKeys.length === 0) {
       // No users in system - this user gets rank 1
       return NextResponse.json({ 
         rank: 1, 
@@ -25,47 +27,50 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Get all user data
-    const allUsers = await redis.mget(...userKeys);
+    // Get all referral counts
+    const allRefcounts = await redis.mget(...allRefcountKeys);
     
-    // Filter out null values and ensure proper typing
-    const validUsers = allUsers
-      .filter((user): user is UserTrustData => user !== null && typeof user === 'object')
-      .map(user => ({
-        address: user.address,
-        referrals: user.referrals || 0
-      }))
-      .sort((a, b) => b.referrals - a.referrals); // Sort by referrals descending
+    // Create user referral data
+    const userReferrals = [];
+    for (let i = 0; i < allRefcountKeys.length; i++) {
+      const userAddr = allRefcountKeys[i].replace('refcount:', '');
+      const count = allRefcounts[i] || 0;
+      userReferrals.push({
+        address: userAddr,
+        referrals: typeof count === 'number' ? count : parseInt(String(count)) || 0
+      });
+    }
+    
+    // Sort by referrals descending
+    userReferrals.sort((a, b) => b.referrals - a.referrals);
 
-    console.log('Valid users for ranking:', validUsers);
+    console.log('User referrals for ranking:', userReferrals);
 
     // Find user's rank
-    const userAddress = address.toLowerCase();
-    const userIndex = validUsers.findIndex(user => user.address === userAddress);
+    const userIndex = userReferrals.findIndex(u => u.address === normalizedAddress);
     
     let rank: number;
-    let userReferrals = 0;
+    let userReferralCount = 0;
     
     if (userIndex === -1) {
       // User not found in system - they get the next available rank
-      // If there are N users, new user gets rank N+1
-      rank = validUsers.length + 1;
-      userReferrals = 0;
+      rank = userReferrals.length + 1;
+      userReferralCount = 0;
     } else {
       // User found - their rank is their position in the sorted list (1-based)
       rank = userIndex + 1;
-      userReferrals = validUsers[userIndex].referrals;
+      userReferralCount = userReferrals[userIndex].referrals;
     }
 
     // Total users includes the current user if they exist, or adds 1 if they don't
-    const totalUsers = userIndex === -1 ? validUsers.length + 1 : validUsers.length;
+    const totalUsers = userIndex === -1 ? userReferrals.length + 1 : userReferrals.length;
 
-    console.log(`Ranking for ${userAddress}: rank=${rank}, totalUsers=${totalUsers}, userReferrals=${userReferrals}`);
+    console.log(`Ranking for ${normalizedAddress}: rank=${rank}, totalUsers=${totalUsers}, userReferrals=${userReferralCount}`);
 
     return NextResponse.json({
       rank,
       totalUsers,
-      userReferrals,
+      userReferrals: userReferralCount,
     });
   } catch (error) {
     console.error('Error calculating rankings:', error);
