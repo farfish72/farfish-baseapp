@@ -5,9 +5,9 @@
   right: 0;
   width: 100%;
   height: var(--bottom-nav-height);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.95);
   backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 1000;
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -29,8 +29,9 @@
   padding: var(--spacing-sm) var(--spacing-xs);
   text-decoration: none;
   color: rgba(255, 255, 255, 0.6);
-  transition: color 0.2s;
+  transition: all 0.2s;
   font-size: 12px;
+  border-radius: 12px;
 }
 
 .navItem:hover {
@@ -38,7 +39,8 @@
 }
 
 .navItem.active {
-  color: #00d4c4;
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
 }
 
 .navIcon {

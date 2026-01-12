@@ -5,30 +5,21 @@ import { useAccount, useReadContract } from "wagmi";
 import { ERC20_TOKEN_ADDRESS } from "../constants";
 import erc20Abi from "../abi/erc20.json";
 import { formatUnits } from "viem";
-import { useState, useEffect } from "react";
+import { useTrustAnchor } from "../hooks/useTrustAnchor";
 
 interface TrustAnchorProps {
-  streak: number | null;          // Current consecutive streak
-  daysActive: number | null;      // Total cumulative days (never resets)
-  referrals: number | null;       // Lifetime referral count
   hasActiveStake: boolean;        // Whether user has active NFT stake
-  rank: number | null;            // User rank from Trust Anchor API
-  isLoading?: boolean;            // Loading state
-  error?: string | null;          // Error message if any
+  hasMintedNFT: boolean;         // Whether user has minted at least 1 NFT
 }
 
 export default function TrustAnchor({
-  streak,
-  daysActive,
-  referrals,
   hasActiveStake,
-  rank,
-  isLoading = false,
-  error = null,
+  hasMintedNFT,
 }: TrustAnchorProps) {
   const { address } = useAccount();
+  const trustData = useTrustAnchor();
 
-  // Read ERC20 balance
+  // Read ERC20 balance - keep current implementation (live on-chain FRH balance)
   const { data: frhBalance } = useReadContract({
     address: ERC20_TOKEN_ADDRESS as `0x${string}`,
     abi: erc20Abi as any,
@@ -37,141 +28,128 @@ export default function TrustAnchor({
     query: { enabled: Boolean(address && ERC20_TOKEN_ADDRESS) },
   });
 
-  // Format number safely
-  const formatNumber = (num: number | null): string => {
-    return num !== null && num >= 0 ? num.toString() : '0';
+  // Format number safely - ensure no negative numbers or null values
+  const formatNumber = (num: number): string => {
+    return Math.max(0, num).toString();
   };
 
-  // Format FRH balance
+  // Format FRH balance - keep current implementation
   const formatFrhBalance = (): string => {
-    if (!frhBalance) return '0';
-    return formatUnits(frhBalance as bigint, 18);
+    if (!frhBalance) return '0.00';
+    const formatted = formatUnits(frhBalance as bigint, 18);
+    return parseFloat(formatted).toFixed(2);
   };
 
-  // Format rank
+  // Format rank - CRITICAL: NO user should ever display empty, null, or "--" rank
   const formatRank = (): string => {
-    return rank ? `#${rank}` : '#0';
+    // Rank is based on referral count (descending)
+    // Users with zero referrals MUST still receive a rank
+    // Rank numbers must be continuous (1, 2, 3, …)
+    return `#${Math.max(1, trustData.rank)}`;
   };
 
-  // Determine tier based ONLY on active stake status
-  const tier = hasActiveStake ? 'Premium' : 'Basic';
+  // Determine tier - Premium if user has: At least 1 NFT minted OR At least 1 NFT staked
+  // Basic if user has zero NFTs minted AND zero staked
+  // Tier must update dynamically based on on-chain state
+  const tier = (hasMintedNFT || hasActiveStake) ? 'Premium' : 'Basic';
 
-  const fields = [
+  // Status becomes Active when the user successfully claims Daily Base Chest
+  // If user has never claimed, status is Inactive
+  // Status is NOT based on wallet connection alone
+  const status = trustData.isActive ? 'Active' : 'Inactive';
+
+  const cards = [
     { 
-      icon: "💰", 
-      label: "Earning", 
-      value: `${formatFrhBalance()} FRH`,
-      color: "from-green-400 to-emerald-500",
-      bgColor: "from-green-500/20 to-emerald-500/20"
+      icon: "✅", 
+      label: "Status", 
+      value: status
     },
     { 
       icon: "📅", 
       label: "Days Active", 
-      value: formatNumber(daysActive),
-      color: "from-white to-white",
-      bgColor: "from-white/20 to-white/20"
+      value: formatNumber(trustData.daysActive)
     },
     { 
       icon: "🔥", 
       label: "Current Streak", 
-      value: `${formatNumber(streak)} days`,
-      color: "from-orange-400 to-red-500",
-      bgColor: "from-orange-500/20 to-red-500/20"
+      value: `${formatNumber(trustData.currentStreak)} days`
     },
     { 
-      icon: "🤝", 
+      icon: "💝", 
       label: "Referrals", 
-      value: formatNumber(referrals),
-      color: "from-purple-400 to-pink-500",
-      bgColor: "from-purple-500/20 to-pink-500/20"
+      value: formatNumber(trustData.referrals)
+    },
+    { 
+      icon: "💰", 
+      label: "Holding", 
+      value: `${formatFrhBalance()} FRH`
     },
     { 
       icon: "📊", 
       label: "Rank", 
-      value: formatRank(),
-      color: "from-yellow-400 to-amber-500",
-      bgColor: "from-yellow-500/20 to-amber-500/20"
+      value: formatRank()
     },
     { 
-      icon: "⏱️", 
+      icon: "⏰", 
       label: "Next Snapshot", 
-      value: "~30 days",
-      color: "from-indigo-400 to-purple-500",
-      bgColor: "from-indigo-500/20 to-purple-500/20"
+      value: "30 days"
     },
     { 
       icon: tier === 'Premium' ? "👑" : "🥉", 
       label: "Tier", 
-      value: tier,
-      color: tier === 'Premium' ? "from-white to-white" : "from-gray-400 to-slate-500",
-      bgColor: tier === 'Premium' ? "from-white/20 to-white/20" : "from-gray-500/20 to-slate-500/20"
+      value: tier
     }
   ];
 
   return (
-    <div className="glass-card rounded-3xl p-6 shadow-2xl shadow-slate-500/20">
-      {/* Animated background elements */}
-      <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      
-      <div className="relative z-10">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-white to-white flex items-center justify-center shadow-lg shadow-white/25">
-            <span className="text-2xl">📈</span>
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-white">
-              Trust Anchor
-            </h3>
-            <p className="text-sm text-white/70">Protocol-based activity tracking</p>
-          </div>
+    <article className="glass-card rounded-3xl p-6 relative">
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-6">
+        <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-primary">
+          <span className="text-xl text-black">📈</span>
         </div>
-
-        {/* Fields Grid */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          {fields.map((field, idx) => (
-            <div 
-              key={idx}
-              className={`
-                relative overflow-hidden bg-gradient-to-br ${field.bgColor} backdrop-blur-sm 
-                border border-white/10 rounded-2xl p-3 hover:scale-105 transition-all duration-300
-              `}
-            >
-              <div className="flex items-center gap-2">
-                <div className={`
-                  w-8 h-8 rounded-lg bg-gradient-to-br ${field.color} 
-                  flex items-center justify-center shadow-lg flex-shrink-0
-                `}>
-                  <span className="text-sm">{field.icon}</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs text-white/60 font-medium">{field.label}</p>
-                  <p className="text-sm font-bold text-white truncate">
-                    {isLoading ? '...' : field.value}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div>
+          <h3 className="premium-heading text-lg text-text-primary">Trust Anchor</h3>
+          <p className="premium-caption text-text-secondary mt-1">Your reputation metrics</p>
         </div>
-
-        {/* Explanation */}
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-sm border border-white/10">
-          <p className="text-sm text-center text-black font-bold">
-            Activity is measured per wallet and finalized during snapshots.
-          </p>
-        </div>
-
-        {error && (
-          <div className="mt-4 p-3 rounded-2xl bg-white/10 border border-white/30">
-            <div className="flex items-center gap-2">
-              <span className="text-white">⚠️</span>
-              <p className="text-sm text-white">{error}</p>
-            </div>
+        {trustData.isLoading && (
+          <div className="ml-auto">
+            <div className="premium-spinner w-5 h-5"></div>
           </div>
         )}
       </div>
-    </div>
+
+      {/* Error Display */}
+      {trustData.error && (
+        <div className="mb-6 outlined-card rounded-2xl p-4 border-red-500/20 bg-red-500/5">
+          <div className="flex items-center gap-3">
+            <span className="text-red-400 text-lg flex-shrink-0">⚠️</span>
+            <p className="premium-caption text-red-300 flex-1">{trustData.error}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-2 gap-4">
+        {cards.map((card, index) => (
+          <div
+            key={index}
+            className="bg-elevated rounded-2xl p-4 border border-white/10"
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-xl">{card.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="premium-caption text-text-secondary uppercase tracking-wide">
+                  {card.label}
+                </p>
+                <p className="premium-heading text-sm text-text-primary font-semibold truncate">
+                  {card.value}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </article>
   );
 }

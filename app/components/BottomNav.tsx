@@ -12,12 +12,13 @@ import {
 } from "react-icons/fa";
 
 const items = [
-  { href: "/", label: "Home", icon: FaHome, color: "from-blue-500 to-cyan-500" },
-  { href: "/chest", label: "Chest", icon: FaBoxOpen, color: "from-amber-500 to-orange-500" },
-  { href: "/stake", label: "Stake", icon: FaCoins, color: "from-green-500 to-emerald-500" },
-  { href: "/steam", label: "Steam", icon: FaTasks, color: "from-purple-500 to-pink-500" },
-  { href: "/profile", label: "Profile", icon: FaUser, color: "from-indigo-500 to-purple-500" },
+  { href: "/home", label: "Home", icon: FaHome, color: "#6b7280" },
+  { href: "/chest", label: "Chest", icon: FaBoxOpen, color: "#f59e0b" },
+  { href: "/stake", label: "Stake", icon: FaCoins, color: "#6b7280" },
+  { href: "/steam", label: "Steam", icon: FaTasks, color: "#6b7280" },
+  { href: "/profile", label: "Profile", icon: FaUser, color: "#6b7280" },
 ];
+
 export function BottomNav() {
   const pathname = usePathname();
 
@@ -25,13 +26,17 @@ export function BottomNav() {
     <nav className={styles.bottomNav}>
       <div className={styles.navContainer}>
         {items.map((item) => {
-          const isActive = pathname === item.href;
+          // Handle both /home and / for home page
+          const isActive = pathname === item.href || (item.href === "/home" && pathname === "/");
           const IconComponent = item.icon;
           return (
             <Link
               key={item.label}
               href={item.href}
               className={`${styles.navItem} ${isActive ? styles.active : ""}`}
+              style={{
+                color: isActive ? item.color : 'rgba(255, 255, 255, 0.6)'
+              }}
             >
               <span className={styles.navIcon}>
                 <IconComponent />

@@ -15,6 +15,9 @@ import TrustAnchor from "@/app/components/TrustAnchor";
 
 import claimControllerAbi from "@/app/abi/claimController.json";
 import { CLAIM_CONTROLLER_ADDRESS } from "@/app/constants";
+import { useTrustAnchor } from "@/app/hooks/useTrustAnchor";
+import { useNFTStatus } from "@/app/hooks/useNFTStatus";
+import useUserStakes from "@/app/hooks/useUserStakes";
 /* ---------------- helpers ---------------- */
 const formatTime = (seconds: bigint | number): string => {
   const s = typeof seconds === "bigint" ? Number(seconds) : seconds;
@@ -30,8 +33,13 @@ export default function ChestPage() {
   const chainId = useChainId();
   const isBase = chainId === base.id;
 
-  // Mock active stakes for now - replace with actual hook when available
-  const activeStakes: any[] = [];
+  // Trust Anchor and NFT status hooks
+  const trustAnchor = useTrustAnchor();
+  const { hasMintedNFT } = useNFTStatus();
+  const { stakes } = useUserStakes();
+
+  // Check if user has active stakes
+  const hasActiveStake = stakes.some(stake => !stake.unstaked && !stake.claimed);
 
   /* ================= DAILY BRONZE ================= */
   const { data: dailyData } = useReadContract({
@@ -60,15 +68,14 @@ export default function ChestPage() {
     hash: dailyTx,
   });
 
-  // Update streak counter after successful daily claim (local state only)
-  const [localStreak, setLocalStreak] = useState(0);
-  
+  // Record claim in Trust Anchor system after successful transaction
   useEffect(() => {
     if (dailySuccess && dailyTx) {
-      // Increment local streak counter
-      setLocalStreak(prev => prev + 1);
+      trustAnchor.recordClaim(dailyTx);
     }
-  }, [dailySuccess, dailyTx]);
+  }, [dailySuccess, dailyTx, trustAnchor]);
+
+  // Remove local streak counter - Trust Anchor handles this now
 
   const handleBronzeClaim = useCallback(async () => {
     if (!daily?.canClaim || !address) return;
@@ -116,13 +123,12 @@ export default function ChestPage() {
     hash: silverTx,
   });
 
-  // Update streak counter after successful silver claim (local state only)
+  // Record silver claim in Trust Anchor system after successful transaction
   useEffect(() => {
     if (silverSuccess && silverTx) {
-      // Increment local streak counter
-      setLocalStreak(prev => prev + 1);
+      trustAnchor.recordClaim(silverTx);
     }
-  }, [silverSuccess, silverTx]);
+  }, [silverSuccess, silverTx, trustAnchor]);
 
   const handleSilverClaim = useCallback(async () => {
     if (!silver?.canClaim || !address) return;
@@ -161,12 +167,8 @@ export default function ChestPage() {
         </section>
 
         <TrustAnchor
-          streak={localStreak}
-          daysActive={localStreak}
-          referrals={0}
-          rank={null}
-          hasActiveStake={activeStakes.length > 0}
-          isLoading={false}
+          hasActiveStake={hasActiveStake}
+          hasMintedNFT={hasMintedNFT}
         />
         
         <ChestCard
@@ -192,7 +194,7 @@ export default function ChestPage() {
 
         <ChestCard
           title="Staked Base Chest"
-          description="Stake tokens to unlock higher rewards. Snapshot weight increases with staked NFTs."
+          description="Stake at least one NFT to unlock enhanced rewards."
           variant="silver"
           badge={
             !silver?.hasStaked
@@ -201,6 +203,7 @@ export default function ChestPage() {
               ? "Ready"
               : "Cooling"
           }
+          progress={daily?.canClaim ? 100 : 0}
           actionLabel={
             silver?.canClaim
               ? "Claim 6 FRH • On-chain action"
@@ -223,6 +226,7 @@ export default function ChestPage() {
           variant="default"
           badge="Coming Soon"
           actionLabel="Coming Soon"
+          progress={daily?.canClaim ? 100 : 0}
           actionDisabled={true}
           onAction={() => {}}
         />
