@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useMemo, useState, useEffect, useCallback, Suspense } from "react";
 import BaseAuthGuard from "@/app/components/BaseAuthGuard";
 import { useBaseAuth } from "@/app/contexts/BaseAuthContext";
+import WalletConnection from "@/app/components/WalletConnection";
 
 type ToastState = { type: "error" | "success"; message: string } | null;
 
@@ -72,6 +73,9 @@ function ProfilePageContent() {
                     <p className="text-white/60 text-sm mt-1">FID: {baseUser?.fid}</p>
                   </div>
                 </div>
+
+                {/* Wallet Connection */}
+                <WalletConnection />
 
                 {/* Connection Status and Disconnect */}
                 <div className="flex items-center justify-between">
