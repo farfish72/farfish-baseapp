@@ -492,9 +492,6 @@ function HomeClient() {
                 <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center">
                   <span className="text-xl">🐟</span>
                 </div>
-                <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                  HOT 🔥
-                </div>
               </div>
             </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useTrustAnchor } from './useTrustAnchor';
 
@@ -9,6 +9,12 @@ const WEBSITE_URL = process.env.NEXT_PUBLIC_URL || 'https://farfish-baseapp.verc
 export function useReferralHandler() {
   const { address, isConnected } = useAccount();
   const { processReferral } = useTrustAnchor();
+  const [isClient, setIsClient] = useState(false);
+
+  // Set client flag after hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Generate referral code from wallet address
   const generateReferralCode = useCallback((walletAddress: string): string => {
@@ -24,7 +30,7 @@ export function useReferralHandler() {
 
   // Process referral when user connects wallet
   const handleWalletConnection = useCallback(async () => {
-    if (!address || !isConnected) return;
+    if (!address || !isConnected || !isClient) return;
 
     try {
       // Check if there's a pending referral code in localStorage
@@ -53,10 +59,12 @@ export function useReferralHandler() {
     } catch (error) {
       console.error('Error processing referral:', error);
     }
-  }, [address, isConnected, processReferral]);
+  }, [address, isConnected, processReferral, isClient]);
 
-  // Check for referral code in URL on page load
+  // Check for referral code in URL on page load - only on client
   useEffect(() => {
+    if (!isClient) return;
+
     const urlParams = new URLSearchParams(window.location.search);
     const referralCode = urlParams.get('ref');
     
@@ -69,14 +77,14 @@ export function useReferralHandler() {
       newUrl.searchParams.delete('ref');
       window.history.replaceState({}, '', newUrl.toString());
     }
-  }, []);
+  }, [isClient]);
 
-  // Process referral when wallet connects
+  // Process referral when wallet connects - only on client
   useEffect(() => {
-    if (address && isConnected) {
+    if (address && isConnected && isClient) {
       handleWalletConnection();
     }
-  }, [address, isConnected, handleWalletConnection]);
+  }, [address, isConnected, handleWalletConnection, isClient]);
 
   return {
     generateReferralCode,

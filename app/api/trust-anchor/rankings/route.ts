@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { redis } from '@/app/lib/upstash';
+import { redis, UserTrustData } from '@/app/lib/upstash';
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,34 +28,39 @@ export async function GET(request: NextRequest) {
     // Get all user data
     const allUsers = await redis.mget(...userKeys);
     
-    // Filter out null values and sort by referrals (descending)
+    // Filter out null values and ensure proper typing
     const validUsers = allUsers
-      .filter((user): user is any => user !== null)
-      .sort((a, b) => b.referrals - a.referrals);
+      .filter((user): user is UserTrustData => user !== null && typeof user === 'object')
+      .map(user => ({
+        address: user.address,
+        referrals: user.referrals || 0
+      }))
+      .sort((a, b) => b.referrals - a.referrals); // Sort by referrals descending
+
+    console.log('Valid users for ranking:', validUsers);
 
     // Find user's rank
     const userAddress = address.toLowerCase();
     const userIndex = validUsers.findIndex(user => user.address === userAddress);
     
-    // CRITICAL: NO user should ever display empty, null, or "--" rank
-    // If user not found in system, they get rank based on total users + 1
-    // If user exists, they get their position in the sorted list (1-based)
     let rank: number;
     let userReferrals = 0;
     
     if (userIndex === -1) {
-      // User not found in system - assign them the next available rank
+      // User not found in system - they get the next available rank
+      // If there are N users, new user gets rank N+1
       rank = validUsers.length + 1;
       userReferrals = 0;
     } else {
-      // User found - assign their rank based on position (1-based indexing)
+      // User found - their rank is their position in the sorted list (1-based)
       rank = userIndex + 1;
       userReferrals = validUsers[userIndex].referrals;
     }
 
-    // Ensure rank is always a positive integer
-    rank = Math.max(1, rank);
-    const totalUsers = Math.max(1, validUsers.length);
+    // Total users includes the current user if they exist, or adds 1 if they don't
+    const totalUsers = userIndex === -1 ? validUsers.length + 1 : validUsers.length;
+
+    console.log(`Ranking for ${userAddress}: rank=${rank}, totalUsers=${totalUsers}, userReferrals=${userReferrals}`);
 
     return NextResponse.json({
       rank,
