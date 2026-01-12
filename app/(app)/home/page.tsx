@@ -477,6 +477,62 @@ function HomeClient() {
             </div>
           </section>
 
+          {/* Choose Your Tier Section */}
+          <section className="glass-card rounded-3xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-white">
+                  Choose Your Tier
+                </h2>
+                <p className="text-white/70 text-sm mt-1">
+                  Unlock exclusive benefits
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center">
+                  <span className="text-xl">🐟</span>
+                </div>
+                <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                  HOT 🔥
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4 mb-6">
+              {/* Basic Tier */}
+              <div className="bg-slate-800/50 border border-slate-600/30 rounded-2xl p-6">
+                <div className="flex flex-col items-center text-center mb-6">
+                  <span className="text-4xl mb-3">🥕</span>
+                  <h3 className="text-2xl font-bold text-white">Basic</h3>
+                </div>
+                <div className="space-y-3 text-white/80">
+                  <p className="text-center">• Claim daily rewards</p>
+                  <p className="text-center">• Build your activity streak</p>
+                  <p className="text-center">• Appear on the leaderboard</p>
+                </div>
+              </div>
+
+              {/* Premium Tier */}
+              <div className="bg-slate-800/50 border border-slate-600/30 rounded-2xl p-6">
+                <div className="flex flex-col items-center text-center mb-6">
+                  <span className="text-4xl mb-3">👑</span>
+                  <h3 className="text-2xl font-bold text-cyan-300">Premium</h3>
+                </div>
+                <div className="space-y-3 text-white/80">
+                  <p className="text-center">• Earn rewards faster</p>
+                  <p className="text-center">• Boost your leaderboard rank</p>
+                  <p className="text-center">• Priority snapshot inclusion</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <p className="text-sm text-white/60">
+                Higher activity leads to higher long-term rewards.
+              </p>
+            </div>
+          </section>
+
           {/* How FarFISH Works */}
           <section className="glass-card rounded-3xl">
             <div className="p-6">
