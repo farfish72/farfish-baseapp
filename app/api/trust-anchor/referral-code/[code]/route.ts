@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { redis } from '@/app/lib/upstash';
+import { redis, getUserKey, UserTrustData } from '@/app/lib/upstash';
 
 export async function GET(
   request: NextRequest,
@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { code } = await params;
     
-    // Validate referral code format (8 characters, hex)
+    // Validate referral code format (8 hex characters)
     if (!code || !/^[a-fA-F0-9]{8}$/.test(code)) {
       return NextResponse.json(
         { error: 'Invalid referral code format' },
@@ -16,40 +16,39 @@ export async function GET(
       );
     }
 
-    // Get all user keys to find matching address
-    const userKeys = await redis.keys('user:*');
+    const normalizedCode = code.toLowerCase();
     
-    if (userKeys.length === 0) {
-      return NextResponse.json(
-        { error: 'Referral code not found' },
-        { status: 404 }
-      );
+    // Search for wallet address ending with this code
+    // This is a simplified approach - in production you might want to maintain a separate mapping
+    const pattern = `*${normalizedCode}`;
+    
+    // Get all user keys and find matching wallet
+    const keys = await redis.keys('user:*');
+    let referrerAddress = null;
+    
+    for (const key of keys) {
+      const address = key.replace('user:', '');
+      if (address.endsWith(normalizedCode)) {
+        // Verify this user exists
+        const userData = await redis.get<UserTrustData>(key);
+        if (userData) {
+          referrerAddress = address;
+          break;
+        }
+      }
     }
-
-    // Get all user data
-    const allUsers = await redis.mget(...userKeys);
     
-    // Find user whose address ends with the referral code
-    const codeToMatch = code.toLowerCase();
-    const matchingUser = allUsers.find((user: any) => {
-      if (!user || !user.address) return false;
-      const address = user.address.toLowerCase();
-      // Referral code = last 8 characters of wallet address (without 0x)
-      const addressSuffix = address.slice(-8);
-      return addressSuffix === codeToMatch;
-    }) as { address: string } | undefined;
-
-    if (!matchingUser) {
+    if (!referrerAddress) {
       return NextResponse.json(
-        { error: 'Referral code not found' },
+        { error: 'Referral code not found or expired' },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      referrerAddress: matchingUser.address,
-      referralCode: code,
+      referrerAddress,
+      code: normalizedCode,
     });
 
   } catch (error) {

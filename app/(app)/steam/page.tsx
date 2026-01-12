@@ -95,11 +95,32 @@ export default function SteamPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [fishingCooldown, setFishingCooldown] = useState(0); // Cooldown in seconds
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const { address: wallet } = useAccount();
   const { activeStakes } = useUserStakes();
   const [referralData, setReferralData] = useState({ count: 0, rewards: 0 });
   const [streak, setStreak] = useState(0);
   const [nftData, setNftData] = useState<{ tokenId?: number; stakeId?: number }>({});
+  
+  // Toast effect
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 4000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  // Listen for custom toast events
+  useEffect(() => {
+    const handleToast = (event: any) => {
+      setToast({
+        type: event.detail.type,
+        message: event.detail.message
+      });
+    };
+
+    window.addEventListener('toast', handleToast);
+    return () => window.removeEventListener('toast', handleToast);
+  }, []);
   
   // Countdown effect for fishing cooldown
   useEffect(() => {
@@ -188,14 +209,15 @@ export default function SteamPage() {
     if (!wallet) return;
     
     try {
-      const response = await fetch(`/api/leaderboard/user?wallet=${wallet}`);
+      // Use trust anchor API to get referral data from Upstash KV
+      const response = await fetch(`/api/trust-anchor/user/${wallet}`);
       if (response.ok) {
         const data = await response.json();
-        const referralCount = data.referrals_count || 0;
+        const referralCount = data.referrals || 0;
         
         setReferralData({
           count: referralCount,
-          rewards: data.rewards || 0,
+          rewards: referralCount * 40, // 40 FRH per referral
         });
       }
     } catch (error) {
@@ -226,9 +248,9 @@ export default function SteamPage() {
       setFishingCooldown(taskStatusData.fishingCooldown || 0);
 
       // Get streak from Trust Anchor API (KV-based, not localStorage)
-      const streakRes = await fetch(`/api/trust-anchor?address=${wallet}`);
+      const streakRes = await fetch(`/api/trust-anchor/user/${wallet}`);
       const streakData = await streakRes.json();
-      setStreak(streakData.streak || 0);
+      setStreak(streakData.currentStreak || 0);
 
       // Update NFT data with auto-detected values
       const newNftData: { tokenId?: number; stakeId?: number } = {};
@@ -251,7 +273,7 @@ export default function SteamPage() {
           status = fishingOnCooldown ? "verified" : "not_started";
         } else if (task.type === "base_activity") {
           // Activity streak: only verified if user has streak from chest claims
-          status = streakData.streak > 0 ? "verified" : "not_started";
+          status = streakData.currentStreak > 0 ? "verified" : "not_started";
         } else if (task.type === "referral") {
           // Referral is always "verified" if user has referrals
           status = referralData.count > 0 ? "verified" : "not_started";
@@ -320,13 +342,22 @@ export default function SteamPage() {
       if (response.ok && data.success) {
         // Refresh task status to reflect the completed fishing
         fetchTaskStatuses();
-        console.log('Fishing completed successfully!');
+        setToast({
+          type: 'success',
+          message: 'Fishing completed! Earned 10 FRH'
+        });
       } else if (response.status === 429) {
         // Cooldown active - update local cooldown state
         setFishingCooldown(data.cooldownRemaining || 0);
-        console.log('Fishing on cooldown:', data.cooldownRemaining, 'seconds remaining');
+        setToast({
+          type: 'error',
+          message: `Fishing on cooldown: ${Math.ceil((data.cooldownRemaining || 0) / 3600)}h remaining`
+        });
       } else {
-        console.error('Fishing failed:', data.error);
+        setToast({
+          type: 'error',
+          message: data.error || 'Fishing failed'
+        });
       }
     } catch (error) {
       console.error('Fishing error:', error);
@@ -341,20 +372,52 @@ export default function SteamPage() {
       const referralCode = wallet.slice(-8).toUpperCase();
       
       // Create embed URL with referrer context
-      const embedUrl = `https://farfish-baseapp.vercel.app/?ref=${referralCode}`;
+      const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://farfish-baseapp.vercel.app';
+      const embedUrl = `${baseUrl}/?ref=${referralCode}`;
       
-      // Use window.open as fallback for web
-      window.open(embedUrl, '_blank');
+      // Create shareable text with embedded link for Base App
+      const shareText = `🐟 Join me on FarFISH - Daily rewards on Base!\n\nEarn FRH tokens by completing daily tasks and building your on-chain streak.\n\n${embedUrl}\n\n#Base #FarFISH #DeFi`;
+      
+      // Try to use Web Share API if available (mobile)
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Join FarFISH on Base',
+          text: shareText,
+          url: embedUrl,
+        });
+      } else {
+        // Fallback: Copy to clipboard
+        await navigator.clipboard.writeText(shareText);
+        
+        // Show success feedback
+        const event = new CustomEvent('toast', {
+          detail: {
+            type: 'success',
+            message: 'Referral link copied to clipboard!'
+          }
+        });
+        window.dispatchEvent(event);
+      }
       
     } catch (error) {
-      console.error('Base App embed error:', error);
-      // Fallback: try direct URL
+      console.error('Base App share error:', error);
+      
+      // Final fallback: try direct URL copy
       try {
         const referralCode = wallet.slice(-8).toUpperCase();
-        const embedUrl = `https://farfish-baseapp.vercel.app/?ref=${referralCode}`;
-        window.open(embedUrl, '_blank');
+        const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://farfish-baseapp.vercel.app';
+        const embedUrl = `${baseUrl}/?ref=${referralCode}`;
+        await navigator.clipboard.writeText(embedUrl);
+        
+        const event = new CustomEvent('toast', {
+          detail: {
+            type: 'success',
+            message: 'Referral link copied!'
+          }
+        });
+        window.dispatchEvent(event);
       } catch (fallbackError) {
-        console.error('Fallback embed error:', fallbackError);
+        console.error('Fallback share error:', fallbackError);
       }
     }
   };
@@ -394,7 +457,7 @@ export default function SteamPage() {
             <div className="p-4">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-lg">
-                  <span className="text-xl">⚡</span>
+                  <span className="text-xl">🎯</span>
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white">
@@ -513,16 +576,17 @@ export default function SteamPage() {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-2xl">�</span>
+                        <span className="text-2xl">🐟</span>
                         <h4 className="text-lg font-bold text-white">Mint FarFISH NFT</h4>
                       </div>
-                      <p className="text-white/70 text-sm mb-3">Mint a FarFISH NFT on Base</p>
+                      <p className="text-white/70 text-sm mb-3">Mint a FarFISH NFT on Base to unlock premium features and earn bonus rewards</p>
                       <div className="text-xs text-white font-medium">Reward: 2500 FRH</div>
+                      <div className="text-xs text-white/60 mt-1">One-time reward for minting your first FarFISH NFT</div>
                       {hasNFT && ownedTokenId !== undefined && (
-                        <div className="text-xs text-white mt-1">Token ID: {ownedTokenId}</div>
+                        <div className="text-xs text-success mt-1">✅ NFT Owned - Token ID: {ownedTokenId}</div>
                       )}
                       {activeStakes.length > 0 && (
-                        <div className="text-xs text-white mt-1">Stake ID: {Number(activeStakes[0].stakeId)}</div>
+                        <div className="text-xs text-success mt-1">🔒 Currently Staked - Stake ID: {Number(activeStakes[0].stakeId)}</div>
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-3">
@@ -554,12 +618,17 @@ export default function SteamPage() {
               <div className="glass-card rounded-2xl p-4 mb-4">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <h4 className="text-lg font-bold text-white mb-1">Invite Users on Base</h4>
-                    <p className="text-white/70 text-sm mb-2">Earn FRH when users join FarFISH through your invite.</p>
-                    <div className="text-xs text-white font-medium mb-1">Reward: 40 FRH per referral</div>
+                    <h4 className="text-lg font-bold text-white mb-1">Share FarFISH on Base</h4>
+                    <p className="text-white/70 text-sm mb-2">Invite friends to join FarFISH and earn rewards when they start their journey on Base.</p>
+                    <div className="text-xs text-white font-medium mb-1">Reward: 40 FRH per successful referral</div>
                     <div className="text-xs text-white/60 mb-1">Current: {referralData.count} referrals · {referralData.count * 40} FRH earned</div>
+                    {wallet && (
+                      <div className="text-xs text-white/60 mb-1">
+                        Your referral code: <span className="font-mono text-white">{wallet.slice(-8).toUpperCase()}</span>
+                      </div>
+                    )}
                     <div className="text-xs text-white/60">
-                      Tracked securely via Base App embed.
+                      Secure tracking via Base App embed system.
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
@@ -570,7 +639,7 @@ export default function SteamPage() {
                         !wallet ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                     >
-                      Invite on Base
+                      Share Link
                     </button>
                   </div>
                 </div>
@@ -642,6 +711,26 @@ export default function SteamPage() {
           </section>
         </div>
       </main>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
+          <div
+            className={`rounded-2xl border px-6 py-4 text-sm shadow-medium backdrop-blur-md ${
+              toast.type === "success"
+                ? "border-green-500/40 bg-green-500/20 text-green-100"
+                : "border-red-500/40 bg-red-500/20 text-red-100"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-lg">
+                {toast.type === "success" ? "✅" : "❌"}
+              </span>
+              {toast.message}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
