@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useAccount, useReadContract } from "wagmi";
+import { useComposeCast } from "@coinbase/onchainkit/minikit";
 import useUserStakes from "@/app/hooks/useUserStakes";
 import { NFT_CONTRACT_ADDRESS, STAKING_CONTRACT_ADDRESS } from "@/app/constants";
 import nftAbi from "@/app/abi/nftDrop.json";
@@ -98,6 +99,7 @@ export default function SteamPage() {
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const { address: wallet } = useAccount();
   const { activeStakes } = useUserStakes();
+  const { composeCast } = useComposeCast();
   const [referralData, setReferralData] = useState({ count: 0, rewards: 0 });
   const [streak, setStreak] = useState(0);
   const [nftData, setNftData] = useState<{ tokenId?: number; stakeId?: number }>({});
@@ -258,7 +260,7 @@ export default function SteamPage() {
         newNftData.tokenId = ownedTokenId;
       }
       if (activeStakes.length > 0) {
-        newNftData.stakeId = Number(activeStakes[0].stakeId);
+        newNftData.stakeId = Number(Math.max(...activeStakes.map(s => Number(s.stakeId))));
       }
       setNftData(newNftData);
 
@@ -372,53 +374,20 @@ export default function SteamPage() {
       const referralCode = wallet.slice(-8).toUpperCase();
       
       // Create embed URL with referrer context
-      const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://farfish-baseapp.vercel.app';
-      const embedUrl = `${baseUrl}/?ref=${referralCode}`;
+      const embedUrl = `https://farfish-baseapp.vercel.app/?ref=${referralCode}`;
       
-      // Create shareable text with embedded link for Base App
-      const shareText = `🐟 Join me on FarFISH - Daily rewards on Base!\n\nEarn FRH tokens by completing daily tasks and building your on-chain streak.\n\n${embedUrl}\n\n#Base #FarFISH #DeFi`;
+      // Fixed embed content as specified
+      const embedText = "🐟 Join me on FarFISH — daily rewards on Base.\nClaim the Daily Base Chest, build your activity streak,\nand earn FRH tokens over time.";
       
-      // Try to use Web Share API if available (mobile)
-      if (navigator.share) {
-        await navigator.share({
-          title: 'Join FarFISH on Base',
-          text: shareText,
-          url: embedUrl,
-        });
-      } else {
-        // Fallback: Copy to clipboard
-        await navigator.clipboard.writeText(shareText);
-        
-        // Show success feedback
-        const event = new CustomEvent('toast', {
-          detail: {
-            type: 'success',
-            message: 'Referral link copied to clipboard!'
-          }
-        });
-        window.dispatchEvent(event);
-      }
+      // Use Farcaster/Base embed composer
+      composeCast({
+        text: embedText,
+        embeds: [embedUrl]
+      });
       
     } catch (error) {
+      // Fail silently as specified
       console.error('Base App share error:', error);
-      
-      // Final fallback: try direct URL copy
-      try {
-        const referralCode = wallet.slice(-8).toUpperCase();
-        const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://farfish-baseapp.vercel.app';
-        const embedUrl = `${baseUrl}/?ref=${referralCode}`;
-        await navigator.clipboard.writeText(embedUrl);
-        
-        const event = new CustomEvent('toast', {
-          detail: {
-            type: 'success',
-            message: 'Referral link copied!'
-          }
-        });
-        window.dispatchEvent(event);
-      } catch (fallbackError) {
-        console.error('Fallback share error:', fallbackError);
-      }
     }
   };
 
@@ -585,8 +554,10 @@ export default function SteamPage() {
                       {hasNFT && ownedTokenId !== undefined && (
                         <div className="text-xs text-success mt-1">✅ NFT Owned - Token ID: {ownedTokenId}</div>
                       )}
-                      {activeStakes.length > 0 && (
-                        <div className="text-xs text-success mt-1">🔒 Currently Staked - Stake ID: {Number(activeStakes[0].stakeId)}</div>
+                      {activeStakes.length > 0 ? (
+                        <div className="text-xs text-success mt-1">🔒 Currently Staked – Stake ID: {Number(Math.max(...activeStakes.map(s => Number(s.stakeId))))}</div>
+                      ) : (
+                        <div className="text-xs text-white/60 mt-1">⏳ Not Staked – Stake an NFT to activate</div>
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-3">
@@ -622,14 +593,6 @@ export default function SteamPage() {
                     <p className="text-white/70 text-sm mb-2">Invite friends to join FarFISH and earn rewards when they start their journey on Base.</p>
                     <div className="text-xs text-white font-medium mb-1">Reward: 40 FRH per successful referral</div>
                     <div className="text-xs text-white/60 mb-1">Current: {referralData.count} referrals · {referralData.count * 40} FRH earned</div>
-                    {wallet && (
-                      <div className="text-xs text-white/60 mb-1">
-                        Your referral code: <span className="font-mono text-white">{wallet.slice(-8).toUpperCase()}</span>
-                      </div>
-                    )}
-                    <div className="text-xs text-white/60">
-                      Secure tracking via Base App embed system.
-                    </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     <button

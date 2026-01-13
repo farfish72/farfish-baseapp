@@ -43,15 +43,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <RootProvider>
-      <html lang="en">
-        <body className={`${inter.variable} ${sourceCodePro.variable}`}>
+    <html lang="en">
+      <body className={`${inter.variable} ${sourceCodePro.variable}`}>
+        <RootProvider>
           <SafeArea>
             <Header />
             {children}
           </SafeArea>
-        </body>
-      </html>
-    </RootProvider>
+        </RootProvider>
+      </body>
+    </html>
   );
 }
