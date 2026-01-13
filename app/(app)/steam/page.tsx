@@ -192,20 +192,143 @@ export default function SteamPage() {
     query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
   });
 
-  // Check if user has any NFTs and get the first owned token ID
-  const hasNFT = Boolean(
+  const { data: nftBalance4 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 4] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance5 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 5] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance6 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 6] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance7 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 7] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance8 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 8] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance9 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 9] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance10 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 10] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance11 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 11] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance12 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 12] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance13 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 13] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance14 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 14] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  const { data: nftBalance15 } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: "balanceOf",
+    args: wallet ? [wallet, 15] : undefined,
+    query: { enabled: Boolean(wallet && NFT_CONTRACT_ADDRESS) },
+  });
+
+  // Check if user owns any FarFISH NFTs (ERC-1155)
+  const ownsAnyNFT = Boolean(
     (nftBalance0 && Number(nftBalance0) > 0) ||
     (nftBalance1 && Number(nftBalance1) > 0) ||
     (nftBalance2 && Number(nftBalance2) > 0) ||
-    (nftBalance3 && Number(nftBalance3) > 0)
+    (nftBalance3 && Number(nftBalance3) > 0) ||
+    (nftBalance4 && Number(nftBalance4) > 0) ||
+    (nftBalance5 && Number(nftBalance5) > 0) ||
+    (nftBalance6 && Number(nftBalance6) > 0) ||
+    (nftBalance7 && Number(nftBalance7) > 0) ||
+    (nftBalance8 && Number(nftBalance8) > 0) ||
+    (nftBalance9 && Number(nftBalance9) > 0) ||
+    (nftBalance10 && Number(nftBalance10) > 0) ||
+    (nftBalance11 && Number(nftBalance11) > 0) ||
+    (nftBalance12 && Number(nftBalance12) > 0) ||
+    (nftBalance13 && Number(nftBalance13) > 0) ||
+    (nftBalance14 && Number(nftBalance14) > 0) ||
+    (nftBalance15 && Number(nftBalance15) > 0)
   );
 
-  const ownedTokenId = hasNFT ? (
+  const ownedTokenId = ownsAnyNFT ? (
     (nftBalance0 && Number(nftBalance0) > 0) ? 0 :
     (nftBalance1 && Number(nftBalance1) > 0) ? 1 :
     (nftBalance2 && Number(nftBalance2) > 0) ? 2 :
-    (nftBalance3 && Number(nftBalance3) > 0) ? 3 : undefined
+    (nftBalance3 && Number(nftBalance3) > 0) ? 3 :
+    (nftBalance4 && Number(nftBalance4) > 0) ? 4 :
+    (nftBalance5 && Number(nftBalance5) > 0) ? 5 :
+    (nftBalance6 && Number(nftBalance6) > 0) ? 6 :
+    (nftBalance7 && Number(nftBalance7) > 0) ? 7 :
+    (nftBalance8 && Number(nftBalance8) > 0) ? 8 :
+    (nftBalance9 && Number(nftBalance9) > 0) ? 9 :
+    (nftBalance10 && Number(nftBalance10) > 0) ? 10 :
+    (nftBalance11 && Number(nftBalance11) > 0) ? 11 :
+    (nftBalance12 && Number(nftBalance12) > 0) ? 12 :
+    (nftBalance13 && Number(nftBalance13) > 0) ? 13 :
+    (nftBalance14 && Number(nftBalance14) > 0) ? 14 :
+    (nftBalance15 && Number(nftBalance15) > 0) ? 15 : undefined
   ) : undefined;
+
+  // Check if user has active stakes
+  const hasActiveStake = activeStakes.length > 0;
 
   const fetchReferralData = useCallback(async () => {
     if (!wallet) return;
@@ -285,8 +408,8 @@ export default function SteamPage() {
         } else if (task.type === "nft") {
           // NFT tasks: auto-detect completion
           if (task.id === "nft_mint") {
-            status = hasNFT ? "verified" : "not_started";
-            if (hasNFT && ownedTokenId !== undefined) {
+            status = (ownsAnyNFT || hasActiveStake) ? "verified" : "not_started";
+            if (ownsAnyNFT && ownedTokenId !== undefined) {
               tokenId = ownedTokenId;
             }
           }
@@ -313,7 +436,7 @@ export default function SteamPage() {
     } finally {
       setLoading(false);
     }
-  }, [wallet, hasNFT, ownedTokenId, activeStakes, referralData.count]);
+  }, [wallet, ownsAnyNFT, ownedTokenId, activeStakes, referralData.count]);
 
   useEffect(() => {
     fetchTaskStatuses();
@@ -551,7 +674,7 @@ export default function SteamPage() {
                       <p className="text-white/70 text-sm mb-3">Mint a FarFISH NFT on Base to unlock premium features and earn bonus rewards</p>
                       <div className="text-xs text-white font-medium">Reward: 2500 FRH</div>
                       <div className="text-xs text-white/60 mt-1">One-time reward for minting your first FarFISH NFT</div>
-                      {hasNFT && ownedTokenId !== undefined && (
+                      {ownsAnyNFT && ownedTokenId !== undefined && (
                         <div className="text-xs text-success mt-1">✅ NFT Owned - Token ID: {ownedTokenId}</div>
                       )}
                       {activeStakes.length > 0 ? (
@@ -561,7 +684,7 @@ export default function SteamPage() {
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-3">
-                      {hasNFT ? (
+                      {(ownsAnyNFT || hasActiveStake) ? (
                         <div className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 text-sm font-medium">
                           ✅ Completed
                         </div>
