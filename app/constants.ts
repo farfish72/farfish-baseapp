@@ -32,6 +32,23 @@ export const CLAIM_CONTROLLER_ADDRESS = validateAddress(
 
 export const NFT_SUPPLY_TOTAL = 9999;
 
+// Toast duration constant (in milliseconds)
+export const TOAST_DURATION = 3000;
+
+// Lock durations for staking (in days)
+export const LOCK_DURATIONS = [30, 90, 180, 360] as const;
+
+// Referral milestones
+export const REFERRAL_MILESTONES = [
+  { count: 5, reward: 200 },
+  { count: 10, reward: 400 },
+  { count: 30, reward: 1200 },
+  { count: 50, reward: 2000 },
+] as const;
+
+// Token IDs array (0-15)
+export const TOKEN_IDS = Array.from({ length: 16 }, (_, i) => i);
+
 // Staking token ranges and reward configuration
 export const STAKING_TOKEN_RANGES = {
   Bluefin: { min: 0, max: 6, representativeTokenId: 0 },

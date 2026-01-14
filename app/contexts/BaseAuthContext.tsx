@@ -70,7 +70,6 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
             }
           }
         } catch (err) {
-          console.error('Failed to parse saved user:', err);
           try {
             localStorage.removeItem('base_auth_user');
           } catch (e) {
@@ -81,7 +80,6 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
         // If no context and no saved user, we'll wait for manual authentication
         setIsLoading(false);
       } catch (err) {
-        console.error('Auto sign-in failed:', err);
         setError('Authentication failed');
         setIsLoading(false);
       }
@@ -97,7 +95,7 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
         fid,
         username: context?.user?.username || `user-${fid}`,
         displayName: context?.user?.displayName || context?.user?.username || `User ${fid}`,
-        pfpUrl: context?.user?.pfpUrl || '/farfish-logo.png',
+        pfpUrl: context?.user?.pfpUrl || '/farfish-logo-optimized.webp',
       };
 
       // Validate profile photo URL if it exists
@@ -106,11 +104,10 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
           // Test if the profile photo URL is accessible
           const response = await fetch(context.user.pfpUrl, { method: 'HEAD' });
           if (!response.ok) {
-            baseUser.pfpUrl = '/farfish-logo.png';
+            baseUser.pfpUrl = '/farfish-logo-optimized.webp';
           }
         } catch (err) {
-          console.warn('Profile photo URL not accessible, using fallback:', err);
-          baseUser.pfpUrl = '/farfish-logo.png';
+          baseUser.pfpUrl = '/farfish-logo-optimized.webp';
         }
       }
 
@@ -121,11 +118,10 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
         try {
           localStorage.setItem('base_auth_user', JSON.stringify(baseUser));
         } catch (err) {
-          console.warn('Failed to save user to localStorage:', err);
+          // Silent error handling
         }
       }
     } catch (err) {
-      console.error('Failed to load user profile:', err);
       setError('Failed to load profile');
     }
   };
@@ -154,7 +150,6 @@ export function BaseAuthProvider({ children }: { children: ReactNode }) {
         setError('Authentication failed');
       }
     } catch (err) {
-      console.error('Sign in failed:', err);
       setError('Sign in failed');
     } finally {
       setIsLoading(false);

@@ -1,6 +1,6 @@
 import { createConfig, http } from 'wagmi';
 import { base } from 'wagmi/chains';
-import { coinbaseWallet, metaMask, walletConnect } from 'wagmi/connectors';
+import { coinbaseWallet } from 'wagmi/connectors';
 
 export const wagmiConfig = createConfig({
   chains: [base],
@@ -8,10 +8,6 @@ export const wagmiConfig = createConfig({
     coinbaseWallet({
       appName: 'FarFISH',
       preference: 'smartWalletOnly',
-    }),
-    metaMask(),
-    walletConnect({
-      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '',
     }),
   ],
   transports: {

@@ -33,9 +33,9 @@ export const minikitConfig = {
     description:
       "Mint. Stake. Earn. Dominate the Seas. Premium NFT collection built for Farcaster. NFT Staking • Leaderboard • Monthly Rewards.",
 
-    iconUrl: `${ROOT_URL}/icon.png`,
-    imageUrl: `${ROOT_URL}/og-image.png`,
-    heroImageUrl: `${ROOT_URL}/og-image.png`,
+    iconUrl: `${ROOT_URL}/icon-optimized.webp`,
+    imageUrl: `${ROOT_URL}/og-image-optimized.webp`,
+    heroImageUrl: `${ROOT_URL}/og-image-optimized.webp`,
     splashImageUrl: `${ROOT_URL}/splash.png`,
     splashBackgroundColor: "#000000",
 
@@ -44,9 +44,9 @@ export const minikitConfig = {
     castShareUrl: `${ROOT_URL}/share`,
 
     screenshotUrls: [
-      `${ROOT_URL}/s1.png`,
-      `${ROOT_URL}/s2.png`,
-      `${ROOT_URL}/s3.png`,
+      `${ROOT_URL}/s1-optimized.webp`,
+      `${ROOT_URL}/s2-optimized.webp`,
+      `${ROOT_URL}/s3-optimized.webp`,
     ],
 
     buttonTitle: "Launch",

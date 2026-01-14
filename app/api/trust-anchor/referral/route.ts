@@ -28,8 +28,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const newUserKey = getUserKey(newUserAddress);
-    const referrerKey = getUserKey(referrerAddress);
+    const normalizedNewUser = newUserAddress.toLowerCase();
+    const normalizedReferrer = referrerAddress.toLowerCase();
+    
+    const newUserKey = getUserKey(normalizedNewUser);
+    const referrerKey = getUserKey(normalizedReferrer);
+    
+    // Upstash refcount keys (for ranking system)
+    const referrerRefcountKey = `refcount:${normalizedReferrer}`;
+    const newUserRefcountKey = `refcount:${normalizedNewUser}`;
 
     // Check if new user already exists
     const existingUser = await redis.get<UserTrustData>(newUserKey);
@@ -42,14 +49,25 @@ export async function POST(request: NextRequest) {
 
     // Get referrer data
     let referrerData = await redis.get<UserTrustData>(referrerKey);
+    
+    // Validate that this is Trust Anchor data (not Steam or other feature data)
+    if (referrerData && !referrerData.address) {
+      // This is not Trust Anchor data, treat as new user
+      referrerData = null;
+    }
+    
+    // Get current refcount for referrer
+    const currentRefcount = await redis.get(referrerRefcountKey);
+    const referralCount = currentRefcount ? (typeof currentRefcount === 'number' ? currentRefcount : parseInt(String(currentRefcount)) || 0) : 0;
+    
     if (!referrerData) {
       // Create referrer if they don't exist
       referrerData = {
-        address: referrerAddress.toLowerCase(),
+        address: normalizedReferrer,
         daysActive: 0,
         currentStreak: 0,
         lastClaimDate: null,
-        referrals: 0,
+        referrals: referralCount,
         referredBy: null,
         firstClaimDate: null,
       };
@@ -57,32 +75,40 @@ export async function POST(request: NextRequest) {
 
     // Create new user with referral link
     const newUserData: UserTrustData = {
-      address: newUserAddress.toLowerCase(),
+      address: normalizedNewUser,
       daysActive: 0,
       currentStreak: 0,
       lastClaimDate: null,
       referrals: 0,
-      referredBy: referrerAddress.toLowerCase(),
+      referredBy: normalizedReferrer,
       firstClaimDate: null,
     };
 
-    // Update referrer's referral count
+    // Increment referrer's refcount (this is what rankings use)
+    const newRefcount = referralCount + 1;
+
+    // Update referrer's referral count in UserTrustData (for consistency)
     const updatedReferrerData: UserTrustData = {
       ...referrerData,
-      referrals: referrerData.referrals + 1,
+      referrals: newRefcount,
     };
 
-    // Save both users
+    // Save everything atomically
     await Promise.all([
       redis.set(newUserKey, newUserData),
       redis.set(referrerKey, updatedReferrerData),
+      redis.set(referrerRefcountKey, newRefcount), // Update refcount for ranking
+      redis.set(newUserRefcountKey, 0), // Initialize new user's refcount
     ]);
+
+    console.log(`Referral processed: ${normalizedNewUser} referred by ${normalizedReferrer}. New refcount: ${newRefcount}`);
 
     return NextResponse.json({
       success: true,
       message: 'Referral processed successfully',
       newUser: newUserData,
       referrer: updatedReferrerData,
+      referralCount: newRefcount,
     });
 
   } catch (error) {

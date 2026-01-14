@@ -20,22 +20,42 @@ export async function POST(request: NextRequest) {
     }
 
     const userKey = getUserKey(address);
+    const normalizedAddress = address.toLowerCase();
+    const refcountKey = `refcount:${normalizedAddress}`;
     const today = getTodayString();
     
     // Get existing user data
     let userData = await redis.get<UserTrustData>(userKey);
     
+    // Validate that this is Trust Anchor data (not Steam or other feature data)
+    if (userData && !userData.address) {
+      // This is not Trust Anchor data, treat as new user
+      userData = null;
+    }
+    
+    // Get current refcount
+    const currentRefcount = await redis.get(refcountKey);
+    const referralCount = currentRefcount ? (typeof currentRefcount === 'number' ? currentRefcount : parseInt(String(currentRefcount)) || 0) : 0;
+    
     if (!userData) {
-      // First time user
+      // First time user - initialize refcount if not exists
       userData = {
-        address: address.toLowerCase(),
+        address: normalizedAddress,
         daysActive: 0,
         currentStreak: 0,
         lastClaimDate: null,
-        referrals: 0,
+        referrals: referralCount,
         referredBy: null,
         firstClaimDate: null,
       };
+      
+      // Initialize refcount if it doesn't exist
+      if (currentRefcount === null) {
+        await redis.set(refcountKey, 0);
+      }
+    } else {
+      // Update existing user's referral count from refcount
+      userData.referrals = referralCount;
     }
 
     // Check if already claimed today

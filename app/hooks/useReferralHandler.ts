@@ -33,31 +33,24 @@ export function useReferralHandler() {
     if (!address || !isConnected || !isClient) return;
 
     try {
-      // Check if there's a pending referral code in localStorage
       const pendingReferralCode = localStorage.getItem('pendingReferralCode');
       
       if (pendingReferralCode) {
-        // Resolve referral code to get referrer address
         const response = await fetch(`/api/trust-anchor/referral-code/${pendingReferralCode}`);
         
         if (response.ok) {
           const data = await response.json();
-          
-          // Process the referral
           const success = await processReferral(data.referrerAddress);
           
           if (success) {
-            console.log('Referral processed successfully');
-            // Clear the pending referral code
             localStorage.removeItem('pendingReferralCode');
           }
         } else {
-          console.warn('Invalid or expired referral code');
           localStorage.removeItem('pendingReferralCode');
         }
       }
     } catch (error) {
-      console.error('Error processing referral:', error);
+      // Silent error handling
     }
   }, [address, isConnected, processReferral, isClient]);
 

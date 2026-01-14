@@ -21,6 +21,12 @@ export async function GET(
     // Get user data from our Trust Anchor structure
     let userData = await redis.get<UserTrustData>(userKey);
     
+    // Validate that this is Trust Anchor data (not Steam or other feature data)
+    if (userData && !userData.address) {
+      // This is not Trust Anchor data, treat as new user
+      userData = null;
+    }
+    
     // Get real referral count from Upstash refcount system
     const refcountKey = `refcount:${normalizedAddress}`;
     const realReferralCount = await redis.get(refcountKey);

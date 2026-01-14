@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState, useEffect, useCallback, Suspense } from "react";
-import BaseAuthGuard from "@/app/components/BaseAuthGuard";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { useBaseAuth } from "@/app/contexts/BaseAuthContext";
 import WalletConnection from "@/app/components/WalletConnection";
 
@@ -59,7 +58,7 @@ function ProfilePageContent() {
                 <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/10 border border-white/20">
                   <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-white/20 bg-white/10">
                     <Image
-                      src="/pfp.png"
+                      src="/pfp-optimized.webp"
                       alt="Profile Avatar"
                       width={48}
                       height={48}
@@ -153,22 +152,5 @@ function ProfilePageContent() {
 }
 
 export default function ProfilePage() {
-  return (
-    <BaseAuthGuard>
-      <Suspense
-        fallback={
-          <div className="min-h-screen bg-gradient-to-br">
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-2xl bg-white/10 animate-pulse"></div>
-                <div className="w-32 h-4 mx-auto rounded bg-white/10 animate-pulse"></div>
-              </div>
-            </div>
-          </div>
-        }
-      >
-        <ProfilePageContent />
-      </Suspense>
-    </BaseAuthGuard>
-  );
+  return <ProfilePageContent />;
 }

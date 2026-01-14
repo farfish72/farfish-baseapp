@@ -7,15 +7,14 @@
 "use client";
 
 import Image from "next/image";
-import BaseAuthGuard from "@/app/components/BaseAuthGuard";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { getPublicClient } from "@wagmi/core";
 import { wagmiConfig } from "@/app/lib/wagmi";
-import { NFT_CONTRACT_ADDRESS, getNameFromTokenId } from "@/app/constants";
+import { NFT_CONTRACT_ADDRESS, getNameFromTokenId, TOKEN_IDS } from "@/app/constants";
 import nftDropAbi from "@/app/abi/nftDrop.json";
 import { base } from "viem/chains";
-import { useToast, ToastProvider } from "@/app/providers/ToastProvider";
+import { useToast } from "@/app/providers/ToastProvider";
 import { handleTransactionError } from "@/app/utils/errorHandling";
 
 interface SupplyInfo {
@@ -82,8 +81,6 @@ function pickWeightedTokenId(candidates: SupplyInfo[]): number {
   // Fallback to last candidate (should not happen)
   return candidates[candidates.length - 1].id;
 }
-
-const TOKEN_IDS = Array.from({ length: 16 }, (_, i) => i); // 0-15
 
 function HomeClient() {
   const { address } = useAccount();
@@ -206,7 +203,7 @@ function HomeClient() {
       });
       setClaimInfo(newMap);
     } catch (error) {
-      // Silent error handling
+      setErrorMessage("Failed to load claim conditions");
     } finally {
       setLoadingClaimConditions(false);
     }
@@ -223,6 +220,7 @@ function HomeClient() {
       const publicClient = getPublicClient(wagmiConfig, { chainId: base.id });
       if (!publicClient) {
         setErrorMessage("Public client not available");
+        setLoadingSupplies(false);
         return;
       }
 

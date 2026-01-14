@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { TOAST_DURATION } from '@/app/constants';
 
 interface Toast {
   id: number;
@@ -31,7 +32,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setToasts(prev => [...prev, { id, message, type: 'success' }]);
     setTimeout(() => {
       setToasts(prev => prev.filter(toast => toast.id !== id));
-    }, 3000); // Reduced from 5000 to 3000ms
+    }, TOAST_DURATION);
   }, []);
 
   const showError = useCallback((message: string) => {
@@ -39,7 +40,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setToasts(prev => [...prev, { id, message, type: 'error' }]);
     setTimeout(() => {
       setToasts(prev => prev.filter(toast => toast.id !== id));
-    }, 3000); // Reduced from 5000 to 3000ms
+    }, TOAST_DURATION);
   }, []);
 
   const clearAll = useCallback(() => {

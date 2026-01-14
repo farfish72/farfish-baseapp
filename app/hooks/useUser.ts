@@ -106,7 +106,7 @@ export default function useUser() {
       return localImage;
     }
     
-    return "/farfish-logo.png";
+    return "/farfish-logo-optimized.webp";
   }, []);
 
   const fid = farcasterProfile?.fid ?? 0;

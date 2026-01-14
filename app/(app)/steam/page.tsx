@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAccount, useReadContract } from "wagmi";
 import { useComposeCast } from "@coinbase/onchainkit/minikit";
 import useUserStakes from "@/app/hooks/useUserStakes";
-import { NFT_CONTRACT_ADDRESS, STAKING_CONTRACT_ADDRESS } from "@/app/constants";
+import { NFT_CONTRACT_ADDRESS, STAKING_CONTRACT_ADDRESS, REFERRAL_MILESTONES } from "@/app/constants";
 import nftAbi from "@/app/abi/nftDrop.json";
 import stakeAbi from "@/app/abi/stake.json";
 
@@ -83,13 +83,6 @@ const TASKS: Omit<Task, "status">[] = [
     type: "referral_milestone",
     target: 50,
   },
-];
-
-const REFERRAL_MILESTONES = [
-  { count: 5, reward: 200 },
-  { count: 10, reward: 400 },
-  { count: 30, reward: 1200 },
-  { count: 50, reward: 2000 },
 ];
 
 export default function SteamPage() {
@@ -334,7 +327,6 @@ export default function SteamPage() {
     if (!wallet) return;
     
     try {
-      // Use trust anchor API to get referral data from Upstash KV
       const response = await fetch(`/api/trust-anchor/user/${wallet}`);
       if (response.ok) {
         const data = await response.json();
@@ -342,47 +334,46 @@ export default function SteamPage() {
         
         setReferralData({
           count: referralCount,
-          rewards: referralCount * 40, // 40 FRH per referral
+          rewards: referralCount * 40,
         });
       }
     } catch (error) {
-      console.error('Referral data fetch error:', error);
+      setReferralData({ count: 0, rewards: 0 });
     }
   }, [wallet]);
 
   const fetchTaskStatuses = useCallback(async () => {
+    if (!wallet) {
+      const staticTasks = TASKS.map((task) => ({
+        ...task,
+        status: "not_started" as TaskStatus,
+      }));
+      setTasks(staticTasks);
+      setLoading(false);
+      return;
+    }
+
     try {
-      // Always load static tasks first
       const staticTasks = TASKS.map((task) => ({
         ...task,
         status: "not_started" as TaskStatus,
       }));
       setTasks(staticTasks);
 
-      if (!wallet) {
-        // If no wallet connected, show all tasks as not started but still visible
-        setLoading(false);
-        return;
-      }
-
-      // Fetch task completion status from API
       const res = await fetch(`/api/steam/task-status?wallet=${wallet}`);
       const taskStatusData = await res.json();
       
-      // Set fishing cooldown from API response
       setFishingCooldown(taskStatusData.fishingCooldown || 0);
 
-      // Get streak from Trust Anchor API (KV-based, not localStorage)
       const streakRes = await fetch(`/api/trust-anchor/user/${wallet}`);
       const streakData = await streakRes.json();
       setStreak(streakData.currentStreak || 0);
 
-      // Update NFT data with auto-detected values
       const newNftData: { tokenId?: number; stakeId?: number } = {};
       if (ownedTokenId !== undefined) {
         newNftData.tokenId = ownedTokenId;
       }
-      if (activeStakes.length > 0) {
+      if (activeStakes && activeStakes.length > 0) {
         newNftData.stakeId = Number(Math.max(...activeStakes.map(s => Number(s.stakeId))));
       }
       setNftData(newNftData);
@@ -393,20 +384,15 @@ export default function SteamPage() {
         let stakeId: number | undefined;
 
         if (task.type === "daily") {
-          // Fishing task: "verified" means on cooldown, "not_started" means available
           const fishingOnCooldown = taskStatusData.tasks?.[task.id] || taskStatusData.fishingCooldown > 0;
           status = fishingOnCooldown ? "verified" : "not_started";
         } else if (task.type === "base_activity") {
-          // Activity streak: only verified if user has streak from chest claims
           status = streakData.currentStreak > 0 ? "verified" : "not_started";
         } else if (task.type === "referral") {
-          // Referral is always "verified" if user has referrals
           status = referralData.count > 0 ? "verified" : "not_started";
         } else if (task.type === "referral_milestone") {
-          // Referral milestone: completed if referral count >= target
           status = referralData.count >= (task.target || 0) ? "verified" : "not_started";
         } else if (task.type === "nft") {
-          // NFT tasks: auto-detect completion
           if (task.id === "nft_mint") {
             status = (ownsAnyNFT || hasActiveStake) ? "verified" : "not_started";
             if (ownsAnyNFT && ownedTokenId !== undefined) {
@@ -425,8 +411,6 @@ export default function SteamPage() {
 
       setTasks(withStatus);
     } catch (error) {
-      console.error('Task status fetch error:', error);
-      // Even on error, show static tasks
       setTasks(
         TASKS.map((task) => ({
           ...task,
@@ -436,7 +420,7 @@ export default function SteamPage() {
     } finally {
       setLoading(false);
     }
-  }, [wallet, ownsAnyNFT, ownedTokenId, activeStakes, referralData.count]);
+  }, [wallet, ownsAnyNFT, ownedTokenId, activeStakes, referralData.count, hasActiveStake]);
 
   useEffect(() => {
     fetchTaskStatuses();
@@ -447,10 +431,15 @@ export default function SteamPage() {
   }, [fetchReferralData]); // Fetch referral data when function changes
 
   const handleFishing = async () => {
-    if (!wallet) return;
+    if (!wallet) {
+      setToast({
+        type: 'error',
+        message: 'Please connect your wallet'
+      });
+      return;
+    }
 
     try {
-      // Call the unified task completion API
       const response = await fetch('/api/steam/task/complete', {
         method: 'POST',
         headers: {
@@ -465,14 +454,12 @@ export default function SteamPage() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Refresh task status to reflect the completed fishing
         fetchTaskStatuses();
         setToast({
           type: 'success',
           message: 'Fishing completed! Earned 10 FRH'
         });
       } else if (response.status === 429) {
-        // Cooldown active - update local cooldown state
         setFishingCooldown(data.cooldownRemaining || 0);
         setToast({
           type: 'error',
@@ -485,32 +472,37 @@ export default function SteamPage() {
         });
       }
     } catch (error) {
-      console.error('Fishing error:', error);
+      setToast({
+        type: 'error',
+        message: 'Failed to complete fishing task'
+      });
     }
   };
 
   const handleBaseAppInvite = async () => {
-    if (!wallet) return;
+    if (!wallet) {
+      setToast({
+        type: 'error',
+        message: 'Please connect your wallet'
+      });
+      return;
+    }
 
     try {
-      // Generate referral code from wallet address (last 8 characters)
       const referralCode = wallet.slice(-8).toUpperCase();
-      
-      // Create embed URL with referrer context
       const embedUrl = `https://farfish-baseapp.vercel.app/?ref=${referralCode}`;
-      
-      // Fixed embed content as specified
       const embedText = "🐟 Join me on FarFISH — daily rewards on Base.\nClaim the Daily Base Chest, build your activity streak,\nand earn FRH tokens over time.";
       
-      // Use Farcaster/Base embed composer
       composeCast({
         text: embedText,
         embeds: [embedUrl]
       });
       
     } catch (error) {
-      // Fail silently as specified
-      console.error('Base App share error:', error);
+      setToast({
+        type: 'error',
+        message: 'Failed to share invite'
+      });
     }
   };
 

@@ -90,7 +90,6 @@ export default function ChestPage() {
         chain: base,
       });
     } catch (error) {
-      console.error('Daily claim error:', error);
       throw error;
     }
   }, [daily, address, claimDaily]);
@@ -143,7 +142,6 @@ export default function ChestPage() {
         chain: base,
       });
     } catch (error) {
-      console.error('Silver claim error:', error);
       throw error;
     }
   }, [silver, address, claimSilver]);

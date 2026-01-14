@@ -9,7 +9,26 @@ import { BaseAuthProvider } from "@/app/contexts/BaseAuthContext";
 import { ReferralHandler } from "@/app/components/ReferralHandler";
 import "@coinbase/onchainkit/styles.css";
 
-const queryClient = new QueryClient();
+// Create query client with optimized settings
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000, // 1 minute
+      gcTime: 5 * 60 * 1000, // 5 minutes (formerly cacheTime)
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+
+// Loading screen component
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+    </div>
+  );
+}
 
 // Auto-connect component that runs inside WagmiProvider
 function AutoConnectWallet() {
@@ -32,7 +51,7 @@ function AutoConnectWallet() {
     }
   }, [isConnected, isConnecting, connect, connectors, hasAttemptedConnect]);
 
-  return null; // This component doesn't render anything
+  return null;
 }
 
 export function RootProvider({ children }: { children: ReactNode }) {
@@ -45,11 +64,7 @@ export function RootProvider({ children }: { children: ReactNode }) {
 
   // Prevent hydration mismatch by not rendering wagmi until mounted
   if (!mounted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
   
   return (
