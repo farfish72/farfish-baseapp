@@ -519,8 +519,8 @@ function HomeClient() {
                 </div>
                 <div className="space-y-2 text-white/80 text-sm">
                   <p className="text-center">• Earn rewards faster</p>
-                  <p className="text-center">• Boost your leaderboard rank</p>
                   <p className="text-center">• Priority snapshot inclusion</p>
+                  <p className="text-center">• Exclusive benefits</p>
                 </div>
               </div>
             </div>

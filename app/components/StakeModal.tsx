@@ -325,7 +325,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
       className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/80 px-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl max-w-md w-full p-4 shadow-2xl max-h-[90vh] flex flex-col">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-white">Stake NFT</h2>
           <button
@@ -393,11 +393,25 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
                 disabled={isPending}
                 className={`rounded-xl p-4 border text-center transition-all duration-200 ${
                   selectedDuration === duration
-                    ? "border-cyan-400 bg-cyan-400/10"
+                    ? "border-cyan-400 bg-cyan-400/20 shadow-lg shadow-cyan-400/20"
                     : "border-slate-600/50 bg-slate-800/30 hover:bg-slate-700/50"
                 } ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
               >
-                <span className="text-lg font-bold text-white">{duration}</span>
+                <div className="flex flex-col items-center gap-1">
+                  <span className={`text-2xl font-bold ${
+                    selectedDuration === duration ? "text-cyan-400" : "text-white"
+                  }`}>
+                    {duration}
+                  </span>
+                  <span className={`text-xs ${
+                    selectedDuration === duration ? "text-cyan-300" : "text-slate-400"
+                  }`}>
+                    days
+                  </span>
+                  {selectedDuration === duration && (
+                    <span className="text-cyan-400 text-sm">✓</span>
+                  )}
+                </div>
               </button>
             ))}
           </div>

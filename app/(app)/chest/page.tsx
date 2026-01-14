@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   useAccount,
   useChainId,
@@ -15,7 +15,6 @@ import TrustAnchor from "@/app/components/TrustAnchor";
 
 import claimControllerAbi from "@/app/abi/claimController.json";
 import { CLAIM_CONTROLLER_ADDRESS } from "@/app/constants";
-import { useTrustAnchor } from "@/app/hooks/useTrustAnchor";
 import { useNFTStatus } from "@/app/hooks/useNFTStatus";
 import useUserStakes from "@/app/hooks/useUserStakes";
 /* ---------------- helpers ---------------- */
@@ -33,8 +32,7 @@ export default function ChestPage() {
   const chainId = useChainId();
   const isBase = chainId === base.id;
 
-  // Trust Anchor and NFT status hooks
-  const trustAnchor = useTrustAnchor();
+  // NFT status hooks
   const { hasMintedNFT } = useNFTStatus();
   const { stakes } = useUserStakes();
 
@@ -67,15 +65,6 @@ export default function ChestPage() {
   const { isLoading: dailyConfirming, isSuccess: dailySuccess } = useWaitForTransactionReceipt({
     hash: dailyTx,
   });
-
-  // Record claim in Trust Anchor system after successful transaction
-  useEffect(() => {
-    if (dailySuccess && dailyTx) {
-      trustAnchor.recordClaim(dailyTx);
-    }
-  }, [dailySuccess, dailyTx, trustAnchor]);
-
-  // Remove local streak counter - Trust Anchor handles this now
 
   const handleBronzeClaim = useCallback(async () => {
     if (!daily?.canClaim || !address) return;
@@ -121,13 +110,6 @@ export default function ChestPage() {
   const { isLoading: silverConfirming, isSuccess: silverSuccess } = useWaitForTransactionReceipt({
     hash: silverTx,
   });
-
-  // Record silver claim in Trust Anchor system after successful transaction
-  useEffect(() => {
-    if (silverSuccess && silverTx) {
-      trustAnchor.recordClaim(silverTx);
-    }
-  }, [silverSuccess, silverTx, trustAnchor]);
 
   const handleSilverClaim = useCallback(async () => {
     if (!silver?.canClaim || !address) return;

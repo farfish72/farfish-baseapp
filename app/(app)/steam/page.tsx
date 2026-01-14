@@ -2,12 +2,10 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useAccount, useReadContract } from "wagmi";
-import { useComposeCast } from "@coinbase/onchainkit/minikit";
 import useUserStakes from "@/app/hooks/useUserStakes";
-import { NFT_CONTRACT_ADDRESS, STAKING_CONTRACT_ADDRESS, REFERRAL_MILESTONES } from "@/app/constants";
+import { NFT_CONTRACT_ADDRESS, STAKING_CONTRACT_ADDRESS } from "@/app/constants";
 import nftAbi from "@/app/abi/nftDrop.json";
 import stakeAbi from "@/app/abi/stake.json";
-
 type TaskStatus = "not_started" | "verified";
 
 type Task = {
@@ -15,7 +13,7 @@ type Task = {
   title: string;
   description: string;
   reward: number;
-  type: "daily" | "base_activity" | "referral" | "referral_milestone" | "nft";
+  type: "daily" | "base_activity" | "nft";
   status: TaskStatus;
   target?: number; // For referral milestones
   tokenId?: number; // For NFT tasks
@@ -44,45 +42,6 @@ const TASKS: Omit<Task, "status">[] = [
     reward: 2500,
     type: "nft",
   },
-  {
-    id: "referral",
-    title: "Referral Rewards (Base)",
-    description: "Earn FRH when users join FarFISH using your invite",
-    reward: 40,
-    type: "referral",
-  },
-  {
-    id: "referral_milestone_5",
-    title: "5 Referrals",
-    description: "Bonus reward for referring 5 users",
-    reward: 200,
-    type: "referral_milestone",
-    target: 5,
-  },
-  {
-    id: "referral_milestone_10",
-    title: "10 Referrals",
-    description: "Bonus reward for referring 10 users",
-    reward: 400,
-    type: "referral_milestone",
-    target: 10,
-  },
-  {
-    id: "referral_milestone_30",
-    title: "30 Referrals",
-    description: "Bonus reward for referring 30 users",
-    reward: 1200,
-    type: "referral_milestone",
-    target: 30,
-  },
-  {
-    id: "referral_milestone_50",
-    title: "50 Referrals",
-    description: "Bonus reward for referring 50 users",
-    reward: 2000,
-    type: "referral_milestone",
-    target: 50,
-  },
 ];
 
 export default function SteamPage() {
@@ -92,8 +51,6 @@ export default function SteamPage() {
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const { address: wallet } = useAccount();
   const { activeStakes } = useUserStakes();
-  const { composeCast } = useComposeCast();
-  const [referralData, setReferralData] = useState({ count: 0, rewards: 0 });
   const [streak, setStreak] = useState(0);
   const [nftData, setNftData] = useState<{ tokenId?: number; stakeId?: number }>({});
   
@@ -323,25 +280,6 @@ export default function SteamPage() {
   // Check if user has active stakes
   const hasActiveStake = activeStakes.length > 0;
 
-  const fetchReferralData = useCallback(async () => {
-    if (!wallet) return;
-    
-    try {
-      const response = await fetch(`/api/trust-anchor/user/${wallet}`);
-      if (response.ok) {
-        const data = await response.json();
-        const referralCount = data.referrals || 0;
-        
-        setReferralData({
-          count: referralCount,
-          rewards: referralCount * 40,
-        });
-      }
-    } catch (error) {
-      setReferralData({ count: 0, rewards: 0 });
-    }
-  }, [wallet]);
-
   const fetchTaskStatuses = useCallback(async () => {
     if (!wallet) {
       const staticTasks = TASKS.map((task) => ({
@@ -388,10 +326,6 @@ export default function SteamPage() {
           status = fishingOnCooldown ? "verified" : "not_started";
         } else if (task.type === "base_activity") {
           status = streakData.currentStreak > 0 ? "verified" : "not_started";
-        } else if (task.type === "referral") {
-          status = referralData.count > 0 ? "verified" : "not_started";
-        } else if (task.type === "referral_milestone") {
-          status = referralData.count >= (task.target || 0) ? "verified" : "not_started";
         } else if (task.type === "nft") {
           if (task.id === "nft_mint") {
             status = (ownsAnyNFT || hasActiveStake) ? "verified" : "not_started";
@@ -420,15 +354,11 @@ export default function SteamPage() {
     } finally {
       setLoading(false);
     }
-  }, [wallet, ownsAnyNFT, ownedTokenId, activeStakes, referralData.count, hasActiveStake]);
+  }, [wallet, ownsAnyNFT, ownedTokenId, activeStakes, hasActiveStake]);
 
   useEffect(() => {
     fetchTaskStatuses();
   }, [fetchTaskStatuses]); // Refetch when function changes
-
-  useEffect(() => {
-    fetchReferralData();
-  }, [fetchReferralData]); // Fetch referral data when function changes
 
   const handleFishing = async () => {
     if (!wallet) {
@@ -479,43 +409,11 @@ export default function SteamPage() {
     }
   };
 
-  const handleBaseAppInvite = async () => {
-    if (!wallet) {
-      setToast({
-        type: 'error',
-        message: 'Please connect your wallet'
-      });
-      return;
-    }
-
-    try {
-      const referralCode = wallet.slice(-8).toUpperCase();
-      const embedUrl = `https://farfish-baseapp.vercel.app/?ref=${referralCode}`;
-      const embedText = "🐟 Join me on FarFISH — daily rewards on Base.\nClaim the Daily Base Chest, build your activity streak,\nand earn FRH tokens over time.";
-      
-      composeCast({
-        text: embedText,
-        embeds: [embedUrl]
-      });
-      
-    } catch (error) {
-      setToast({
-        type: 'error',
-        message: 'Failed to share invite'
-      });
-    }
-  };
-
   const completedTasks = tasks.filter(task => task.status === "verified").length;
   const totalTasks = tasks.length;
   const totalRewards = tasks
     .filter(task => task.status === "verified")
-    .reduce((sum, task) => {
-      if (task.type === "referral") {
-        return sum + (referralData.count * task.reward);
-      }
-      return sum + task.reward;
-    }, 0);
+    .reduce((sum, task) => sum + task.reward, 0);
 
   if (loading) {
     return (
@@ -688,72 +586,6 @@ export default function SteamPage() {
                       )}
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Referral Rewards Section */}
-          <section className="glass-card rounded-3xl">
-            <div className="p-6">
-              <h3 className="text-xl font-bold text-white mb-6">
-                🤝 Referral Rewards (Base)
-              </h3>
-
-              {/* Invite Users */}
-              <div className="glass-card rounded-2xl p-4 mb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-bold text-white mb-1">Share FarFISH on Base</h4>
-                    <p className="text-white/70 text-sm mb-2">Invite friends to join FarFISH and earn rewards when they start their journey on Base.</p>
-                    <div className="text-xs text-white font-medium mb-1">Reward: 40 FRH per successful referral</div>
-                    <div className="text-xs text-white/60 mb-1">Current: {referralData.count} referrals · {referralData.count * 40} FRH earned</div>
-                  </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <button
-                      onClick={handleBaseAppInvite}
-                      disabled={!wallet}
-                      className={`bg-gradient-primary text-black px-3 py-1.5 rounded-lg font-medium text-sm ${
-                        !wallet ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
-                    >
-                      Share Link
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Referral Milestones */}
-              <div className="mb-4">
-                <h4 className="text-lg font-bold text-white mb-4">🏆 Referral Milestones</h4>
-                <div className="grid grid-cols-2 gap-3">
-                  {REFERRAL_MILESTONES.map((milestone) => (
-                    <div
-                      key={milestone.count}
-                      className="glass-card rounded-xl p-4"
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-lg">
-                          {milestone.count === 5 ? "🥉" : 
-                           milestone.count === 10 ? "🥈" : 
-                           milestone.count === 30 ? "🥇" : "👑"}
-                        </span>
-                        <div className="text-sm font-bold text-white">{milestone.count} Referrals</div>
-                      </div>
-                      <div className="text-xs text-white font-medium mb-2">Reward: {milestone.reward} FRH</div>
-                      <div className="text-xs text-white/70">
-                        Progress: {Math.min(referralData.count, milestone.count)} / {milestone.count}
-                      </div>
-                      <div className="w-full bg-white/20 rounded-full h-2 mt-2">
-                        <div 
-                          className="bg-gradient-primary h-2 rounded-full"
-                          style={{ 
-                            width: `${Math.min(100, (referralData.count / milestone.count) * 100)}%` 
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>

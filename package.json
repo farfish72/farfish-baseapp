@@ -6,17 +6,12 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "analyze": "ANALYZE=true npm run build",
-    "optimize-images": "node scripts/optimize-images.js",
-    "sync-refcount": "node scripts/sync-refcount.js",
-    "cleanup-orphaned-refcounts": "node scripts/cleanup-orphaned-refcounts.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@coinbase/onchainkit": "latest",
     "@farcaster/miniapp-sdk": "^0.2.0",
     "@tanstack/react-query": "^5.81.5",
-    "@upstash/redis": "^1.36.1",
     "next": "^16.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

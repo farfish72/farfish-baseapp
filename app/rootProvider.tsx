@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, useAccount, useConnect } from "wagmi";
 import { wagmiConfig } from "@/app/lib/wagmi";
 import { BaseAuthProvider } from "@/app/contexts/BaseAuthContext";
-import { ReferralHandler } from "@/app/components/ReferralHandler";
 import "@coinbase/onchainkit/styles.css";
 
 // Create query client with optimized settings
@@ -88,7 +87,6 @@ export function RootProvider({ children }: { children: ReactNode }) {
         >
           <BaseAuthProvider>
             <AutoConnectWallet />
-            <ReferralHandler />
             {children}
           </BaseAuthProvider>
         </OnchainKitProvider>
