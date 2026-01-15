@@ -23,7 +23,7 @@ export default function Footer() {
       >
         <div className="text-center">
           <p className="text-xs text-white/80 font-medium">
-            FarFISH © 2026 • Built on Base
+            FarFISH © 2026 • Built on Base Network
           </p>
         </div>
       </div>

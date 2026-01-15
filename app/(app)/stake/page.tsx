@@ -123,12 +123,12 @@ export default function StakingPage() {
                     <h2 className="text-xl font-bold text-white leading-tight">
                       Staking Overview
                     </h2>
-                    <p className="text-white/70 text-sm">Lock NFTs to earn rewards</p>
+                    <p className="text-white/70 text-sm">Lock your NFTs to earn rewards</p>
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <p className="text-sm text-white/70">Staking locks your NFT in a smart contract on Base.</p>
-                  <p className="text-sm text-white/70">Locked NFTs increase your snapshot weight and unlock protocol rewards.</p>
+                  <p className="text-sm text-white/70">Staking securely locks your NFT in a smart contract on Base Network.</p>
+                  <p className="text-sm text-white/70">Staked NFTs increase your snapshot allocation and unlock additional protocol rewards.</p>
                 </div>
               </div>
             </section>
@@ -144,7 +144,7 @@ export default function StakingPage() {
                     <h2 className="text-xl font-bold text-white leading-tight">
                       Stake Your NFTs
                     </h2>
-                    <p className="text-white/70 text-sm">Manage your staked positions</p>
+                    <p className="text-white/70 text-sm">Manage your active stakes</p>
                   </div>
                 </div>
                 
@@ -153,19 +153,19 @@ export default function StakingPage() {
                     onClick={() => setIsStakeModalOpen(true)}
                     className="bg-gradient-primary text-black font-bold py-4 rounded-2xl transition-all duration-300 hover:shadow-lg"
                   >
-                    Stake NFT
+                    Stake Your NFT
                   </button>
                   <button
                     onClick={() => setIsUnstakeModalOpen(true)}
                     className="bg-surface text-white font-bold py-4 rounded-2xl border border-white/20 transition-all duration-300 hover:bg-white/10"
                   >
-                    Unstake NFT
+                    Unstake Your NFT
                   </button>
                 </div>
                 
                 <div className="text-center">
-                  <p className="text-xs text-white/60">On-chain action • Base Network</p>
-                  <p className="text-xs text-white/60">Gas fees may apply</p>
+                  <p className="text-xs text-white/60">On-chain transaction • Base Network</p>
+                  <p className="text-xs text-white/60">Network fees may apply</p>
                 </div>
               </div>
             </section>
@@ -182,33 +182,33 @@ export default function StakingPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <h2 className="text-xl font-bold text-white leading-tight">
-                      My Staked NFTs
+                      Active Stakes
                     </h2>
-                    <p className="text-white/70 text-sm">Track your active stakes</p>
+                    <p className="text-white/70 text-sm">Monitor your staked positions</p>
                   </div>
                 </div>
 
                 {/* Staking Flow Explanation */}
                 <div className="mb-6 p-4 rounded-2xl bg-elevated border border-white/10">
                   <p className="text-sm text-white font-medium mb-3">
-                    Staking Flow:
+                    How Staking Works:
                   </p>
                   <ul className="text-sm text-white/70 space-y-2">
                     <li className="flex items-start gap-2">
                       <span>•</span>
-                      <span>Staking rewards accrue while your NFT is locked</span>
+                      <span>Rewards accumulate while your NFT is staked</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span>•</span>
-                      <span>Rewards become claimable after the selected lock period</span>
+                      <span>Rewards become available after your selected lock period</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span>•</span>
-                      <span>Claiming finalizes rewards on-chain</span>
+                      <span>Claiming records your rewards on-chain</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span>•</span>
-                      <span>Unstaking becomes available after the claim window</span>
+                      <span>Unstaking is available after the claim period</span>
                     </li>
                   </ul>
                 </div>
@@ -218,14 +218,14 @@ export default function StakingPage() {
                     <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
                       <span className="text-2xl">🔌</span>
                     </div>
-                    <p className="text-white/70">Connect wallet to view stakes</p>
+                    <p className="text-white/70">Connect your wallet to view stakes</p>
                   </div>
                 )}
                 
                 {isLoading && (
                   <div className="text-center py-6">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-                    <p className="text-white/70">Loading stakes...</p>
+                    <p className="text-white/70">Loading your stakes...</p>
                   </div>
                 )}
                 
@@ -240,7 +240,7 @@ export default function StakingPage() {
                     <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
                       <span className="text-2xl">📭</span>
                     </div>
-                    <p className="text-white/70">No staked NFTs</p>
+                    <p className="text-white/70">No active stakes</p>
                   </div>
                 )}
 
@@ -279,7 +279,7 @@ export default function StakingPage() {
                                 : "bg-white/10 text-white/40 cursor-not-allowed"
                             }`}
                           >
-                            {isButtonEnabled ? "Claim Rewards" : "Claim"}
+                            {isButtonEnabled ? "Claim Rewards" : "Locked"}
                           </button>
                         </div>
                       );

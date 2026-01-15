@@ -19,7 +19,7 @@ export default function Header() {
             
             {/* Subtitle - Centered */}
             <p className="text-sm text-white/70 leading-relaxed text-center">
-              Daily on-chain habits for future rewards on Base
+              Build on-chain habits, earn sustainable rewards on Base Network
             </p>
           </div>
           

@@ -273,7 +273,7 @@ function HomeClient() {
       fetchSupplyInfo();
       fetchAllClaimConditions();
       setIsMinting(false);
-      setMintMessage({ type: 'success', text: 'Mint successful' });
+      setMintMessage({ type: 'success', text: 'NFT minted successfully' });
     }
   }, [isMintConfirmed, mintTxHash, fetchSupplyInfo, fetchAllClaimConditions]);
 
@@ -305,7 +305,7 @@ function HomeClient() {
     setMintMessage(null);
 
     if (!NFT_CONTRACT_ADDRESS) {
-      setMintMessage({ type: 'error', text: 'Contract not configured. Mint is disabled.' });
+      setMintMessage({ type: 'error', text: 'Minting temporarily unavailable' });
       return;
     }
 
@@ -326,7 +326,7 @@ function HomeClient() {
     });
 
     if (candidates.length === 0) {
-      setMintMessage({ type: 'error', text: 'No tokens available for minting at this time.' });
+      setMintMessage({ type: 'error', text: 'No NFTs currently available for minting' });
       return;
     }
 
@@ -336,7 +336,7 @@ function HomeClient() {
       const claim = claimInfo.get(tokenId);
 
       if (!claim || !claim.condition) {
-        setMintMessage({ type: 'error', text: 'Mint conditions not available. Please try again.' });
+        setMintMessage({ type: 'error', text: 'Minting conditions unavailable. Please try again' });
         return;
       }
 
@@ -346,13 +346,13 @@ function HomeClient() {
       // Verify mint has started
       const now = BigInt(Math.floor(Date.now() / 1000));
       if (claim.condition.startTimestamp > now) {
-        setMintMessage({ type: 'error', text: 'Mint has not started yet. Please wait.' });
+        setMintMessage({ type: 'error', text: 'Minting has not begun. Please check back soon' });
         return;
       }
 
       // Verify claim condition has remaining supply
       if (claim.condition.supplyClaimed >= claim.condition.maxClaimableSupply) {
-        setMintMessage({ type: 'error', text: 'This token type is sold out. Please try again.' });
+        setMintMessage({ type: 'error', text: 'This rarity tier is sold out. Please try again' });
         return;
       }
 
@@ -379,10 +379,10 @@ function HomeClient() {
       };
 
       setIsMinting(true);
-      setMintMessage({ type: 'info', text: 'Mint started' });
+      setMintMessage({ type: 'info', text: 'Transaction initiated' });
 
       // Call claim function with sponsor transaction support
-      // Pimlico paymaster will sponsor gas fees when available
+      // Pimlico paymaster will sponsor network fees when available
       await writeMint({
         address: NFT_CONTRACT_ADDRESS as `0x${string}`,
         abi: nftDropAbi as any,
@@ -398,7 +398,7 @@ function HomeClient() {
         ],
         value: isNativeCurrency ? totalValue : BigInt(0),
         // Sponsor transaction via Pimlico paymaster
-        // Gas fees will be sponsored when paymaster is available
+        // Network fees will be sponsored when paymaster is available
         account: address as `0x${string}`,
         chain: base,
       } as any);
@@ -473,7 +473,7 @@ function HomeClient() {
                     Home
                   </h2>
                   <p className="text-white/70 text-sm mt-1">
-                    Start your daily habit
+                    Build your on-chain routine
                   </p>
                 </div>
               </div>
@@ -485,10 +485,10 @@ function HomeClient() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-xl font-bold text-white">
-                  Choose Your Tier
+                  Select Your Membership
                 </h2>
                 <p className="text-white/70 text-sm mt-1">
-                  Unlock exclusive benefits
+                  Access exclusive rewards and benefits
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -508,9 +508,9 @@ function HomeClient() {
                   <h3 className="text-lg font-bold text-white">Basic</h3>
                 </div>
                 <div className="space-y-2 text-white/80 text-sm">
-                  <p className="text-center">• Claim daily rewards</p>
-                  <p className="text-center">• Build your activity streak</p>
-                  <p className="text-center">• Appear on the leaderboard</p>
+                  <p className="text-center">• Earn daily rewards</p>
+                  <p className="text-center">• Maintain your activity streak</p>
+                  <p className="text-center">• Compete on the leaderboard</p>
                 </div>
               </div>
 
@@ -523,9 +523,9 @@ function HomeClient() {
                   <h3 className="text-lg font-bold text-cyan-300">Premium</h3>
                 </div>
                 <div className="space-y-2 text-white/80 text-sm">
-                  <p className="text-center">• Earn rewards faster</p>
-                  <p className="text-center">• Priority snapshot inclusion</p>
-                  <p className="text-center">• Exclusive benefits</p>
+                  <p className="text-center">• Accelerated reward earnings</p>
+                  <p className="text-center">• Priority snapshot allocation</p>
+                  <p className="text-center">• Premium member benefits</p>
                 </div>
               </div>
             </div>
@@ -556,19 +556,19 @@ function HomeClient() {
                   <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
                     <span className="text-lg">1️⃣</span>
                   </div>
-                  <p className="text-white font-medium leading-relaxed">Mint a FarFISH NFT</p>
+                  <p className="text-white font-medium leading-relaxed">Mint your FarFISH NFT</p>
                 </div>
                 <div className="flex items-center gap-3 py-3 px-4 rounded-xl bg-elevated">
                   <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
                     <span className="text-lg">2️⃣</span>
                   </div>
-                  <p className="text-white font-medium leading-relaxed">Complete daily on-chain actions</p>
+                  <p className="text-white font-medium leading-relaxed">Complete daily on-chain activities</p>
                 </div>
                 <div className="flex items-center gap-3 py-3 px-4 rounded-xl bg-elevated">
                   <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
                     <span className="text-lg">3️⃣</span>
                   </div>
-                  <p className="text-white font-medium leading-relaxed">Earn long-term rewards on Base</p>
+                  <p className="text-white font-medium leading-relaxed">Earn sustainable rewards on Base Network</p>
                 </div>
               </div>
             </div>
@@ -580,10 +580,10 @@ function HomeClient() {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-xl font-bold text-white">
-                    Mint FarFISH NFTs
+                    Mint Your FarFISH NFT
                   </h2>
                   <p className="text-white/70 text-sm mt-1">
-                    {totalMaxSupply ? `Total supply ${totalMaxSupply} and 4 rarities` : "Loading supply..."}
+                    {totalMaxSupply ? `Limited supply of ${totalMaxSupply} across 4 rarity tiers` : "Loading availability..."}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -640,7 +640,7 @@ function HomeClient() {
                 </div>
               </div>
 
-              {/* Mint Premium Pass Button - Always Visible */}
+              {/* Mint NFT Button - Always Visible */}
               <button
                 type="button"
                 onClick={handleMint}
@@ -656,17 +656,17 @@ function HomeClient() {
                 {isMinting || isMintPending || isMintConfirming ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                    {isMinting ? "Preparing..." : isMintPending ? "Confirming..." : "Processing..."}
+                    {isMinting ? "Preparing transaction..." : isMintPending ? "Awaiting confirmation..." : "Processing transaction..."}
                   </div>
                 ) : (
-                  "Mint Premium Pass"
+                  "Mint NFT"
                 )}
               </button>
 
               {/* Transaction Transparency */}
               <div className="text-center">
-                <p className="text-xs text-white/60 mb-1">On-chain action • Base Network</p>
-                <p className="text-xs text-white/60">Price shown in wallet confirmation</p>
+                <p className="text-xs text-white/60 mb-1">On-chain transaction • Base Network</p>
+                <p className="text-xs text-white/60">Price displayed in wallet</p>
               </div>
 
               {/* Mint Messages */}
@@ -685,7 +685,7 @@ function HomeClient() {
                     <div>
                       <p className="font-semibold">{mintMessage.text}</p>
                       {mintMessage.type === 'success' && (
-                        <p className="text-xs opacity-80 mt-1">Premium Pass minted successfully!</p>
+                        <p className="text-xs opacity-80 mt-1">Your NFT has been minted successfully</p>
                       )}
                     </div>
                   </div>
@@ -697,7 +697,7 @@ function HomeClient() {
                   <div className="flex items-center gap-3">
                     <span className="text-xl">🎉</span>
                     <div>
-                      <p className="font-semibold text-white">Successfully Minted!</p>
+                      <p className="font-semibold text-white">Minting Complete</p>
                       <p className="text-xs text-white/80">{lastMintedDisplay}</p>
                     </div>
                   </div>
@@ -715,7 +715,7 @@ function HomeClient() {
             </div>
             <div>
               <h3 className="text-xl font-bold text-white">
-                Collection Preview
+                Explore the Collection
               </h3>
             </div>
           </div>

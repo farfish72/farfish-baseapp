@@ -206,7 +206,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
   // Handle approval transaction success
   useEffect(() => {
     if (isApprovalSuccess && approvalTx) {
-      setToast({ type: "success", message: "Approval confirmed! Proceeding to stake..." });
+      setToast({ type: "success", message: "Approval confirmed. Proceeding to stake..." });
       refetchApproval();
       // After approval, automatically proceed to stake
       setTimeout(() => {
@@ -218,7 +218,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
   // Handle stake transaction success
   useEffect(() => {
     if (isStakeSuccess && stakeTx) {
-      setToast({ type: "success", message: "NFT staked successfully!" });
+      setToast({ type: "success", message: "NFT staked successfully" });
 
       // Broadcast a global staking update so other parts of the app (Profile, Chest, Stake page)
       // can refetch on-chain data such as getUserStakeIds, profile stats, and chest eligibility.
@@ -278,12 +278,12 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
 
     // Precondition checks
     if (!isConnected) {
-      setToast({ type: "error", message: "Please connect your wallet" });
+      setToast({ type: "error", message: "Connect your wallet" });
       return;
     }
 
     if (!isBaseNetwork) {
-      setToast({ type: "error", message: `Please switch to the correct network (chainId ${expectedChainId})` });
+      setToast({ type: "error", message: "Switch to Base Network to continue" });
       return;
     }
 
@@ -327,7 +327,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
     >
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white">Stake NFT</h2>
+          <h2 className="text-xl font-bold text-white">Stake Your NFT</h2>
           <button
             onClick={onClose}
             className="text-slate-400 hover:text-white transition-colors text-xl"
@@ -339,19 +339,19 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
 
         {!isConnected && (
           <div className="mb-4 p-4 bg-yellow-600/20 border border-yellow-600/40 rounded-xl">
-            <p className="text-yellow-200 font-medium">Please connect your wallet to stake NFTs.</p>
+            <p className="text-yellow-200 font-medium">Connect your wallet to stake NFTs</p>
           </div>
         )}
 
         {isConnected && !isBaseNetwork && (
           <div className="mb-4 p-4 bg-yellow-600/20 border border-yellow-600/40 rounded-xl">
-            <p className="text-yellow-200 font-medium">Please switch to the correct network (chainId {expectedChainId}).</p>
+            <p className="text-yellow-200 font-medium">Switch to Base Network to continue</p>
           </div>
         )}
 
         {/* Category Selection */}
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-white mb-3">Select NFT</h3>
+          <h3 className="text-lg font-semibold text-white mb-3">Select Your NFT</h3>
           <div className="grid grid-cols-2 gap-3">
             {(Object.keys(NFT_CATEGORIES) as NFTCategory[]).map((category) => {
               return (
@@ -368,7 +368,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
                 >
                   <span className="text-lg font-medium text-white">{category}</span>
                   {selectedCategory === category && isResolvingTokenId && (
-                    <span className="text-xs text-slate-400 mt-1 block">Checking ownership...</span>
+                    <span className="text-xs text-slate-400 mt-1 block">Verifying ownership...</span>
                   )}
                 </button>
               );
@@ -376,14 +376,14 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
           </div>
           {ownershipError && selectedCategory && (
             <div className="mt-3 p-3 bg-red-900/30 border border-red-600/30 rounded-xl">
-              <p className="text-red-200 text-sm">{ownershipError}</p>
+              <p className="text-red-200 text-sm">This NFT is not in your wallet</p>
             </div>
           )}
         </div>
 
         {/* Lock Duration Selection */}
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-white mb-3">Select Lock Duration</h3>
+          <h3 className="text-lg font-semibold text-white mb-3">Choose Lock Duration</h3>
           <div className="grid grid-cols-4 gap-3">
             {LOCK_DURATIONS.map((duration) => (
               <button
@@ -421,7 +421,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
         {needsApproval === true && !isApprovalSuccess && (
           <div className="mb-4 p-4 bg-blue-900/20 border border-blue-600/30 rounded-xl">
             <p className="text-blue-200 text-sm">
-              Approval required: Please approve the staking contract to transfer your NFTs.
+              Approval Required: Authorize the staking contract to manage your NFTs
             </p>
           </div>
         )}
@@ -432,10 +432,10 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
             <p className="text-blue-200 text-sm">
               {isApprovalPending || isApprovalConfirming
                 ? isApprovalConfirming
-                  ? "Confirming approval..."
+                  ? "Awaiting approval confirmation..."
                   : "Approval transaction pending..."
                 : isStakeConfirming
-                ? "Confirming stake..."
+                ? "Awaiting confirmation..."
                 : "Stake transaction pending..."}
             </p>
             {currentTxHash && (
@@ -467,11 +467,11 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
           >
             {isPending
               ? isApprovalPending || isApprovalConfirming
-                ? "Approving..."
+                ? "Authorizing..."
                 : "Staking..."
               : needsApproval === true
-              ? "Approve & Stake"
-              : "Stake"}
+              ? "Authorize & Stake"
+              : "Stake NFT"}
           </button>
         </div>
 

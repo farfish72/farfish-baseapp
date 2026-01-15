@@ -117,7 +117,7 @@ export default function StakeTable() {
           </div>
           <div className="text-xs text-secondary space-y-2 leading-relaxed">
             <p>• Reward parameters are defined by the protocol</p>
-            <p>• NFT rarity determines reward weight multiplier</p>
+            <p>• NFT rarity tier determines reward weight multiplier</p>
             <p>• Longer lock durations increase snapshot weight</p>
             <p>• Staking rewards are claimable directly from this page</p>
           </div>

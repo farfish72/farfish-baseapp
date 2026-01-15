@@ -139,8 +139,8 @@ export default function ChestPage() {
             <div className="flex items-center gap-3">
               <span className="text-xl">ℹ️</span>
               <div>
-                <p className="font-semibold text-white">Daily Rewards</p>
-                <p className="text-sm text-white/70">Daily rewards are recorded on-chain on Base. Each claim contributes to monthly snapshot rewards.</p>
+                <p className="font-semibold text-white">Reward Transparency</p>
+                <p className="text-sm text-white/70">All reward claims are recorded on-chain on Base Network. Each claim contributes to monthly snapshot rewards.</p>
               </div>
             </div>
           </div>
@@ -152,15 +152,15 @@ export default function ChestPage() {
         />
         
         <ChestCard
-          title="Daily Base Chest"
-          description="Claim rewards every 24 hours."
+          title="Daily Reward Chest"
+          description="Claim your rewards every 24 hours"
           variant="bronze"
           badge={daily?.canClaim ? "Ready" : "Cooling"}
           progress={daily?.canClaim ? 100 : 0}
           actionLabel={
             daily?.canClaim 
-              ? "Claim 3 FRH • On-chain action" 
-              : `Next claim in: ${formatTime(daily?.timeLeft ?? 0n)}`
+              ? "Claim 3 FRH • On-chain transaction" 
+              : `Available in: ${formatTime(daily?.timeLeft ?? 0n)}`
           }
           actionDisabled={
             !isConnected ||
@@ -173,12 +173,12 @@ export default function ChestPage() {
         />
 
         <ChestCard
-          title="Staked Base Chest"
-          description="Stake at least one NFT to unlock enhanced rewards."
+          title="Staker Reward Chest"
+          description="Stake at least one NFT to unlock enhanced rewards"
           variant="silver"
           badge={
             !silver?.hasStaked
-              ? "Stake required"
+              ? "Staking Required"
               : silver?.canClaim
               ? "Ready"
               : "Cooling"
@@ -186,8 +186,8 @@ export default function ChestPage() {
           progress={daily?.canClaim ? 100 : 0}
           actionLabel={
             silver?.canClaim
-              ? "Claim 6 FRH • On-chain action"
-              : `Next claim in: ${formatTime(silver?.timeLeft ?? 0n)}`
+              ? "Claim 6 FRH • On-chain transaction"
+              : `Available in: ${formatTime(silver?.timeLeft ?? 0n)}`
           }
           actionDisabled={
             !isConnected ||
@@ -201,8 +201,8 @@ export default function ChestPage() {
         />
 
         <ChestCard
-          title="Future Rewards"
-          description="More reward types coming soon."
+          title="Additional Rewards"
+          description="More reward types coming soon"
           variant="default"
           badge="Coming Soon"
           actionLabel="Coming Soon"

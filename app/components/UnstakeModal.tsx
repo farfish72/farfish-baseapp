@@ -133,7 +133,7 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
     >
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white">Unstake NFT</h2>
+          <h2 className="text-xl font-bold text-white">Unstake Your NFT</h2>
           <button
             onClick={onClose}
             className="text-slate-400 hover:text-white transition-colors text-xl"
@@ -147,28 +147,28 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
         <div className="mb-4 p-4 bg-gradient-to-r from-cyan-400 to-teal-400 rounded-xl">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-slate-900">⚠️</span>
-            <p className="text-sm font-semibold text-slate-900">Warning</p>
+            <p className="text-sm font-semibold text-slate-900">Important Notice</p>
           </div>
           <div className="text-sm text-slate-900 space-y-1">
-            <p>• Unstaking removes your NFT from the protocol</p>
-            <p>• You will stop earning rewards after unstaking</p>
+            <p>• Unstaking withdraws your NFT from the protocol</p>
+            <p>• Reward accumulation stops upon unstaking</p>
           </div>
         </div>
 
         {/* Description */}
         <p className="mb-4 text-sm text-slate-300">
-          When your claim period ends, you will be able to unstake your NFT.
+          Unstaking becomes available after your claim period ends.
           For more information, please refer to the master reward parameters.
         </p>
 
         {/* Stake list */}
         {!isConnected ? (
           <div className="mb-4 p-4 bg-yellow-600/20 border border-yellow-600/40 rounded-xl">
-            <p className="text-yellow-200 text-center">Connect wallet to view positions.</p>
+            <p className="text-yellow-200 text-center">Connect your wallet to view positions</p>
           </div>
         ) : isLoadingStakes ? (
           <div className="mb-4 p-4 bg-slate-800/30 border border-slate-600/50 rounded-xl">
-            <p className="text-slate-300 text-center">Loading staked positions...</p>
+            <p className="text-slate-300 text-center">Loading your stakes...</p>
           </div>
         ) : stakesError && activeStakes.length === 0 ? (
           <div className="mb-4 p-4 bg-red-900/20 border border-red-600/30 rounded-xl">
@@ -176,7 +176,7 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
           </div>
         ) : !stakesError && !isLoadingStakes && activeStakes.length === 0 ? (
           <div className="mb-4 p-4 bg-slate-800/30 border border-slate-600/50 rounded-xl">
-            <p className="text-slate-300 text-center">You have no staked positions to unstake.</p>
+            <p className="text-slate-300 text-center">No active stakes available to unstake</p>
           </div>
         ) : (
           <div className="mb-4">
@@ -224,7 +224,7 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
             disabled={!isButtonEnabled}
             className="flex-1 py-4 px-6 bg-slate-700/50 border border-slate-600/50 hover:bg-slate-600/50 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
           >
-            {isPending ? "Unstaking..." : "Unstake"}
+            {isPending ? "Unstaking..." : "Unstake NFT"}
           </button>
         </div>
       </div>

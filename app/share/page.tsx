@@ -11,10 +11,10 @@ const ROOT_URL = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'FarFISH - Mint • Stake • Earn',
-    description: 'Premium NFT collection built on Base. Mint your FarFISH, stake for rewards, and dominate the seas.',
+    description: 'Premium NFT collection built on Base Network. Mint your FarFISH, stake for rewards, and dominate the seas.',
     openGraph: {
       title: 'FarFISH - Mint • Stake • Earn',
-      description: 'Premium NFT collection built on Base. Mint your FarFISH, stake for rewards, and dominate the seas.',
+      description: 'Premium NFT collection built on Base Network. Mint your FarFISH, stake for rewards, and dominate the seas.',
       images: [
         {
           url: `${ROOT_URL}/og-image-optimized.webp`,
@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: 'summary_large_image',
       title: 'FarFISH - Mint • Stake • Earn',
-      description: 'Premium NFT collection built on Base',
+      description: 'Premium NFT collection built on Base Network',
       images: [`${ROOT_URL}/og-image-optimized.webp`],
     },
     other: {
@@ -99,7 +99,7 @@ export default function SharePage() {
             
             {/* Description */}
             <p className="text-white/90 text-lg mb-6">
-              Premium NFT collection built on Base. Mint your FarFISH, stake for rewards, and dominate the seas.
+              Premium NFT collection built on Base Network. Mint your FarFISH, stake for rewards, and dominate the seas.
             </p>
             
             {/* Features */}
@@ -133,7 +133,7 @@ export default function SharePage() {
             <div className="mt-6 text-center">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/20 text-blue-300 text-sm">
                 <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
-                Built on Base
+                Built on Base Network
               </span>
             </div>
           </div>

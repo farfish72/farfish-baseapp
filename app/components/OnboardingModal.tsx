@@ -22,19 +22,19 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     {
       icon: '🐟',
       title: 'Welcome to FarFISH',
-      description: 'Premium NFT collection built on Base. Mint, stake, and earn rewards.',
+      description: 'A premium NFT collection on Base Network. Mint, stake, and earn rewards.',
       image: '/og-image-optimized.webp',
     },
     {
       icon: '💎',
-      title: 'Mint Your FarFISH',
-      description: 'Choose from 4 rarities: BlueFin, GoldRay, RedSpike, and ShadowGill. Each has unique rewards.',
+      title: 'Mint Your NFT',
+      description: 'Select from 4 rarity tiers: BlueFin, GoldRay, RedSpike, and ShadowGill. Each has unique rewards.',
       image: '/bluefin.jpg',
     },
     {
       icon: '🏆',
       title: 'Stake & Earn',
-      description: 'Stake your NFTs to earn daily rewards. Higher rarity = higher rewards. Compete on the leaderboard!',
+      description: 'Stake your NFTs to earn daily rewards. Higher rarity tiers yield greater rewards. Compete on the leaderboard!',
       image: '/goldray.jpg',
     },
   ];
@@ -112,7 +112,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 onClick={handleSkip}
                 className="flex-1 py-3 rounded-2xl bg-white/10 text-white font-semibold transition-all duration-300 hover:bg-white/20"
               >
-                Skip
+                Skip Tutorial
               </button>
             )}
             <button
@@ -121,7 +121,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 isLastStep ? 'flex-1' : 'flex-1'
               } py-3 rounded-2xl bg-gradient-primary text-black font-semibold transition-all duration-300 hover:shadow-lg`}
             >
-              {isLastStep ? 'Get Started' : 'Next'}
+              {isLastStep ? 'Get Started' : 'Continue'}
             </button>
           </div>
         </div>

@@ -24,15 +24,15 @@ const TASKS: Omit<Task, "status">[] = [
   {
     id: "activity_streak",
     title: "Activity Streak",
-    description: "Maintain consecutive daily activity on Base",
+    description: "Maintain your daily engagement streak on Base Network",
     reward: 0, // Bonus increases with streak length
     type: "base_activity",
   },
   {
     id: "nft_mint",
-    title: "Mint FarFISH NFT",
-    description: "Mint a FarFISH NFT on Base",
-    reward: 2500,
+    title: "Stake FarFISH NFT",
+    description: "Stake your FarFISH NFT to unlock premium features",
+    reward: 1500,
     type: "nft",
   },
 ];
@@ -325,7 +325,7 @@ export default function SteamPage() {
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-              <p className="text-white/70">Loading Base tasks...</p>
+              <p className="text-white/70">Loading your tasks...</p>
             </div>
           </div>
         </main>
@@ -348,7 +348,7 @@ export default function SteamPage() {
                   <h2 className="text-xl font-bold text-white">
                     Steam
                   </h2>
-                  <p className="text-white/70 text-sm">Complete Base tasks to earn FRH</p>
+                  <p className="text-white/70 text-sm">Complete activities to earn rewards</p>
                 </div>
               </div>
             </div>
@@ -360,7 +360,7 @@ export default function SteamPage() {
               <div className="p-6">
                 <div className="text-center">
                   <p className="text-white text-sm font-medium">
-                    Connect wallet to verify & earn rewards
+                    Connect your wallet to verify tasks and earn rewards
                   </p>
                 </div>
               </div>
@@ -373,9 +373,9 @@ export default function SteamPage() {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h3 className="text-xl font-bold text-white">
-                    📊 Task Progress
+                    📊 Your Progress
                   </h3>
-                  <p className="text-white/70 text-sm">Complete Base-native activities to earn verified FRH rewards</p>
+                  <p className="text-white/70 text-sm">Complete on-chain activities to earn verified rewards</p>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-white">
@@ -398,7 +398,7 @@ export default function SteamPage() {
           <section className="glass-card rounded-3xl">
             <div className="p-6">
               <h3 className="text-xl font-bold text-white mb-6">
-                🎯 Base Tasks
+                🎯 Available Tasks
               </h3>
 
               <div className="space-y-4">
@@ -410,15 +410,15 @@ export default function SteamPage() {
                         <span className="text-2xl">🔥</span>
                         <h4 className="text-lg font-bold text-white">Activity Streak</h4>
                       </div>
-                      <p className="text-white/70 text-sm mb-3">Maintain consecutive daily activity on Base</p>
-                      <div className="text-xs text-white font-medium">Increases only when claiming Daily Base Chest</div>
+                      <p className="text-white/70 text-sm mb-3">Maintain your daily engagement streak on Base Network</p>
+                      <div className="text-xs text-white font-medium">Streak increases when claiming Daily Reward Chest</div>
                       {streak > 0 && (
                         <div className="text-xs text-white mt-1">Current streak: {streak} days</div>
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-3">
                       <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
-                        {streak > 0 ? `${streak} days` : "Start streak"}
+                        {streak > 0 ? `${streak} days` : "Begin streak"}
                       </div>
                     </div>
                   </div>
@@ -430,18 +430,18 @@ export default function SteamPage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-2xl">🐟</span>
-                        <h4 className="text-lg font-bold text-white">Mint FarFISH NFT</h4>
+                        <h4 className="text-lg font-bold text-white">Stake FarFISH NFT</h4>
                       </div>
-                      <p className="text-white/70 text-sm mb-3">Mint a FarFISH NFT on Base to unlock premium features and earn bonus rewards</p>
-                      <div className="text-xs text-white font-medium">Reward: 2500 FRH</div>
-                      <div className="text-xs text-white/60 mt-1">One-time reward for minting your first FarFISH NFT</div>
+                      <p className="text-white/70 text-sm mb-3">Stake your FarFISH NFT to unlock premium features and enhanced rewards</p>
+                      <div className="text-xs text-white font-medium">Reward: 1,500 FRH</div>
+                      <div className="text-xs text-white/60 mt-1">One-time reward for staking your first NFT</div>
                       {ownsAnyNFT && ownedTokenId !== undefined && (
-                        <div className="text-xs text-success mt-1">✅ NFT Owned - Token ID: {ownedTokenId}</div>
+                        <div className="text-xs text-success mt-1">✅ NFT Owned (Token ID: {ownedTokenId})</div>
                       )}
                       {activeStakes.length > 0 ? (
-                        <div className="text-xs text-success mt-1">🔒 Currently Staked – Stake ID: {Number(Math.max(...activeStakes.map(s => Number(s.stakeId))))}</div>
+                        <div className="text-xs text-success mt-1">🔒 Currently Staked (Stake ID: {Number(Math.max(...activeStakes.map(s => Number(s.stakeId))))})</div>
                       ) : (
-                        <div className="text-xs text-white/60 mt-1">⏳ Not Staked – Stake an NFT to activate</div>
+                        <div className="text-xs text-white/60 mt-1">⏳ Not yet staked</div>
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-3">
@@ -451,8 +451,8 @@ export default function SteamPage() {
                         </div>
                       ) : (
                         <div className="text-xs text-white/80 text-center">
-                          ⏳ Incomplete<br />
-                          <span className="text-white/60">Mint on Home page</span>
+                          ⏳ Pending<br />
+                          <span className="text-white/60">Visit Home to mint</span>
                         </div>
                       )}
                     </div>
@@ -465,27 +465,27 @@ export default function SteamPage() {
           {/* How it works */}
           <section className="glass-card rounded-3xl">
             <div className="p-6">
-              <h3 className="text-lg font-semibold mb-3 text-white">ℹ️ How it works</h3>
+              <h3 className="text-lg font-semibold mb-3 text-white">ℹ️ How It Works</h3>
               <div className="space-y-2 text-white/80">
                 <div className="flex items-start gap-2">
                   <span>•</span>
-                  <span>Complete Base App activities to earn FRH</span>
+                  <span>Complete on-chain activities to earn FRH rewards</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span>•</span>
-                  <span>Tasks verify automatically on Base</span>
+                  <span>Tasks verify automatically on Base Network</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span>•</span>
-                  <span>Referral rewards use secure domain-based tracking</span>
+                  <span>Referral tracking uses secure domain-based verification</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span>•</span>
-                  <span>Invalid or manipulated activity is filtered automatically</span>
+                  <span>Invalid activity is automatically filtered</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span>•</span>
-                  <span>Rewards are finalized before token distribution</span>
+                  <span>Rewards are finalized before distribution</span>
                 </div>
               </div>
             </div>

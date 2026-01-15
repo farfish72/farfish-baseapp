@@ -22,7 +22,7 @@ interface ShareButtonProps {
  */
 export default function ShareButton({
   title = 'FarFISH - Mint • Stake • Earn',
-  text = 'Check out FarFISH! Premium NFT collection on Base. 🐟',
+  text = 'Check out FarFISH! Premium NFT collection on Base Network. 🐟',
   url,
   variant = 'primary',
   className = '',
@@ -87,12 +87,12 @@ export default function ShareButton({
         {showCopied ? (
           <>
             <span className="text-lg">✓</span>
-            <span>Link Copied!</span>
+            <span>Link Copied</span>
           </>
         ) : (
           <>
             <FiShare2 className="w-4 h-4" />
-            <span>{isSharing ? 'Sharing...' : 'Share'}</span>
+            <span>{isSharing ? 'Sharing...' : 'Share FarFISH'}</span>
           </>
         )}
       </button>
@@ -109,7 +109,7 @@ export default function ShareButton({
       {showCopied ? (
         <>
           <span className="text-lg">✓</span>
-          <span>Link Copied!</span>
+          <span>Link Copied</span>
         </>
       ) : (
         <>

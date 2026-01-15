@@ -10,27 +10,27 @@ type ToastState = { type: "error" | "success"; message: string } | null;
 const faqItems = [
   {
     question: "What is FarFISH?",
-    answer: "FarFISH is a daily habit-building app on Base that rewards consistent on-chain activity. Connect your wallet, complete daily tasks, and earn rewards while building healthy crypto habits.",
+    answer: "FarFISH is a daily engagement platform on Base Network that rewards consistent on-chain activity. Connect your wallet, complete daily tasks, and earn rewards while building healthy crypto habits.",
   },
   {
     question: "How do I get started?",
-    answer: "Simply connect your Base wallet and start claiming daily rewards in the Chest section. The more consistent you are, the higher your rewards and streak bonuses.",
+    answer: "Connect your Base wallet and begin claiming daily rewards in the Chest section. The more consistent you are, the higher your rewards and streak bonuses.",
   },
   {
-    question: "What can I do in the app?",
-    answer: "• Chest: Claim daily rewards and build your streak\n• Stake: Stake NFTs for bonus rewards\n• Steam: Trade and manage assets\n• Profile: View your stats and settings",
+    question: "What features are available?",
+    answer: "• Chest: Claim daily rewards and maintain your streak\n• Stake: Stake NFTs for bonus rewards\n• Steam: Trade and manage assets\n• Profile: View your stats and settings",
   },
   {
     question: "How does NFT staking work?",
-    answer: "Mint or buy FarFISH NFTs, then stake them to earn higher daily rewards. Different rarities (Common, Rare, Epic, Legendary) offer different reward multipliers. You can unstake anytime.",
+    answer: "Mint or acquire FarFISH NFTs, then stake them to earn enhanced daily rewards. Different rarities (Common, Rare, Epic, Legendary) offer different reward multipliers. You can unstake anytime.",
   },
   {
     question: "Is my wallet secure?",
-    answer: "Yes. FarFISH is completely non-custodial and built on Base blockchain. You maintain full control of your wallet and assets at all times. We never have access to your private keys.",
+    answer: "Yes. FarFISH is fully non-custodial and built on Base Network. You maintain full control of your wallet and assets at all times. We never have access to your private keys.",
   },
   {
     question: "How are rewards calculated?",
-    answer: "Base rewards are earned daily through consistent activity. Staking NFTs provides bonus multipliers based on rarity and lock duration. All rewards are tracked transparently on-chain.",
+    answer: "Base rewards are earned daily through consistent engagement. Staking NFTs provides bonus multipliers based on rarity tier and lock duration. All rewards are tracked transparently on-chain.",
   },
 ];
 
@@ -88,7 +88,7 @@ function ProfilePageContent() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <h2 className="text-xl font-bold text-white leading-tight">
-                    How It Works
+                    Frequently Asked Questions
                   </h2>
                   <p className="text-white/70 text-sm">Everything you need to know</p>
                 </div>
