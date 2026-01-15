@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import StakeTable from "@/app/components/StakeTable";
+import StakeModal from "@/app/components/StakeModal";
+import UnstakeModal from "@/app/components/UnstakeModal";
 
 import {
   useAccount,
@@ -17,25 +18,6 @@ import { base } from "viem/chains";
 import useUserStakes from "@/app/hooks/useUserStakes";
 import { STAKING_CONTRACT_ADDRESS } from "@/app/constants";
 import stakeAbi from "@/app/abi/stake.json";
-
-// Lazy load modals for better performance
-const StakeModal = dynamic(() => import("@/app/components/StakeModal"), {
-  loading: () => (
-    <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/80">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-    </div>
-  ),
-  ssr: false,
-});
-
-const UnstakeModal = dynamic(() => import("@/app/components/UnstakeModal"), {
-  loading: () => (
-    <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/80">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-    </div>
-  ),
-  ssr: false,
-});
 
 const BASE_CHAIN_ID = 8453;
 

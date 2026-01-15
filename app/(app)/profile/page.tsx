@@ -35,7 +35,7 @@ const faqItems = [
 ];
 
 function ProfilePageContent() {
-  const { user: baseUser, signOut } = useBaseAuth();
+  const { user: baseUser } = useBaseAuth();
 
   const [openIdx, setOpenIdx] = useState<number | null>(0);
   const [toast, setToast] = useState<ToastState>(null);

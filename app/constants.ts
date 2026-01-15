@@ -3,11 +3,11 @@
 const validateAddress = (address: string, name: string): string => {
   if (!address) {
     console.warn(`${name} is not set in environment variables - using placeholder`);
-    return "0x0000000000000000000000000000000000000000";
+    return "";
   }
   if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
     console.error(`${name} is not a valid Ethereum address: ${address}`);
-    return "0x0000000000000000000000000000000000000000";
+    return "";
   }
   return address;
 };

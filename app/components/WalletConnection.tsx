@@ -1,13 +1,11 @@
 "use client";
 
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { useBaseAuth } from '@/app/contexts/BaseAuthContext';
 
 export default function WalletConnection() {
   const { address, isConnected, isConnecting } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
-  const { signOut } = useBaseAuth();
 
   const handleConnect = () => {
     const coinbaseConnector = connectors.find(
@@ -20,9 +18,9 @@ export default function WalletConnection() {
   };
 
   const handleDisconnect = () => {
-    // Disconnect both wallet and Base auth
+    // Disconnect wallet
+    // Note: In Base App, user authentication persists
     disconnect();
-    signOut();
   };
 
   if (isConnecting) {
