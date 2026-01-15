@@ -25,13 +25,13 @@ export const minikitConfig = {
   miniapp: {
     version: "1",
     name: "FarFISH",
-    noindex: true,
+    noindex: false,
 
     subtitle: "Mint • Stake • Earn",
     tagline: "Earn Rewards Daily",
 
     description:
-      "Mint. Stake. Earn. Dominate the Seas. Premium NFT collection built for Farcaster. NFT Staking • Leaderboard • Monthly Rewards.",
+      "Mint. Stake. Earn. Dominate the Seas. Premium NFT collection built on Base. NFT Staking • Leaderboard • Monthly Rewards.",
 
     iconUrl: `${ROOT_URL}/icon-optimized.webp`,
     imageUrl: `${ROOT_URL}/og-image-optimized.webp`,

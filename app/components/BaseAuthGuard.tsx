@@ -8,18 +8,26 @@ interface BaseAuthGuardProps {
   fallback?: ReactNode;
 }
 
+/**
+ * Base Auth Guard - Simplified for Base App
+ * 
+ * Authentication is automatic via Base App.
+ * No manual sign-in buttons - users are already authenticated.
+ * 
+ * @see https://docs.base.org/mini-apps/features/authentication
+ */
 export default function BaseAuthGuard({ children, fallback }: BaseAuthGuardProps) {
-  const { isAuthenticated, isLoading, error, signIn } = useBaseAuth();
+  const { isAuthenticated, isLoading, error } = useBaseAuth();
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-primary flex items-center justify-center">
             <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
           </div>
-          <p className="text-white font-medium">Connected</p>
-          <p className="text-white/60 text-sm mt-2">Authenticating your identity</p>
+          <p className="text-white font-medium">Loading FarFISH</p>
+          <p className="text-white/60 text-sm mt-2">Connecting to Base App</p>
         </div>
       </div>
     );
@@ -27,19 +35,14 @@ export default function BaseAuthGuard({ children, fallback }: BaseAuthGuardProps
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-red-500/20 flex items-center justify-center">
             <span className="text-2xl">⚠️</span>
           </div>
-          <p className="text-white font-medium mb-2">Authentication Error</p>
+          <p className="text-white font-medium mb-2">Connection Error</p>
           <p className="text-white/70 text-sm mb-6">{error}</p>
-          <button
-            onClick={signIn}
-            className="py-3 px-6 rounded-2xl bg-gradient-primary text-black font-semibold transition-all duration-300 hover:shadow-lg"
-          >
-            Retry Authentication
-          </button>
+          <p className="text-white/60 text-xs">Please try reopening the app from Base</p>
         </div>
       </div>
     );
@@ -51,19 +54,18 @@ export default function BaseAuthGuard({ children, fallback }: BaseAuthGuardProps
     }
 
     return (
-      <div className="min-h-screen bg-gradient-to-br flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-primary flex items-center justify-center">
             <span className="text-2xl">🔐</span>
           </div>
-          <p className="text-white font-medium mb-2">Base App Authentication Required</p>
-          <p className="text-white/70 text-sm mb-6">Please authenticate with Base App to continue</p>
-          <button
-            onClick={signIn}
-            className="py-3 px-6 rounded-2xl bg-gradient-primary text-black font-semibold transition-all duration-300 hover:shadow-lg"
-          >
-            Sign in with Base
-          </button>
+          <p className="text-white font-medium mb-2">Base App Required</p>
+          <p className="text-white/70 text-sm mb-6">
+            Please open FarFISH from the Base App to continue
+          </p>
+          <p className="text-white/60 text-xs">
+            Authentication is automatic when launched from Base
+          </p>
         </div>
       </div>
     );

@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { base } from "wagmi/chains";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WagmiProvider, useAccount, useConnect } from "wagmi";
+import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "@/app/lib/wagmi";
 import { BaseAuthProvider } from "@/app/contexts/BaseAuthContext";
 import "@coinbase/onchainkit/styles.css";
@@ -29,30 +29,14 @@ function LoadingScreen() {
   );
 }
 
-// Auto-connect component that runs inside WagmiProvider
-function AutoConnectWallet() {
-  const { isConnected, isConnecting } = useAccount();
-  const { connect, connectors } = useConnect();
-  const [hasAttemptedConnect, setHasAttemptedConnect] = useState(false);
-
-  useEffect(() => {
-    // Only attempt auto-connect once when app loads
-    if (!isConnected && !isConnecting && !hasAttemptedConnect && connectors.length > 0) {
-      const coinbaseConnector = connectors.find(
-        connector => connector.id === 'coinbaseWalletSDK'
-      );
-      
-      if (coinbaseConnector) {
-        setHasAttemptedConnect(true);
-        // Connect immediately when app opens
-        connect({ connector: coinbaseConnector });
-      }
-    }
-  }, [isConnected, isConnecting, connect, connectors, hasAttemptedConnect]);
-
-  return null;
-}
-
+/**
+ * Root Provider - Simplified for Base App
+ * 
+ * Wallet connection is automatic via Base App.
+ * No manual connection logic needed.
+ * 
+ * @see https://docs.base.org/mini-apps/features/wallet
+ */
 export function RootProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
   const apiKey = process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY;
@@ -67,7 +51,7 @@ export function RootProvider({ children }: { children: ReactNode }) {
   }
   
   return (
-    <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+    <WagmiProvider config={wagmiConfig} reconnectOnMount={true}>
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
           apiKey={apiKey || undefined}
@@ -86,7 +70,6 @@ export function RootProvider({ children }: { children: ReactNode }) {
           }}
         >
           <BaseAuthProvider>
-            <AutoConnectWallet />
             {children}
           </BaseAuthProvider>
         </OnchainKitProvider>

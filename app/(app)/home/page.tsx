@@ -16,6 +16,9 @@ import nftDropAbi from "@/app/abi/nftDrop.json";
 import { base } from "viem/chains";
 import { useToast } from "@/app/providers/ToastProvider";
 import { handleTransactionError } from "@/app/utils/errorHandling";
+import OnboardingModal from "@/app/components/OnboardingModal";
+import LoadingSkeleton from "@/app/components/LoadingSkeleton";
+import ShareButton from "@/app/components/ShareButton";
 
 interface SupplyInfo {
   id: number;
@@ -86,6 +89,9 @@ function HomeClient() {
   const { address } = useAccount();
   const { showError, showSuccess, clearAll } = useToast();
 
+  // Onboarding state
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
   // State
   const [supplyInfo, setSupplyInfo] = useState<SupplyInfo[]>([]);
   const [loadingSupplies, setLoadingSupplies] = useState(false);
@@ -95,6 +101,23 @@ function HomeClient() {
   const [claimInfo, setClaimInfo] = useState<Map<number, TokenClaimInfo>>(new Map());
   const [loadingClaimConditions, setLoadingClaimConditions] = useState(false);
   const [mintMessage, setMintMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
+
+  // Check if user has seen onboarding
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hasSeenOnboarding = localStorage.getItem('farfish_onboarding_seen');
+      if (!hasSeenOnboarding) {
+        setShowOnboarding(true);
+      }
+    }
+  }, []);
+
+  const handleOnboardingComplete = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('farfish_onboarding_seen', 'true');
+    }
+    setShowOnboarding(false);
+  };
 
   const {
     writeContract: writeMint,
@@ -109,111 +132,12 @@ function HomeClient() {
     hash: mintTxHash,
   });
 
-  // Fetch claim conditions for a specific tokenId
-  const fetchClaimCondition = useCallback(async (tokenId: number): Promise<TokenClaimInfo> => {
-    if (typeof window === "undefined" || !NFT_CONTRACT_ADDRESS) {
-      return {
-        tokenId,
-        condition: null,
-        activeConditionId: null,
-        isLoading: false,
-        error: "Contract not available",
-      };
-    }
-
-    try {
-      const publicClient = getPublicClient(wagmiConfig, { chainId: base.id });
-      if (!publicClient) {
-        return {
-          tokenId,
-          condition: null,
-          activeConditionId: null,
-          isLoading: false,
-          error: "Public client not available",
-        };
-      }
-
-      // Get active claim condition ID
-      const activeConditionId = (await (publicClient.readContract as any)({
-        address: NFT_CONTRACT_ADDRESS as `0x${string}`,
-        abi: nftDropAbi as any,
-        functionName: "getActiveClaimConditionId",
-        args: [BigInt(tokenId)],
-      })) as bigint;
-
-      // If no active condition, return error
-      if (activeConditionId === BigInt(0)) {
-        return {
-          tokenId,
-          condition: null,
-          activeConditionId: null,
-          isLoading: false,
-          error: "No active claim condition",
-        };
-      }
-
-      // Get claim condition details
-      const condition = (await (publicClient.readContract as any)({
-        address: NFT_CONTRACT_ADDRESS as `0x${string}`,
-        abi: nftDropAbi as any,
-        functionName: "getClaimConditionById",
-        args: [BigInt(tokenId), activeConditionId],
-      })) as ClaimCondition;
-
-      return {
-        tokenId,
-        condition,
-        activeConditionId,
-        isLoading: false,
-        error: null,
-      };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
-      if (errorMessage.includes("DropNoActiveCondition") || errorMessage.includes("execution reverted")) {
-        return {
-          tokenId,
-          condition: null,
-          activeConditionId: null,
-          isLoading: false,
-          error: "No active claim condition on-chain",
-        };
-      }
-      return {
-        tokenId,
-        condition: null,
-        activeConditionId: null,
-        isLoading: false,
-        error: errorMessage,
-      };
-    }
-  }, []);
-
-  // Fetch claim conditions for all tokenIds
-  const fetchAllClaimConditions = useCallback(async () => {
-    if (typeof window === "undefined" || !NFT_CONTRACT_ADDRESS) return;
-
-    setLoadingClaimConditions(true);
-    try {
-      const claimPromises = TOKEN_IDS.map((id) => fetchClaimCondition(id));
-      const results = await Promise.all(claimPromises);
-      
-      const newMap = new Map<number, TokenClaimInfo>();
-      results.forEach((info) => {
-        newMap.set(info.tokenId, info);
-      });
-      setClaimInfo(newMap);
-    } catch (error) {
-      setErrorMessage("Failed to load claim conditions");
-    } finally {
-      setLoadingClaimConditions(false);
-    }
-  }, [fetchClaimCondition]);
-
-  // Fetch supply info for all tokenIds (0-15)
-  const fetchSupplyInfo = useCallback(async () => {
+  // Optimized: Fetch ALL data in a single multicall batch
+  const fetchAllData = useCallback(async () => {
     if (typeof window === "undefined" || !NFT_CONTRACT_ADDRESS) return;
 
     setLoadingSupplies(true);
+    setLoadingClaimConditions(true);
     setErrorMessage(null);
 
     try {
@@ -221,61 +145,142 @@ function HomeClient() {
       if (!publicClient) {
         setErrorMessage("Public client not available");
         setLoadingSupplies(false);
+        setLoadingClaimConditions(false);
         return;
       }
 
-      const supplyPromises = TOKEN_IDS.map(async (id) => {
-        const [totalSupply, maxTotalSupply] = await Promise.all([
-          (publicClient.readContract as any)({
-            address: NFT_CONTRACT_ADDRESS as `0x${string}`,
-            abi: nftDropAbi as any,
-            functionName: "totalSupply",
-            args: [BigInt(id)],
-          }) as Promise<bigint>,
-          (publicClient.readContract as any)({
-            address: NFT_CONTRACT_ADDRESS as `0x${string}`,
-            abi: nftDropAbi as any,
-            functionName: "maxTotalSupply",
-            args: [BigInt(id)],
-          }) as Promise<bigint>,
-        ]);
+      // Build all contract calls in a single batch
+      const calls = TOKEN_IDS.flatMap((id) => [
+        // Supply info calls
+        {
+          address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+          abi: nftDropAbi as any,
+          functionName: "totalSupply",
+          args: [BigInt(id)],
+        },
+        {
+          address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+          abi: nftDropAbi as any,
+          functionName: "maxTotalSupply",
+          args: [BigInt(id)],
+        },
+        // Claim condition calls
+        {
+          address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+          abi: nftDropAbi as any,
+          functionName: "getActiveClaimConditionId",
+          args: [BigInt(id)],
+        },
+      ]);
 
-        const remaining = maxTotalSupply > totalSupply ? maxTotalSupply - totalSupply : BigInt(0);
-
-        return {
-          id,
-          totalSupply,
-          maxTotalSupply,
-          remaining,
-        } as SupplyInfo;
+      // Execute all calls in a single multicall
+      const results = await (publicClient as any).multicall({
+        contracts: calls,
+        allowFailure: true,
       });
 
-      const supplies = await Promise.all(supplyPromises);
+      // Process supply info results
+      const supplies: SupplyInfo[] = [];
+      const claimInfoMap = new Map<number, TokenClaimInfo>();
+
+      for (let i = 0; i < TOKEN_IDS.length; i++) {
+        const tokenId = TOKEN_IDS[i];
+        const baseIndex = i * 3;
+
+        // Extract supply data
+        const totalSupplyResult = results[baseIndex];
+        const maxTotalSupplyResult = results[baseIndex + 1];
+        const activeConditionIdResult = results[baseIndex + 2];
+
+        if (totalSupplyResult.status === 'success' && maxTotalSupplyResult.status === 'success') {
+          const totalSupply = totalSupplyResult.result as bigint;
+          const maxTotalSupply = maxTotalSupplyResult.result as bigint;
+          const remaining = maxTotalSupply > totalSupply ? maxTotalSupply - totalSupply : BigInt(0);
+
+          supplies.push({
+            id: tokenId,
+            totalSupply,
+            maxTotalSupply,
+            remaining,
+          });
+        }
+
+        // Extract claim condition data
+        if (activeConditionIdResult.status === 'success') {
+          const activeConditionId = activeConditionIdResult.result as bigint;
+
+          if (activeConditionId > BigInt(0)) {
+            // Fetch claim condition details (this is a second batch, but much smaller)
+            try {
+              const condition = (await (publicClient.readContract as any)({
+                address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+                abi: nftDropAbi as any,
+                functionName: "getClaimConditionById",
+                args: [BigInt(tokenId), activeConditionId],
+              })) as ClaimCondition;
+
+              claimInfoMap.set(tokenId, {
+                tokenId,
+                condition,
+                activeConditionId,
+                isLoading: false,
+                error: null,
+              });
+            } catch (error) {
+              claimInfoMap.set(tokenId, {
+                tokenId,
+                condition: null,
+                activeConditionId: null,
+                isLoading: false,
+                error: "Failed to fetch claim condition",
+              });
+            }
+          } else {
+            claimInfoMap.set(tokenId, {
+              tokenId,
+              condition: null,
+              activeConditionId: null,
+              isLoading: false,
+              error: "No active claim condition",
+            });
+          }
+        } else {
+          claimInfoMap.set(tokenId, {
+            tokenId,
+            condition: null,
+            activeConditionId: null,
+            isLoading: false,
+            error: "Failed to fetch active condition ID",
+          });
+        }
+      }
+
       setSupplyInfo(supplies);
+      setClaimInfo(claimInfoMap);
     } catch (error) {
-      setErrorMessage("Failed to load supply data");
+      console.error('[FarFISH] Error fetching data:', error);
+      setErrorMessage("Failed to load data");
     } finally {
       setLoadingSupplies(false);
+      setLoadingClaimConditions(false);
     }
   }, []);
 
-  // Fetch supply info and claim conditions on mount
+  // Fetch all data on mount using optimized multicall
   useEffect(() => {
     if (typeof window !== "undefined") {
-      fetchSupplyInfo();
-      fetchAllClaimConditions();
+      fetchAllData();
     }
-  }, [fetchSupplyInfo, fetchAllClaimConditions]);
+  }, [fetchAllData]);
 
   // Handle mint success
   useEffect(() => {
     if (isMintConfirmed && mintTxHash) {
-      fetchSupplyInfo();
-      fetchAllClaimConditions();
+      fetchAllData();
       setIsMinting(false);
       setMintMessage({ type: 'success', text: 'Mint successful' });
     }
-  }, [isMintConfirmed, mintTxHash, fetchSupplyInfo, fetchAllClaimConditions]);
+  }, [isMintConfirmed, mintTxHash, fetchAllData]);
 
   // Handle mint errors
   useEffect(() => {
@@ -454,6 +459,11 @@ function HomeClient() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br">
+      {/* Onboarding Modal */}
+      {showOnboarding && (
+        <OnboardingModal onComplete={handleOnboardingComplete} />
+      )}
+
       <main className="container mx-auto px-4 py-6 max-w-lg">
         <div className="flex flex-col gap-6">
           {/* Home Section - As specified in requirements */}
@@ -599,7 +609,14 @@ function HomeClient() {
                 </div>
               )}
 
-              {/* Stats Grid */}
+              {/* Loading Skeleton */}
+              {(loadingSupplies || loadingClaimConditions) && (
+                <LoadingSkeleton />
+              )}
+
+              {/* Stats Grid - Only show when loaded */}
+              {!loadingSupplies && !loadingClaimConditions && (
+                <>
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="bg-surface border border-white/30 rounded-2xl p-4 text-center">
                   <div className="text-2xl font-bold text-white">
@@ -677,13 +694,22 @@ function HomeClient() {
                     <span className="text-xl">
                       {mintMessage.type === 'success' ? '✅' : mintMessage.type === 'error' ? '❌' : 'ℹ️'}
                     </span>
-                    <div>
+                    <div className="flex-1">
                       <p className="font-semibold">{mintMessage.text}</p>
                       {mintMessage.type === 'success' && (
                         <p className="text-xs opacity-80 mt-1">Premium Pass minted successfully!</p>
                       )}
                     </div>
                   </div>
+                  {mintMessage.type === 'success' && (
+                    <div className="mt-3">
+                      <ShareButton 
+                        variant="secondary"
+                        text="Just minted my FarFISH Premium Pass! 🐟 Join me on Base!"
+                        className="w-full"
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -697,6 +723,8 @@ function HomeClient() {
                     </div>
                   </div>
                 </div>
+              )}
+                </>
               )}
           </div>
           </div>
