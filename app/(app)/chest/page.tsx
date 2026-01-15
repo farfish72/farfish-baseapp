@@ -135,7 +135,7 @@ export default function ChestPage() {
         <div className="flex flex-col gap-6">
         {/* Transparency Notice */}
         <section className="glass-card rounded-3xl">
-          <div className="p-6">
+          <div className="p-4">
             <div className="flex items-center gap-3">
               <span className="text-xl">ℹ️</span>
               <div>

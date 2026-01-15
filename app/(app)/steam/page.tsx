@@ -22,6 +22,13 @@ type Task = {
 
 const TASKS: Omit<Task, "status">[] = [
   {
+    id: "fishing",
+    title: "Fishing",
+    description: "Perform one fishing action per 24 hours to earn rewards",
+    reward: 10,
+    type: "daily",
+  },
+  {
     id: "activity_streak",
     title: "Activity Streak",
     description: "Maintain consecutive daily activity on Base",
@@ -40,6 +47,7 @@ const TASKS: Omit<Task, "status">[] = [
 export default function SteamPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fishingCooldown, setFishingCooldown] = useState(0); // Cooldown in seconds
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const { address: wallet } = useAccount();
   const { activeStakes } = useUserStakes();
@@ -65,6 +73,41 @@ export default function SteamPage() {
     window.addEventListener('toast', handleToast);
     return () => window.removeEventListener('toast', handleToast);
   }, []);
+  
+  // Countdown effect for fishing cooldown
+  useEffect(() => {
+    if (fishingCooldown <= 0) return;
+    
+    const interval = setInterval(() => {
+      setFishingCooldown(prev => {
+        if (prev <= 1) {
+          // Cooldown finished, refresh task status
+          fetchTaskStatuses();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [fishingCooldown]);
+
+  // Helper function to format cooldown time
+  const formatCooldownTime = (seconds: number): string => {
+    if (seconds <= 0) return "Available";
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${secs}s`;
+    } else {
+      return `${secs}s`;
+    }
+  };
 
   // NFT balance check - check multiple token IDs to find owned NFTs
   const { data: nftBalance0 } = useReadContract({
@@ -257,6 +300,8 @@ export default function SteamPage() {
 
       const res = await fetch(`/api/steam/task-status?wallet=${wallet}`);
       const taskStatusData = await res.json();
+      
+      setFishingCooldown(taskStatusData.fishingCooldown || 0);
 
       const streakRes = await fetch(`/api/trust-anchor/user/${wallet}`);
       const streakData = await streakRes.json();
@@ -276,7 +321,10 @@ export default function SteamPage() {
         let tokenId: number | undefined;
         let stakeId: number | undefined;
 
-        if (task.type === "base_activity") {
+        if (task.type === "daily") {
+          const fishingOnCooldown = taskStatusData.tasks?.[task.id] || taskStatusData.fishingCooldown > 0;
+          status = fishingOnCooldown ? "verified" : "not_started";
+        } else if (task.type === "base_activity") {
           status = streakData.currentStreak > 0 ? "verified" : "not_started";
         } else if (task.type === "nft") {
           if (task.id === "nft_mint") {
@@ -312,6 +360,55 @@ export default function SteamPage() {
     fetchTaskStatuses();
   }, [fetchTaskStatuses]); // Refetch when function changes
 
+  const handleFishing = async () => {
+    if (!wallet) {
+      setToast({
+        type: 'error',
+        message: 'Please connect your wallet'
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/steam/task/complete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          wallet: wallet,
+          taskId: 'fishing',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        fetchTaskStatuses();
+        setToast({
+          type: 'success',
+          message: 'Fishing completed! Earned 10 FRH'
+        });
+      } else if (response.status === 429) {
+        setFishingCooldown(data.cooldownRemaining || 0);
+        setToast({
+          type: 'error',
+          message: `Fishing on cooldown: ${Math.ceil((data.cooldownRemaining || 0) / 3600)}h remaining`
+        });
+      } else {
+        setToast({
+          type: 'error',
+          message: data.error || 'Fishing failed'
+        });
+      }
+    } catch (error) {
+      setToast({
+        type: 'error',
+        message: 'Failed to complete fishing task'
+      });
+    }
+  };
+
   const completedTasks = tasks.filter(task => task.status === "verified").length;
   const totalTasks = tasks.length;
   const totalRewards = tasks
@@ -339,7 +436,7 @@ export default function SteamPage() {
         <div className="flex flex-col gap-6">
           {/* Page Header */}
           <section className="glass-card rounded-3xl">
-            <div className="p-6">
+            <div className="p-4">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-lg">
                   <span className="text-xl">🎯</span>
@@ -357,7 +454,7 @@ export default function SteamPage() {
           {/* Wallet Connection Notice */}
           {!wallet && (
             <section className="glass-card rounded-3xl">
-              <div className="p-6">
+              <div className="p-4">
                 <div className="text-center">
                   <p className="text-white text-sm font-medium">
                     Connect wallet to verify & earn rewards
@@ -369,7 +466,7 @@ export default function SteamPage() {
 
           {/* Task Progress Card */}
           <section className="glass-card rounded-3xl">
-            <div className="p-6">
+            <div className="p-4">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h3 className="text-xl font-bold text-white">
@@ -396,12 +493,44 @@ export default function SteamPage() {
 
           {/* Base Tasks Section */}
           <section className="glass-card rounded-3xl">
-            <div className="p-6">
+            <div className="p-4">
               <h3 className="text-xl font-bold text-white mb-6">
                 🎯 Base Tasks
               </h3>
 
               <div className="space-y-4">
+                {/* Fishing */}
+                <div className="glass-card rounded-2xl p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-2xl">🎣</span>
+                        <h4 className="text-lg font-bold text-white">Fishing</h4>
+                      </div>
+                      <p className="text-white/70 text-sm mb-3">Perform one fishing action per 24 hours to earn rewards</p>
+                      <div className="text-xs text-white font-medium">Reward: 10 FRH</div>
+                      <div className="text-xs text-white/60 mt-1">Cooldown: 24 hours</div>
+                    </div>
+                    <div className="flex flex-col items-end gap-3">
+                      {fishingCooldown > 0 ? (
+                        <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
+                          {formatCooldownTime(fishingCooldown)}
+                        </div>
+                      ) : (
+                        <button
+                          onClick={handleFishing}
+                          disabled={!wallet}
+                          className={`bg-gradient-primary text-black px-4 py-2 rounded-xl font-medium text-sm ${
+                            !wallet ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
+                        >
+                          Fishing
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 {/* Activity Streak */}
                 <div className="glass-card rounded-2xl p-6">
                   <div className="flex items-center justify-between mb-4">
@@ -464,7 +593,7 @@ export default function SteamPage() {
 
           {/* How it works */}
           <section className="glass-card rounded-3xl">
-            <div className="p-6">
+            <div className="p-4">
               <h3 className="text-lg font-semibold mb-3 text-white">ℹ️ How it works</h3>
               <div className="space-y-2 text-white/80">
                 <div className="flex items-start gap-2">

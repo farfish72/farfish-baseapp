@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { useMiniKit } from '@coinbase/onchainkit/minikit';
+import { useAuthenticate, useMiniKit } from '@coinbase/onchainkit/minikit';
 
 interface BaseUser {
   fid: string;
@@ -14,63 +14,174 @@ interface BaseAuthContextType {
   user: BaseUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  signIn: () => Promise<void>;
+  signOut: () => void;
   error: string | null;
+}
+
+// Define the AuthenticatedUser type based on the documentation
+interface AuthenticatedUser {
+  fid: string;
+  signature: string;
+  message: string;
 }
 
 const BaseAuthContext = createContext<BaseAuthContextType | undefined>(undefined);
 
-/**
- * Base Auth Provider - Simplified for Base App
- * 
- * Authentication is automatic via Base App context.
- * No manual sign-in, no localStorage, no external redirects.
- * 
- * @see https://docs.base.org/mini-apps/features/authentication
- */
 export function BaseAuthProvider({ children }: { children: ReactNode }) {
+  const { signIn: authenticate } = useAuthenticate();
   const { context } = useMiniKit();
   
   const [user, setUser] = useState<BaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
-  // Automatically load user from Base App context
+  // Set client flag after hydration
   useEffect(() => {
-    const loadUser = () => {
+    setIsClient(true);
+  }, []);
+
+  // Auto sign-in on app load - only run on client side
+  useEffect(() => {
+    if (!isClient) return;
+
+    const autoSignIn = async () => {
       setIsLoading(true);
       setError(null);
 
       try {
-        // Check if we have Base App context (user is already authenticated)
+        // Check if we have Base App context (user is already authenticated in Base App)
         if (context?.user?.fid) {
-          const baseUser: BaseUser = {
-            fid: context.user.fid.toString(),
-            username: context.user.username || `user-${context.user.fid}`,
-            displayName: context.user.displayName || context.user.username || `User ${context.user.fid}`,
-            pfpUrl: context.user.pfpUrl || '/farfish-logo-optimized.webp',
-          };
-
-          setUser(baseUser);
-        } else {
-          // No user context available yet
-          setUser(null);
+          await loadUserProfile(context.user.fid.toString());
+          setIsLoading(false);
+          return;
         }
+
+        // Check if user is already saved in localStorage - only on client
+        try {
+          const savedUser = localStorage.getItem('base_auth_user');
+          if (savedUser) {
+            const parsedUser = JSON.parse(savedUser);
+            if (parsedUser && parsedUser.fid) {
+              setUser(parsedUser);
+              setIsLoading(false);
+              return;
+            }
+          }
+        } catch (err) {
+          try {
+            localStorage.removeItem('base_auth_user');
+          } catch (e) {
+            // Ignore localStorage errors
+          }
+        }
+
+        // If no context and no saved user, we'll wait for manual authentication
+        setIsLoading(false);
       } catch (err) {
-        console.error('[BaseAuth] Error loading user:', err);
-        setError('Failed to load user profile');
-        setUser(null);
-      } finally {
+        setError('Authentication failed');
         setIsLoading(false);
       }
     };
 
-    loadUser();
-  }, [context]);
+    autoSignIn();
+  }, [context, isClient]);
+
+  const loadUserProfile = async (fid: string) => {
+    try {
+      // Use Base App context for user profile data
+      const baseUser: BaseUser = {
+        fid,
+        username: context?.user?.username || `user-${fid}`,
+        displayName: context?.user?.displayName || context?.user?.username || `User ${fid}`,
+        pfpUrl: context?.user?.pfpUrl || '/farfish-logo-optimized.webp',
+      };
+
+      // Validate profile photo URL if it exists
+      if (context?.user?.pfpUrl) {
+        try {
+          // Test if the profile photo URL is accessible
+          const response = await fetch(context.user.pfpUrl, { method: 'HEAD' });
+          if (!response.ok) {
+            baseUser.pfpUrl = '/farfish-logo-optimized.webp';
+          }
+        } catch (err) {
+          baseUser.pfpUrl = '/farfish-logo-optimized.webp';
+        }
+      }
+
+      setUser(baseUser);
+      
+      // Store in localStorage for persistence - only on client
+      if (isClient) {
+        try {
+          localStorage.setItem('base_auth_user', JSON.stringify(baseUser));
+        } catch (err) {
+          // Silent error handling
+        }
+      }
+    } catch (err) {
+      setError('Failed to load profile');
+    }
+  };
+
+  const signIn = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const authResult = await authenticate();
+      
+      // Handle the result - it can be false or SignInResult
+      if (authResult) {
+        // Check if the result has fid property
+        if (typeof authResult === 'object' && 'fid' in authResult) {
+          await loadUserProfile(authResult.fid as string);
+        } else {
+          // If no fid in result, check context
+          if (context?.user?.fid) {
+            await loadUserProfile(context.user.fid.toString());
+          } else {
+            setError('Authentication succeeded but no user data available');
+          }
+        }
+      } else {
+        setError('Authentication failed');
+      }
+    } catch (err) {
+      setError('Sign in failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signOut = () => {
+    setUser(null);
+    setError(null);
+    
+    // Clear localStorage - only on client
+    if (isClient) {
+      try {
+        localStorage.removeItem('base_auth_user');
+      } catch (err) {
+        console.warn('Failed to clear localStorage:', err);
+      }
+    }
+    
+    // Clear any cached data
+    if (typeof window !== 'undefined') {
+      // Force reload to clear all state
+      window.location.reload();
+    }
+  };
 
   const value: BaseAuthContextType = {
     user,
     isAuthenticated: !!user,
     isLoading,
+    signIn,
+    signOut,
     error,
   };
 
