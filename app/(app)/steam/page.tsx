@@ -321,7 +321,7 @@ export default function SteamPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br">
-        <main className="container mx-auto px-4 py-6 max-w-lg">
+        <main className="py-4 w-full">
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
@@ -335,25 +335,9 @@ export default function SteamPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br">
-      <main className="container mx-auto px-4 py-6 max-w-lg">
-        <div className="flex flex-col gap-6">
+      <main className="py-4 w-full">
+        <div className="flex flex-col gap-4">
           {/* Page Header */}
-          <section className="glass-card rounded-3xl">
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-lg">
-                  <span className="text-xl">🎯</span>
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">
-                    Steam
-                  </h2>
-                  <p className="text-white/70 text-sm">Complete activities to earn rewards</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
           {/* Wallet Connection Notice */}
           {!wallet && (
             <section className="glass-card rounded-3xl">
@@ -373,9 +357,9 @@ export default function SteamPage() {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h3 className="text-xl font-bold text-white">
-                    📊 Your Progress
+                    Task Progress
                   </h3>
-                  <p className="text-white/70 text-sm">Complete on-chain activities to earn verified rewards</p>
+                  <p className="text-white/70 text-sm">Complete tasks to earn rewards</p>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-white">
@@ -394,68 +378,48 @@ export default function SteamPage() {
             </div>
           </section>
 
-          {/* Base Tasks Section */}
+          {/* Activity Streak Section */}
           <section className="glass-card rounded-3xl">
             <div className="p-6">
-              <h3 className="text-xl font-bold text-white mb-6">
-                🎯 Available Tasks
-              </h3>
-
-              <div className="space-y-4">
-                {/* Activity Streak */}
-                <div className="glass-card rounded-2xl p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="text-2xl">🔥</span>
-                        <h4 className="text-lg font-bold text-white">Activity Streak</h4>
-                      </div>
-                      <p className="text-white/70 text-sm mb-3">Maintain your daily engagement streak on Base Network</p>
-                      <div className="text-xs text-white font-medium">Streak increases when claiming Daily Reward Chest</div>
-                      {streak > 0 && (
-                        <div className="text-xs text-white mt-1">Current streak: {streak} days</div>
-                      )}
-                    </div>
-                    <div className="flex flex-col items-end gap-3">
-                      <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
-                        {streak > 0 ? `${streak} days` : "Begin streak"}
-                      </div>
+              <div className="glass-card rounded-2xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold text-white mb-2">Fishing</h4>
+                    <p className="text-white/70 text-sm mb-3">Claim your daily Streak</p>
+                    {streak > 0 && (
+                      <div className="text-xs text-white mt-1">Current streak: {streak} days</div>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-end gap-3">
+                    <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
+                      {streak > 0 ? `${streak} days` : "Begin streak"}
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </section>
 
-                {/* Mint FarFISH NFT */}
-                <div className="glass-card rounded-2xl p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="text-2xl">🐟</span>
-                        <h4 className="text-lg font-bold text-white">Stake FarFISH NFT</h4>
+          {/* Stake FarFISH NFT Section */}
+          <section className="glass-card rounded-3xl">
+            <div className="p-6">
+              <div className="glass-card rounded-2xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold text-white mb-2">Mint NFT</h4>
+                    <p className="text-white/70 text-sm mb-3">Own or lock an NFT to qualify</p>
+                    <div className="text-xs text-white font-medium">1250 Token</div>
+                  </div>
+                  <div className="flex flex-col items-end gap-3">
+                    {(ownsAnyNFT || hasActiveStake) ? (
+                      <div className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 text-sm font-medium">
+                        ✅ Completed
                       </div>
-                      <p className="text-white/70 text-sm mb-3">Stake your FarFISH NFT to unlock premium features and enhanced rewards</p>
-                      <div className="text-xs text-white font-medium">Reward: 1,500 FRH</div>
-                      <div className="text-xs text-white/60 mt-1">One-time reward for staking your first NFT</div>
-                      {ownsAnyNFT && ownedTokenId !== undefined && (
-                        <div className="text-xs text-success mt-1">✅ NFT Owned (Token ID: {ownedTokenId})</div>
-                      )}
-                      {activeStakes.length > 0 ? (
-                        <div className="text-xs text-success mt-1">🔒 Currently Staked (Stake ID: {Number(Math.max(...activeStakes.map(s => Number(s.stakeId))))})</div>
-                      ) : (
-                        <div className="text-xs text-white/60 mt-1">⏳ Not yet staked</div>
-                      )}
-                    </div>
-                    <div className="flex flex-col items-end gap-3">
-                      {(ownsAnyNFT || hasActiveStake) ? (
-                        <div className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 text-sm font-medium">
-                          ✅ Completed
-                        </div>
-                      ) : (
-                        <div className="text-xs text-white/80 text-center">
-                          ⏳ Pending<br />
-                          <span className="text-white/60">Visit Home to mint</span>
-                        </div>
-                      )}
-                    </div>
+                    ) : (
+                      <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium">
+                        NFT
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -465,27 +429,23 @@ export default function SteamPage() {
           {/* How it works */}
           <section className="glass-card rounded-3xl">
             <div className="p-6">
-              <h3 className="text-lg font-semibold mb-3 text-white">ℹ️ How It Works</h3>
+              <h3 className="text-lg font-semibold mb-3 text-white">How it works</h3>
               <div className="space-y-2 text-white/80">
                 <div className="flex items-start gap-2">
                   <span>•</span>
-                  <span>Complete on-chain activities to earn FRH rewards</span>
+                  <span>Finish tasks to accumulate tokens</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span>•</span>
-                  <span>Tasks verify automatically on Base Network</span>
+                  <span>Completions are recorded on the spot</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span>•</span>
-                  <span>Referral tracking uses secure domain-based verification</span>
+                  <span>Balances are settled ahead of launch</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span>•</span>
-                  <span>Invalid activity is automatically filtered</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Rewards are finalized before distribution</span>
+                  <span>Suspicious activity is screened out automatically</span>
                 </div>
               </div>
             </div>

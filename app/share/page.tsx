@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import ShareFeatures from '@/app/components/ShareFeatures';
 
 const ROOT_URL = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
 
@@ -103,28 +104,12 @@ export default function SharePage() {
             </p>
             
             {/* Features */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-surface rounded-2xl p-4 text-center">
-                <div className="text-3xl mb-2">🐟</div>
-                <div className="text-white font-semibold">Mint NFTs</div>
-                <div className="text-white/60 text-sm">4 rarities</div>
-              </div>
-              <div className="bg-surface rounded-2xl p-4 text-center">
-                <div className="text-3xl mb-2">💎</div>
-                <div className="text-white font-semibold">Stake & Earn</div>
-                <div className="text-white/60 text-sm">Daily rewards</div>
-              </div>
-              <div className="bg-surface rounded-2xl p-4 text-center">
-                <div className="text-3xl mb-2">🏆</div>
-                <div className="text-white font-semibold">Leaderboard</div>
-                <div className="text-white/60 text-sm">Compete</div>
-              </div>
-            </div>
+            <ShareFeatures />
             
             {/* Launch Button */}
             <Link
               href="/"
-              className="block w-full py-4 rounded-2xl bg-gradient-primary text-black font-bold text-lg text-center transition-all duration-300 hover:shadow-lg"
+              className="block w-full py-4 rounded-2xl bg-ink border-2 border-teal text-white font-bold text-lg text-center transition-all duration-300 hover:shadow-glow hover:bg-teal/10"
             >
               Launch FarFISH
             </Link>

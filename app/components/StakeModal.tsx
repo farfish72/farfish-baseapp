@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useChainId, useReadContract } from "wagmi";
+import Button from "./ui/Button";
 import { STAKING_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS, LOCK_DURATIONS } from "../constants";
 import stakeAbi from "../abi/stake.json";
 import nftDropAbi from "../abi/nftDrop.json";
@@ -325,111 +326,106 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
       className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/80 px-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white">Stake Your NFT</h2>
-          <button
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl max-w-md w-full p-4 shadow-2xl max-h-[85vh] flex flex-col no-button-ring">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-bold text-white">Stake NFT</h2>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors text-xl"
+            className="w-8 h-8"
             aria-label="Close modal"
           >
             ✕
-          </button>
+          </Button>
         </div>
 
         {!isConnected && (
-          <div className="mb-4 p-4 bg-yellow-600/20 border border-yellow-600/40 rounded-xl">
-            <p className="text-yellow-200 font-medium">Connect your wallet to stake NFTs</p>
+          <div className="mb-3 p-3 bg-yellow-600/20 border border-yellow-600/40 rounded-lg">
+            <p className="text-yellow-200 text-sm font-medium">Connect your wallet to continue.</p>
           </div>
         )}
 
         {isConnected && !isBaseNetwork && (
-          <div className="mb-4 p-4 bg-yellow-600/20 border border-yellow-600/40 rounded-xl">
-            <p className="text-yellow-200 font-medium">Switch to Base Network to continue</p>
+          <div className="mb-3 p-3 bg-yellow-600/20 border border-yellow-600/40 rounded-lg">
+            <p className="text-yellow-200 text-sm font-medium">Switch to Base Network to continue</p>
           </div>
         )}
 
         {/* Category Selection */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-white mb-3">Select Your NFT</h3>
-          <div className="grid grid-cols-2 gap-3">
+        <div className="mb-3">
+          <h3 className="text-base font-semibold text-white mb-2">Select Your NFT</h3>
+          <div className="grid grid-cols-2 gap-2">
             {(Object.keys(NFT_CATEGORIES) as NFTCategory[]).map((category) => {
+              const isSelected = selectedCategory === category;
               return (
-                <button
+                <Button
                   key={category}
-                  type="button"
+                  variant={isSelected ? 'primary' : 'outline'}
+                  size="md"
                   onClick={() => setSelectedCategory(category)}
                   disabled={isPending || isResolvingTokenId}
-                  className={`rounded-xl p-4 border transition-all duration-200 ${
-                    selectedCategory === category
-                      ? "border-cyan-400 bg-cyan-400/10"
-                      : "border-slate-600/50 bg-slate-800/30 hover:bg-slate-700/50"
-                  } ${isPending || isResolvingTokenId ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className="w-full py-2"
                 >
-                  <span className="text-lg font-medium text-white">{category}</span>
-                  {selectedCategory === category && isResolvingTokenId && (
-                    <span className="text-xs text-slate-400 mt-1 block">Verifying ownership...</span>
-                  )}
-                </button>
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span className="text-base font-medium">{category}</span>
+                    {isSelected && !isResolvingTokenId && (
+                      <span className="text-cyan-400 text-xs">✓</span>
+                    )}
+                    {isSelected && isResolvingTokenId && (
+                      <span className="text-xs text-slate-400">Verifying...</span>
+                    )}
+                  </div>
+                </Button>
               );
             })}
           </div>
           {ownershipError && selectedCategory && (
-            <div className="mt-3 p-3 bg-red-900/30 border border-red-600/30 rounded-xl">
-              <p className="text-red-200 text-sm">This NFT is not in your wallet</p>
+            <div className="mt-2 p-2 bg-red-900/30 border border-red-600/30 rounded-lg">
+              <p className="text-red-200 text-xs">This NFT is not in your wallet</p>
             </div>
           )}
         </div>
 
         {/* Lock Duration Selection */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-white mb-3">Choose Lock Duration</h3>
-          <div className="grid grid-cols-4 gap-3">
+        <div className="mb-3">
+          <h3 className="text-base font-semibold text-white mb-2">Lock Duration</h3>
+          <div className="grid grid-cols-4 gap-2">
             {LOCK_DURATIONS.map((duration) => (
-              <button
+              <Button
                 key={duration}
-                type="button"
+                variant={selectedDuration === duration ? 'primary' : 'outline'}
+                size="sm"
                 onClick={() => setSelectedDuration(duration)}
                 disabled={isPending}
-                className={`rounded-xl p-4 border text-center transition-all duration-200 ${
-                  selectedDuration === duration
-                    ? "border-cyan-400 bg-cyan-400/20 shadow-lg shadow-cyan-400/20"
-                    : "border-slate-600/50 bg-slate-800/30 hover:bg-slate-700/50"
-                } ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
+                className="w-full py-2"
               >
-                <div className="flex flex-col items-center gap-1">
-                  <span className={`text-2xl font-bold ${
-                    selectedDuration === duration ? "text-cyan-400" : "text-white"
-                  }`}>
-                    {duration}
-                  </span>
-                  <span className={`text-xs ${
-                    selectedDuration === duration ? "text-cyan-300" : "text-slate-400"
-                  }`}>
-                    days
+                <div className="flex flex-col items-center gap-0.5">
+                  <span className="text-lg font-bold">
+                    {duration}d
                   </span>
                   {selectedDuration === duration && (
-                    <span className="text-cyan-400 text-sm">✓</span>
+                    <span className="text-cyan-400 text-xs">✓</span>
                   )}
                 </div>
-              </button>
+              </Button>
             ))}
           </div>
         </div>
 
         {/* Approval Status */}
         {needsApproval === true && !isApprovalSuccess && (
-          <div className="mb-4 p-4 bg-blue-900/20 border border-blue-600/30 rounded-xl">
-            <p className="text-blue-200 text-sm">
-              Approval Required: Authorize the staking contract to manage your NFTs
+          <div className="mb-3 p-2 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+            <p className="text-blue-200 text-xs">
+              Approval required to stake
             </p>
           </div>
         )}
 
         {/* Transaction Status */}
         {isPending && (
-          <div className="mb-4 p-4 bg-blue-900/20 border border-blue-600/30 rounded-xl">
-            <p className="text-blue-200 text-sm">
+          <div className="mb-3 p-2 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+            <p className="text-blue-200 text-xs">
               {isApprovalPending || isApprovalConfirming
                 ? isApprovalConfirming
                   ? "Awaiting approval confirmation..."
@@ -443,7 +439,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
                 href={`${BASESCAN_URL}/${currentTxHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-cyan-400 hover:text-cyan-300 text-sm underline mt-2 inline-block"
+                className="text-cyan-400 hover:text-cyan-300 text-xs underline mt-1 inline-block"
               >
                 View on BaseScan
               </a>
@@ -452,18 +448,22 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-4 mt-auto">
-          <button
+        <div className="flex gap-3 mt-auto">
+          <Button
+            variant="secondary"
+            size="md"
             onClick={onClose}
             disabled={isPending}
-            className="flex-1 py-4 px-6 bg-slate-800/50 border border-slate-600/50 hover:bg-slate-700/50 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
+            className="flex-1"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
             onClick={handleStake}
             disabled={!canStake || isPending}
-            className="flex-1 py-4 px-6 bg-slate-700/50 border border-slate-600/50 hover:bg-slate-600/50 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
+            className="flex-1"
           >
             {isPending
               ? isApprovalPending || isApprovalConfirming
@@ -472,19 +472,19 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
               : needsApproval === true
               ? "Authorize & Stake"
               : "Stake NFT"}
-          </button>
+          </Button>
         </div>
 
         {/* Toast Notification */}
         {toast && (
           <div
-            className={`mb-4 p-4 rounded-xl border ${
+            className={`mb-3 p-2 rounded-lg border ${
               toast.type === "success"
                 ? "bg-green-900/20 border-green-600/30 text-green-200"
                 : "bg-red-900/20 border-red-600/30 text-red-200"
             }`}
           >
-            <p className="text-sm">{toast.message}</p>
+            <p className="text-xs">{toast.message}</p>
           </div>
         )}
       </div>

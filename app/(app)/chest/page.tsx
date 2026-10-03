@@ -130,30 +130,17 @@ export default function ChestPage() {
 
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen bg-gradient-to-br">
-      <main className="container mx-auto px-4 py-6 max-w-lg">
-        <div className="flex flex-col gap-6">
-        {/* Transparency Notice */}
-        <section className="glass-card rounded-3xl">
-          <div className="p-6">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">ℹ️</span>
-              <div>
-                <p className="font-semibold text-white">Reward Transparency</p>
-                <p className="text-sm text-white/70">All reward claims are recorded on-chain on Base Network. Each claim contributes to monthly snapshot rewards.</p>
-              </div>
-            </div>
-          </div>
-        </section>
+    <div className="py-4 w-full">
+      <div className="flex flex-col gap-4">
 
-        <TrustAnchor
-          hasActiveStake={hasActiveStake}
-          hasMintedNFT={hasMintedNFT}
-        />
+      <TrustAnchor
+        hasActiveStake={hasActiveStake}
+        hasMintedNFT={hasMintedNFT}
+      />
         
         <ChestCard
-          title="Daily Reward Chest"
-          description="Claim your rewards every 24 hours"
+          title="Daily Bronze Chest"
+          description="Opens every 24 hours."
           variant="bronze"
           badge={daily?.canClaim ? "Ready" : "Cooling"}
           progress={daily?.canClaim ? 100 : 0}
@@ -173,12 +160,12 @@ export default function ChestPage() {
         />
 
         <ChestCard
-          title="Staker Reward Chest"
-          description="Stake at least one NFT to unlock enhanced rewards"
+          title="Silver Chest"
+          description="Requires an active NFT stake."
           variant="silver"
           badge={
             !silver?.hasStaked
-              ? "Staking Required"
+              ? "Stake required"
               : silver?.canClaim
               ? "Ready"
               : "Cooling"
@@ -201,17 +188,16 @@ export default function ChestPage() {
         />
 
         <ChestCard
-          title="Additional Rewards"
-          description="More reward types coming soon"
+          title="Gold Chest"
+          description="Staking milestone rewards coming."
           variant="default"
-          badge="Coming Soon"
-          actionLabel="Coming Soon"
+          badge="Next Up"
+          actionLabel="Next Up"
           progress={daily?.canClaim ? 100 : 0}
           actionDisabled={true}
           onAction={() => {}}
         />
         </div>
-      </main>
     </div>
   );
 }

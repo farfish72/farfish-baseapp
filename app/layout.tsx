@@ -47,8 +47,18 @@ export default function RootLayout({
       <body className={`${inter.variable} ${sourceCodePro.variable}`}>
         <RootProvider>
           <SafeArea>
-            <Header />
-            {children}
+            <div className="w-full max-w-md min-h-screen flex flex-col relative z-10 mx-auto px-4">
+              <Header />
+              <main 
+                className="flex-1 w-full"
+                style={{
+                  paddingTop: 'env(safe-area-inset-top, 0px)',
+                  paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 7.5rem)' // Reduced from 8rem
+                }}
+              >
+                {children}
+              </main>
+            </div>
           </SafeArea>
         </RootProvider>
       </body>

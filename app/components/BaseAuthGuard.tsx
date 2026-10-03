@@ -2,6 +2,7 @@
 
 import { useBaseAuth } from '@/app/contexts/BaseAuthContext';
 import { ReactNode } from 'react';
+import { Warning, LockKey } from '@phosphor-icons/react';
 
 interface BaseAuthGuardProps {
   children: ReactNode;
@@ -38,7 +39,7 @@ export default function BaseAuthGuard({ children, fallback }: BaseAuthGuardProps
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-red-500/20 flex items-center justify-center">
-            <span className="text-2xl">⚠️</span>
+            <Warning size={32} weight="duotone" color="#ef4444" />
           </div>
           <p className="text-white font-medium mb-2">Connection Error</p>
           <p className="text-white/70 text-sm mb-6">{error}</p>
@@ -57,7 +58,7 @@ export default function BaseAuthGuard({ children, fallback }: BaseAuthGuardProps
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-primary flex items-center justify-center">
-            <span className="text-2xl">🔐</span>
+            <LockKey size={32} weight="duotone" color="#000000" />
           </div>
           <p className="text-white font-medium mb-2">Base App Required</p>
           <p className="text-white/70 text-sm mb-6">

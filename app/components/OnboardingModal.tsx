@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { Fish, Diamond, Trophy } from '@phosphor-icons/react';
+import Button from './ui/Button';
 
 interface OnboardingModalProps {
   onComplete: () => void;
@@ -20,19 +22,19 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
   const steps = [
     {
-      icon: '🐟',
+      icon: Fish,
       title: 'Welcome to FarFISH',
       description: 'A premium NFT collection on Base Network. Mint, stake, and earn rewards.',
       image: '/og-image-optimized.webp',
     },
     {
-      icon: '💎',
+      icon: Diamond,
       title: 'Mint Your NFT',
       description: 'Select from 4 rarity tiers: BlueFin, GoldRay, RedSpike, and ShadowGill. Each has unique rewards.',
       image: '/bluefin.jpg',
     },
     {
-      icon: '🏆',
+      icon: Trophy,
       title: 'Stake & Earn',
       description: 'Stake your NFTs to earn daily rewards. Higher rarity tiers yield greater rewards. Compete on the leaderboard!',
       image: '/goldray.jpg',
@@ -78,7 +80,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         <div className="p-6">
           {/* Icon */}
           <div className="w-16 h-16 rounded-2xl bg-gradient-primary flex items-center justify-center mb-4">
-            <span className="text-3xl">{currentStepData.icon}</span>
+            <currentStepData.icon size={32} weight="duotone" color="#000000" />
           </div>
 
           {/* Title */}
@@ -108,21 +110,23 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           {/* Buttons */}
           <div className="flex gap-3">
             {!isLastStep && (
-              <button
+              <Button
+                variant="secondary"
+                size="md"
                 onClick={handleSkip}
-                className="flex-1 py-3 rounded-2xl bg-white/10 text-white font-semibold transition-all duration-300 hover:bg-white/20"
+                className="flex-1"
               >
                 Skip Tutorial
-              </button>
+              </Button>
             )}
-            <button
+            <Button
+              variant="primary"
+              size="md"
               onClick={handleNext}
-              className={`${
-                isLastStep ? 'flex-1' : 'flex-1'
-              } py-3 rounded-2xl bg-gradient-primary text-black font-semibold transition-all duration-300 hover:shadow-lg`}
+              className="flex-1"
             >
               {isLastStep ? 'Get Started' : 'Continue'}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

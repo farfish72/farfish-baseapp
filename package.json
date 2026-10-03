@@ -6,12 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@coinbase/onchainkit": "latest",
     "@farcaster/miniapp-sdk": "^0.2.0",
+    "@phosphor-icons/react": "^2.1.10",
     "@tanstack/react-query": "^5.81.5",
+    "@x402/core": "^2.28.0",
+    "@x402/evm": "^2.28.0",
+    "@x402/svm": "^2.28.0",
     "next": "^16.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -20,23 +24,25 @@
     "wagmi": "^2.16.3"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@farcaster/quick-auth": "^0.0.7",
     "@next/bundle-analyzer": "^16.1.1",
-    "@next/eslint-plugin-next": "^15.3.4",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.23",
     "eslint": "^9",
-    "eslint-config-next": "^16.1.1",
     "postcss": "^8.5.6",
-    "sharp-cli": "^5.2.0",
     "tailwindcss": "^4.1.18",
     "typescript": "^5"
   },
   "overrides": {
-    "use-sync-external-store": "^1.2.2"
+    "use-sync-external-store": "^1.2.2",
+    "braces": "^3.0.3",
+    "decode-uri-component": "^0.5.0",
+    "sharp": "^0.35.5",
+    "stream-json": "^3.4.1",
+    "uuid": "^11.1.1",
+    "ws": "^8.22.0"
   }
 }

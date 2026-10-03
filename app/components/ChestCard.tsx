@@ -1,5 +1,6 @@
 // app/components/ChestCard.tsx
 import { useState, useEffect } from 'react';
+import { Warning } from '@phosphor-icons/react';
 
 type Props = {
   title: string;
@@ -20,21 +21,21 @@ const variantStyles = {
   bronze: {
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        <path d="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,5V19H5V5H19M16.5,17A1.5,1.5 0 0,1 15,15.5A1.5,1.5 0 0,1 16.5,14A1.5,1.5 0 0,1 18,15.5A1.5,1.5 0 0,1 16.5,17M7.5,17A1.5,1.5 0 0,1 6,15.5A1.5,1.5 0 0,1 7.5,14A1.5,1.5 0 0,1 9,15.5A1.5,1.5 0 0,1 7.5,17M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8M12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14Z"/>
       </svg>
     )
   },
   silver: {
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        <path d="M5,3A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3H5M5,5H19V19H5V5M7.5,8A1.5,1.5 0 0,0 6,9.5A1.5,1.5 0 0,0 7.5,11A1.5,1.5 0 0,0 9,9.5A1.5,1.5 0 0,0 7.5,8M16.5,8A1.5,1.5 0 0,0 15,9.5A1.5,1.5 0 0,0 16.5,11A1.5,1.5 0 0,0 18,9.5A1.5,1.5 0 0,0 16.5,8M12,13A1.5,1.5 0 0,0 10.5,14.5A1.5,1.5 0 0,0 12,16A1.5,1.5 0 0,0 13.5,14.5A1.5,1.5 0 0,0 12,13Z"/>
       </svg>
     )
   },
   default: {
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M6,2A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z M6,4H13V9H18V20H6V4Z"/>
+        <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,17V16H9V14H13V13H10A1,1 0 0,1 9,12V9A1,1 0 0,1 10,8H14V9H16V11H12V12H15A1,1 0 0,1 16,13V16A1,1 0 0,1 15,17H11Z"/>
       </svg>
     )
   }
@@ -119,8 +120,8 @@ export default function ChestCard({
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-6">
         <div className="flex items-center gap-4 min-w-0 flex-1">
-          <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-primary flex-shrink-0">
-            <div className="text-black">
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-primary flex-shrink-0" style={{ background: '#181a20', border: '2px solid #000000' }}>
+            <div className="text-white">
               {styles.icon}
             </div>
           </div>
@@ -169,7 +170,7 @@ export default function ChestCard({
       {displayError && (
         <div className="mb-6 outlined-card rounded-2xl p-4 border-red-500/20 bg-red-500/5">
           <div className="flex items-center gap-3">
-            <span className="text-red-400 text-lg flex-shrink-0">⚠️</span>
+            <Warning size={20} weight="duotone" color="#f87171" className="flex-shrink-0" />
             <p className="premium-caption text-red-300 flex-1">{displayError}</p>
           </div>
         </div>
@@ -182,10 +183,10 @@ export default function ChestCard({
             type="button"
             onClick={handleAction}
             disabled={actionDisabled || isLoading}
-            className={`w-full py-3 px-6 rounded-2xl font-semibold focus-ring ${
+            className={`w-full py-3 px-6 rounded-2xl font-semibold transition-all duration-300 ${
               actionDisabled || isLoading
-                ? "bg-neutral/20 text-neutral cursor-not-allowed"
-                : "bg-gradient-primary text-black hover:shadow-lg"
+                ? "bg-ink border-2 border-muted/30 text-muted cursor-not-allowed"
+                : "bg-ink border-2 border-teal text-white hover:shadow-glow hover:bg-teal/10"
             }`}
           >
             {isLoading ? (
@@ -204,7 +205,7 @@ export default function ChestCard({
             type="button"
             onClick={handleSecondaryAction}
             disabled={secondaryActionDisabled || secondaryLoading}
-            className={`outlined-card w-full py-3 px-6 rounded-2xl font-semibold text-text-primary focus-ring interactive-scale ${
+            className={`w-full py-3 px-6 rounded-2xl font-semibold transition-all duration-300 bg-ink border-2 border-white/30 text-white hover:bg-white/5 hover:border-white/50 ${
               secondaryActionDisabled || secondaryLoading
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:bg-white/5"

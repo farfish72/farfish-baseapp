@@ -1,32 +1,38 @@
 export default function Footer() {
   return (
-    <div 
-      style={{ 
+    <footer 
+      style={{
         position: 'fixed',
-        bottom: 'var(--footer-offset)', // Uses CSS variable for dynamic positioning
+        bottom: 'calc(6.5rem + env(safe-area-inset-bottom, 0px))', // Move higher
         left: '50%',
         transform: 'translateX(-50%)',
-        zIndex: 998, // Below toasts but above content
-        width: '90%',
-        maxWidth: '400px'
+        width: 'calc(100% - 2rem)',
+        maxWidth: 'calc(28rem - 2rem)',
+        zIndex: 45,
+        pointerEvents: 'none'
       }}
     >
       <div 
-        className="glass-card rounded-xl shadow-medium"
         style={{
-          background: 'rgba(255, 255, 255, 0.08)',
+          background: 'var(--color-surface)',
           backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-          padding: 'var(--spacing-lg)' // Content-driven padding
+          padding: '0.5rem', // Keep minimal padding
+          borderRadius: '0.75rem',
+          border: '1px solid var(--color-surface-raised)',
+          textAlign: 'center',
+          pointerEvents: 'auto',
+          boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.3)'
         }}
       >
-        <div className="text-center">
-          <p className="text-xs text-white/80 font-medium">
-            FarFISH © 2026 • Built on Base Network
-          </p>
-        </div>
+        <p style={{ 
+          fontSize: '10px', 
+          color: 'var(--color-muted)', 
+          fontWeight: 500,
+          margin: 0
+        }}>
+          FarFISH 2026 | Built on Base
+        </p>
       </div>
-    </div>
+    </footer>
   );
 }

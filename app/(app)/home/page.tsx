@@ -16,6 +16,7 @@ import nftDropAbi from "@/app/abi/nftDrop.json";
 import { base } from "viem/chains";
 import { useToast } from "@/app/providers/ToastProvider";
 import { handleTransactionError } from "@/app/utils/errorHandling";
+import { GameController, Rocket, ChartBar, Clock, Trophy, Diamond, Warning } from "@phosphor-icons/react";
 
 interface SupplyInfo {
   id: number;
@@ -459,118 +460,54 @@ function HomeClient() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br">
-      <main className="container mx-auto px-4 py-6 max-w-lg">
-        <div className="flex flex-col gap-6">
-          {/* Home Section - As specified in requirements */}
-          <section className="glass-card rounded-3xl">
-            <div className="p-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center flex-shrink-0">
-                  <span className="text-xl">🏠</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h2 className="text-xl font-bold text-white leading-tight">
-                    Home
-                  </h2>
-                  <p className="text-white/70 text-sm mt-1">
-                    Build your on-chain routine
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Choose Your Tier Section */}
+      <main className="py-4 w-full">
+        <div className="flex flex-col gap-4">
+          {/* Pick Your Pass Section */}
           <section className="glass-card rounded-3xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-bold text-white">
-                  Select Your Membership
-                </h2>
-                <p className="text-white/70 text-sm mt-1">
-                  Access exclusive rewards and benefits
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center">
-                  <span className="text-xl">🐟</span>
-                </div>
-              </div>
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-white">
+                Pick Your Pass
+              </h2>
+              <p className="text-white/70 text-sm mt-1">
+                Two tiers, one clear choice
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
               {/* Basic Tier */}
-              <div className="bg-slate-800/50 border border-slate-600/30 rounded-2xl p-4">
-                <div className="flex flex-col items-center text-center mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gray-500 flex items-center justify-center mb-3">
-                    <span className="text-2xl">🥕</span>
-                  </div>
+              <div className="rounded-xl p-4 h-full" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
+                <div className="flex flex-col items-center text-center mb-4 h-[28px]">
                   <h3 className="text-lg font-bold text-white">Basic</h3>
                 </div>
                 <div className="space-y-2 text-white/80 text-sm">
-                  <p className="text-center">• Earn daily rewards</p>
-                  <p className="text-center">• Maintain your activity streak</p>
-                  <p className="text-center">• Compete on the leaderboard</p>
+                  <p className="text-center">• Daily chest access</p>
+                  <p className="text-center">• Streak tracking</p>
+                  <p className="text-center">• Leaderboard entry</p>
                 </div>
               </div>
 
               {/* Premium Tier */}
-              <div className="bg-slate-800/50 border border-cyan-400/30 rounded-2xl p-4">
-                <div className="flex flex-col items-center text-center mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center mb-3">
-                    <span className="text-2xl">👑</span>
-                  </div>
-                  <h3 className="text-lg font-bold text-cyan-300">Premium</h3>
+              <div className="rounded-xl p-4 relative h-full" style={{ background: '#0b0e11', border: '1px solid rgba(34, 211, 238, 0.3)' }}>
+                <div className="absolute -top-2 right-0">
+                  <span className="bg-accent text-black text-xs font-bold px-2 py-1 rounded">
+                    FEATURED
+                  </span>
+                </div>
+                <div className="flex flex-col items-center text-center mb-4 h-[28px]">
+                  <h3 className="text-lg font-bold text-white">Premium</h3>
                 </div>
                 <div className="space-y-2 text-white/80 text-sm">
-                  <p className="text-center">• Accelerated reward earnings</p>
-                  <p className="text-center">• Priority snapshot allocation</p>
-                  <p className="text-center">• Premium member benefits</p>
+                  <p className="text-center">• 2x chest yield</p>
+                  <p className="text-center">• Priority ranking</p>
+                  <p className="text-center">• Snapshot advantage</p>
                 </div>
               </div>
             </div>
 
             <div className="text-center">
               <p className="text-sm text-white/60">
-                Higher activity leads to higher long-term rewards.
+                Consistent activity compounds over time.
               </p>
-            </div>
-          </section>
-
-          {/* How FarFISH Works */}
-          <section className="glass-card rounded-3xl">
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center flex-shrink-0">
-                  <span className="text-xl">🐟</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h2 className="text-xl font-bold text-white leading-tight">
-                    How FarFISH Works
-                  </h2>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 py-3 px-4 rounded-xl bg-elevated">
-                  <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                    <span className="text-lg">1️⃣</span>
-                  </div>
-                  <p className="text-white font-medium leading-relaxed">Mint your FarFISH NFT</p>
-                </div>
-                <div className="flex items-center gap-3 py-3 px-4 rounded-xl bg-elevated">
-                  <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                    <span className="text-lg">2️⃣</span>
-                  </div>
-                  <p className="text-white font-medium leading-relaxed">Complete daily on-chain activities</p>
-                </div>
-                <div className="flex items-center gap-3 py-3 px-4 rounded-xl bg-elevated">
-                  <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                    <span className="text-lg">3️⃣</span>
-                  </div>
-                  <p className="text-white font-medium leading-relaxed">Earn sustainable rewards on Base Network</p>
-                </div>
-              </div>
             </div>
           </section>
 
@@ -580,22 +517,18 @@ function HomeClient() {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-xl font-bold text-white">
-                    Mint Your FarFISH NFT
+                    Get Your NFT
                   </h2>
                   <p className="text-white/70 text-sm mt-1">
-                    {totalMaxSupply ? `Limited supply of ${totalMaxSupply} across 4 rarity tiers` : "Loading availability..."}
+                    {totalMaxSupply ? `${totalMaxSupply.toLocaleString()} total · 4 rarities` : "Loading availability..."}
                   </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-success rounded-full"></div>
-                  <span className="text-xs text-white/60">Live</span>
                 </div>
               </div>
 
               {!NFT_CONTRACT_ADDRESS && (
                 <div className="mb-6 p-4 rounded-2xl bg-neutral/10 border border-neutral/20">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">⚠️</span>
+                    <Warning size={24} weight="duotone" color="#ffffff" />
                     <div>
                       <p className="font-semibold text-white">Contract Not Configured</p>
                       <p className="text-xs text-white/70">Minting is temporarily disabled</p>
@@ -606,19 +539,19 @@ function HomeClient() {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="bg-surface border border-white/30 rounded-2xl p-4 text-center">
+                <div className="rounded-2xl p-4 text-center" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
                   <div className="text-2xl font-bold text-white">
                     {loadingSupplies ? "..." : totalMinted.toLocaleString()}
                   </div>
                   <div className="text-xs text-white/70 mt-1">Minted</div>
                 </div>
-                <div className="bg-surface border border-white/30 rounded-2xl p-4 text-center">
+                <div className="rounded-2xl p-4 text-center" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
                   <div className="text-2xl font-bold text-white">
                     {loadingSupplies ? "..." : `${mintedProgress.toFixed(1)}%`}
                   </div>
                   <div className="text-xs text-white/70 mt-1">Progress</div>
                 </div>
-                <div className="bg-surface border border-white/30 rounded-2xl p-4 text-center">
+                <div className="rounded-2xl p-4 text-center" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
                   <div className="text-2xl font-bold text-white">
                     {loadingSupplies ? "..." : totalRemaining.toLocaleString()}
                   </div>
@@ -629,7 +562,7 @@ function HomeClient() {
               {/* Progress Bar */}
               <div className="mb-6">
                 <div className="flex justify-between items-center mb-3">
-                  <span className="text-sm text-white/60">Mint Progress</span>
+                  <span className="text-sm text-white/60">Supply minted</span>
                   <span className="text-sm text-white/60 font-medium">{mintedProgress.toFixed(1)}%</span>
                 </div>
                 <div className="w-full bg-surface rounded-full h-3 overflow-hidden">
@@ -646,10 +579,10 @@ function HomeClient() {
                 onClick={handleMint}
                 disabled={primaryButtonDisabled}
                 className={`
-                  w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-medium
+                  w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 border-2
                   ${primaryButtonDisabled 
-                    ? "bg-neutral/20 text-neutral cursor-not-allowed" 
-                    : "bg-gradient-primary text-black hover:shadow-lg"
+                    ? "bg-ink border-muted/30 text-muted cursor-not-allowed" 
+                    : "bg-ink border-teal text-white hover:shadow-glow hover:bg-teal/10"
                   }
                 `}
               >
@@ -662,12 +595,6 @@ function HomeClient() {
                   "Mint NFT"
                 )}
               </button>
-
-              {/* Transaction Transparency */}
-              <div className="text-center">
-                <p className="text-xs text-white/60 mb-1">On-chain transaction • Base Network</p>
-                <p className="text-xs text-white/60">Price displayed in wallet</p>
-              </div>
 
               {/* Mint Messages */}
               {mintMessage && (
@@ -706,17 +633,96 @@ function HomeClient() {
           </div>
           </div>
 
+          {/* Why FarFISH? */}
+          <section className="glass-card rounded-3xl">
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: '#181a20', border: '2px solid #000000' }}>
+                  <Diamond size={28} weight="fill" className="text-white" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-xl font-bold text-white leading-tight">
+                    Why FarFISH?
+                  </h2>
+                  <p className="text-white/70 text-sm mt-1">
+                    The compounding edge
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {/* Future Games */}
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#181a20', border: '2px solid #000000' }}>
+                    <GameController size={20} weight="regular" className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold">Future Games</h3>
+                    <p className="text-white/70 text-sm">Early access to play-to-earn</p>
+                  </div>
+                </div>
+
+                {/* Compounding Rewards */}
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#181a20', border: '2px solid #000000' }}>
+                    <Rocket size={20} weight="regular" className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold">Compounding Rewards</h3>
+                    <p className="text-white/70 text-sm">Every action builds on the last</p>
+                  </div>
+                </div>
+
+                {/* Built on Base */}
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#181a20', border: '2px solid #000000' }}>
+                    <ChartBar size={20} weight="regular" className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold">Built on Base</h3>
+                    <p className="text-white/70 text-sm">Fast, cheap, on-chain</p>
+                  </div>
+                </div>
+
+                {/* Daily Edge */}
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#181a20', border: '2px solid #000000' }}>
+                    <Clock size={20} weight="regular" className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold">Daily Edge</h3>
+                    <p className="text-white/70 text-sm">Small habits, outsized returns</p>
+                  </div>
+                </div>
+
+                {/* Early Access */}
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#181a20', border: '2px solid #000000' }}>
+                    <Trophy size={20} weight="regular" className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold">Early Access</h3>
+                    <p className="text-white/70 text-sm">First in line, every launch</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* Collection Preview */}
           <div className="glass-card rounded-3xl">
             <div className="p-6">
               <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: '#181a20', border: '2px solid #000000' }}>
               <span className="text-xl">🖼️</span>
             </div>
             <div>
               <h3 className="text-xl font-bold text-white">
-                Explore the Collection
+                Collection Preview
               </h3>
+              <p className="text-white/70 text-sm mt-1">
+                Four rarities. One collection.
+              </p>
             </div>
           </div>
 

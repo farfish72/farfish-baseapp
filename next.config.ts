@@ -6,6 +6,8 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
+  allowedDevOrigins: ['*.run.app', 'localhost:3000'],
   webpack: (config, { isServer }) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     

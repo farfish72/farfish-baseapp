@@ -35,7 +35,12 @@ export async function POST(request: NextRequest) {
 
     // 2. Validate origin (security check)
     const origin = request.headers.get('origin');
-    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    const isAllowedOrigin = !origin || 
+      ALLOWED_ORIGINS.includes(origin) || 
+      origin.includes('.run.app') || 
+      origin.includes('localhost') || 
+      origin.includes('127.0.0.1');
+    if (!isAllowedOrigin) {
       console.error('[Pimlico] Unauthorized origin:', origin);
       return NextResponse.json(
         { error: 'Unauthorized origin' },

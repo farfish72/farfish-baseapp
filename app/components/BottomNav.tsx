@@ -1,47 +1,39 @@
 "use client";
-import { usePathname } from "next/navigation";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { House, Package, Coins, ListChecks, User } from "@phosphor-icons/react";
 import styles from "./BottomNav.module.css";
-
-import {
-  FaHome,
-  FaBoxOpen,
-  FaCoins,
-  FaTasks,
-  FaUser,
-} from "react-icons/fa";
-
-const items = [
-  { href: "/home", label: "Home", icon: FaHome, color: "#6b7280" },
-  { href: "/chest", label: "Chest", icon: FaBoxOpen, color: "#f59e0b" },
-  { href: "/stake", label: "Stake", icon: FaCoins, color: "#6b7280" },
-  { href: "/steam", label: "Steam", icon: FaTasks, color: "#6b7280" },
-  { href: "/profile", label: "Profile", icon: FaUser, color: "#6b7280" },
-];
 
 export function BottomNav() {
   const pathname = usePathname();
 
+  const navItems = [
+    { href: "/home", label: "Home", icon: House },
+    { href: "/chest", label: "Chest", icon: Package },
+    { href: "/stake", label: "Stake", icon: Coins },
+    { href: "/steam", label: "Steam", icon: ListChecks },
+    { href: "/profile", label: "Profile", icon: User },
+  ];
+
   return (
     <nav className={styles.bottomNav}>
       <div className={styles.navContainer}>
-        {items.map((item) => {
-          // Handle both /home and / for home page
-          const isActive = pathname === item.href || (item.href === "/home" && pathname === "/");
-          const IconComponent = item.icon;
+        {navItems.map((item) => {
+          const active = pathname === item.href;
+          const Icon = item.icon;
+          
           return (
             <Link
-              key={item.label}
+              key={item.href}
               href={item.href}
-              className={`${styles.navItem} ${isActive ? styles.active : ""}`}
-              style={{
-                color: isActive ? item.color : 'rgba(255, 255, 255, 0.6)'
-              }}
+              className={`${styles.navItem} ${active ? styles.active : ""}`}
             >
               <span className={styles.navIcon}>
-                <IconComponent />
+                <Icon size={20} weight="bold" />
               </span>
               <span className={styles.navLabel}>{item.label}</span>
+              {active && <span className={styles.activeDot} />}
             </Link>
           );
         })}

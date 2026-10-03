@@ -9,15 +9,8 @@ export default function AppLayout({
 }) {
   return (
     <ToastProvider>
-      {/* Page content with content-driven padding */}
-      <div style={{ paddingBottom: "var(--content-bottom-padding)" }}>
-        {children}
-      </div>
-
-      {/* Footer */}
+      {children}
       <Footer />
-
-      {/* Fixed Bottom Navigation */}
       <BottomNav />
     </ToastProvider>
   );

@@ -6,7 +6,33 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "@/app/lib/wagmi";
 import { BaseAuthProvider } from "@/app/contexts/BaseAuthContext";
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
+import { sdk } from "@farcaster/miniapp-sdk";
 import "@coinbase/onchainkit/styles.css";
+
+function MiniAppReadyHandler() {
+  const { setMiniAppReady, isMiniAppReady } = useMiniKit();
+
+  useEffect(() => {
+    try {
+      if (!isMiniAppReady && typeof setMiniAppReady === "function") {
+        setMiniAppReady();
+      }
+    } catch (e) {
+      // safe fallback
+    }
+
+    try {
+      if (typeof sdk !== "undefined" && sdk?.actions && typeof sdk.actions.ready === "function") {
+        sdk.actions.ready();
+      }
+    } catch (e) {
+      // safe fallback
+    }
+  }, [isMiniAppReady, setMiniAppReady]);
+
+  return null;
+}
 
 // Create query client with optimized settings
 const queryClient = new QueryClient({
@@ -20,35 +46,8 @@ const queryClient = new QueryClient({
   },
 });
 
-// Loading screen component
-function LoadingScreen() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-    </div>
-  );
-}
-
-/**
- * Root Provider - Simplified for Base App
- * 
- * Wallet connection is automatic via Base App.
- * No manual connection logic needed.
- * 
- * @see https://docs.base.org/mini-apps/features/wallet
- */
 export function RootProvider({ children }: { children: ReactNode }) {
-  const [mounted, setMounted] = useState(false);
   const apiKey = process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY;
-  
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Prevent hydration mismatch by not rendering wagmi until mounted
-  if (!mounted) {
-    return <LoadingScreen />;
-  }
   
   return (
     <WagmiProvider config={wagmiConfig} reconnectOnMount={true}>
@@ -70,6 +69,7 @@ export function RootProvider({ children }: { children: ReactNode }) {
           }}
         >
           <BaseAuthProvider>
+            <MiniAppReadyHandler />
             {children}
           </BaseAuthProvider>
         </OnchainKitProvider>

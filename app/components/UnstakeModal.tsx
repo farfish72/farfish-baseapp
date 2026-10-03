@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useChainId, usePublicClient, useBlockNumber } from "wagmi";
 import { base } from "viem/chains";
+import Button from "./ui/Button";
 import { STAKING_CONTRACT_ADDRESS } from "../constants";
 import stakeAbi from "../abi/stake.json";
 import useUserStakes from "../hooks/useUserStakes";
@@ -131,79 +132,57 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
       className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/80 px-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white">Unstake Your NFT</h2>
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors text-xl"
-            aria-label="Close modal"
-          >
-            ✕
-          </button>
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl max-w-md w-full p-4 shadow-2xl max-h-[85vh] flex flex-col no-button-ring">
+        <div className="mb-3">
+          <h2 className="text-lg font-bold text-white mb-2">Unstake NFT</h2>
+          <p className="text-xs text-slate-300 mb-1">
+            Release your NFT after the lock period ends.
+          </p>
+          <p className="text-xs text-slate-300">
+            Connect your wallet to see locked NFTs.
+          </p>
         </div>
-
-        {/* Warning Notice */}
-        <div className="mb-4 p-4 bg-gradient-to-r from-cyan-400 to-teal-400 rounded-xl">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-slate-900">⚠️</span>
-            <p className="text-sm font-semibold text-slate-900">Important Notice</p>
-          </div>
-          <div className="text-sm text-slate-900 space-y-1">
-            <p>• Unstaking withdraws your NFT from the protocol</p>
-            <p>• Reward accumulation stops upon unstaking</p>
-          </div>
-        </div>
-
-        {/* Description */}
-        <p className="mb-4 text-sm text-slate-300">
-          Unstaking becomes available after your claim period ends.
-          For more information, please refer to the master reward parameters.
-        </p>
 
         {/* Stake list */}
         {!isConnected ? (
-          <div className="mb-4 p-4 bg-yellow-600/20 border border-yellow-600/40 rounded-xl">
-            <p className="text-yellow-200 text-center">Connect your wallet to view positions</p>
+          <div className="mb-3 p-3 bg-yellow-600/20 border border-yellow-600/40 rounded-lg">
+            <p className="text-yellow-200 text-xs text-center">Connect your wallet to view positions</p>
           </div>
         ) : isLoadingStakes ? (
-          <div className="mb-4 p-4 bg-slate-800/30 border border-slate-600/50 rounded-xl">
-            <p className="text-slate-300 text-center">Loading your stakes...</p>
+          <div className="mb-3 p-3 bg-slate-800/30 border border-slate-600/50 rounded-lg">
+            <p className="text-slate-300 text-xs text-center">Loading...</p>
           </div>
         ) : stakesError && activeStakes.length === 0 ? (
-          <div className="mb-4 p-4 bg-red-900/20 border border-red-600/30 rounded-xl">
-            <p className="text-red-200 text-center">Failed to load your staked positions. Please try again.</p>
+          <div className="mb-3 p-3 bg-red-900/20 border border-red-600/30 rounded-lg">
+            <p className="text-red-200 text-xs text-center">Failed to load stakes</p>
           </div>
         ) : !stakesError && !isLoadingStakes && activeStakes.length === 0 ? (
-          <div className="mb-4 p-4 bg-slate-800/30 border border-slate-600/50 rounded-xl">
-            <p className="text-slate-300 text-center">No active stakes available to unstake</p>
+          <div className="mb-3 p-3 bg-slate-800/30 border border-slate-600/50 rounded-lg">
+            <p className="text-slate-300 text-xs text-center">No active stakes</p>
           </div>
         ) : (
-          <div className="mb-4">
-            <div className="space-y-3 max-h-48 overflow-y-auto">
+          <div className="mb-3">
+            <div className="space-y-2 max-h-48 overflow-y-auto">
               {activeStakes
                 .filter((s) => s.error !== true)
                 .map((position) => {
                   const isSelected = selectedPosition?.stakeId === position.stakeId;
 
                   return (
-                    <button
+                    <Button
                       key={position.stakeId.toString()}
-                      type="button"
+                      variant={isSelected ? 'primary' : 'outline'}
+                      size="md"
                       onClick={() => {
                         setSelectedPosition(position);
                       }}
                       disabled={isPending}
-                      className={`w-full rounded-xl p-4 border transition-all duration-200 ${
-                        isSelected
-                          ? "border-cyan-400 bg-cyan-400/10"
-                          : "border-slate-600/50 bg-slate-800/30 hover:bg-slate-700/50"
-                      } ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
+                      className="w-full py-2"
                     >
-                      <span className="text-lg font-medium text-white">
+                      <span className="text-base font-medium">
                         Stake #{position.stakeId.toString()}
                       </span>
-                    </button>
+                    </Button>
                   );
                 })}
             </div>
@@ -211,24 +190,27 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-4 mt-auto">
-          <button
+        <div className="flex gap-3 mt-auto">
+          <Button
+            variant="secondary"
+            size="md"
             onClick={onClose}
             disabled={isPending}
-            className="flex-1 py-4 px-6 bg-slate-800/50 border border-slate-600/50 hover:bg-slate-700/50 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
+            className="flex-1"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
             onClick={handleUnstake}
             disabled={!isButtonEnabled}
-            className="flex-1 py-4 px-6 bg-slate-700/50 border border-slate-600/50 hover:bg-slate-600/50 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
+            className="flex-1"
           >
             {isPending ? "Unstaking..." : "Unstake NFT"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
   );
 }
-

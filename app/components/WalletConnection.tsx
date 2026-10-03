@@ -1,6 +1,7 @@
 "use client";
 
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import Button from './ui/Button';
 
 export default function WalletConnection() {
   const { address, isConnected, isConnecting } = useAccount();
@@ -9,8 +10,8 @@ export default function WalletConnection() {
 
   const handleConnect = () => {
     const coinbaseConnector = connectors.find(
-      connector => connector.id === 'coinbaseWalletSDK'
-    );
+      connector => connector.id === 'coinbaseWalletSDK' || connector.id === 'coinbaseWallet'
+    ) || connectors[0];
     
     if (coinbaseConnector) {
       connect({ connector: coinbaseConnector });
@@ -47,12 +48,13 @@ export default function WalletConnection() {
               <p className="text-white/60 text-xs">Base Network</p>
             </div>
           </div>
-          <button
+          <Button
+            variant="danger"
+            size="sm"
             onClick={handleDisconnect}
-            className="py-2 px-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-300 font-medium text-xs transition-all duration-300 hover:bg-red-500/30"
           >
             Disconnect Your Wallet
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -66,16 +68,16 @@ export default function WalletConnection() {
             <span className="text-white/60 text-xs">💳</span>
           </div>
           <div>
-            <p className="text-white font-medium text-sm">Connect Your Wallet</p>
-            <p className="text-white/60 text-xs">Connect to Base Network</p>
+            <p className="text-white font-medium text-sm">Connect to Base Network</p>
           </div>
         </div>
-        <button
+        <Button
+          variant="outline"
+          size="sm"
           onClick={handleConnect}
-          className="py-2 px-4 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium text-xs transition-all duration-300 hover:shadow-lg"
         >
           Connect Your Wallet
-        </button>
+        </Button>
       </div>
     </div>
   );

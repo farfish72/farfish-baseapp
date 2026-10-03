@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { FiShare2 } from 'react-icons/fi';
+import { ShareNetwork, Check } from '@phosphor-icons/react';
 
 interface ShareButtonProps {
   title?: string;
@@ -68,10 +68,10 @@ export default function ShareButton({
       <button
         onClick={handleShare}
         disabled={isSharing}
-        className={`p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all duration-300 disabled:opacity-50 ${className}`}
+        className={`p-2 rounded-xl bg-teal border-2 border-teal hover:brightness-110 hover:shadow-glow transition-all duration-300 disabled:opacity-50 ${className}`}
         aria-label="Share"
       >
-        <FiShare2 className="w-5 h-5 text-white" />
+        <ShareNetwork size={20} weight="bold" color="#000000" />
       </button>
     );
   }
@@ -82,16 +82,16 @@ export default function ShareButton({
       <button
         onClick={handleShare}
         disabled={isSharing}
-        className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/30 text-white font-medium transition-all duration-300 hover:bg-white/20 disabled:opacity-50 ${className}`}
+        className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-mint border-2 border-mint text-black font-medium transition-all duration-300 hover:brightness-110 hover:shadow-glow disabled:opacity-50 ${className}`}
       >
         {showCopied ? (
           <>
-            <span className="text-lg">✓</span>
+            <Check size={16} weight="bold" color="#000000" />
             <span>Link Copied</span>
           </>
         ) : (
           <>
-            <FiShare2 className="w-4 h-4" />
+            <ShareNetwork size={16} weight="bold" color="#000000" />
             <span>{isSharing ? 'Sharing...' : 'Share FarFISH'}</span>
           </>
         )}
@@ -104,16 +104,16 @@ export default function ShareButton({
     <button
       onClick={handleShare}
       disabled={isSharing}
-      className={`flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-primary text-black font-bold transition-all duration-300 hover:shadow-lg disabled:opacity-50 ${className}`}
+      className={`flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-teal border-2 border-teal text-black font-bold transition-all duration-300 hover:shadow-glow hover:brightness-110 disabled:opacity-50 ${className}`}
     >
       {showCopied ? (
         <>
-          <span className="text-lg">✓</span>
+          <Check size={20} weight="bold" color="#000000" />
           <span>Link Copied</span>
         </>
       ) : (
         <>
-          <FiShare2 className="w-5 h-5" />
+          <ShareNetwork size={20} weight="bold" color="#000000" />
           <span>{isSharing ? 'Sharing...' : 'Share FarFISH'}</span>
         </>
       )}

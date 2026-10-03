@@ -6,6 +6,17 @@ import { ERC20_TOKEN_ADDRESS } from "../constants";
 import erc20Abi from "../abi/erc20.json";
 import { formatUnits } from "viem";
 import { useState, useEffect } from "react";
+import { 
+  TrendUp, 
+  CheckCircle, 
+  Calendar, 
+  Flame, 
+  Users, 
+  Wallet, 
+  ChartBar, 
+  Hourglass, 
+  MapPin 
+} from "@phosphor-icons/react";
 
 interface TrustAnchorProps {
   hasActiveStake: boolean;        // Whether user has active NFT stake
@@ -86,25 +97,49 @@ export default function TrustAnchor({
 
   const cards = [
     { 
-      icon: "✅", 
+      Icon: CheckCircle, 
       label: "Status", 
       value: status,
       color: isConnected ? "text-green-400" : "text-gray-400"
     },
     { 
-      icon: "💰", 
-      label: "Holding", 
+      Icon: Calendar, 
+      label: "Active Days", 
+      value: "0",
+      color: "text-blue-400"
+    },
+    { 
+      Icon: Flame, 
+      label: "Streak", 
+      value: "0 days",
+      color: "text-orange-400"
+    },
+    { 
+      Icon: Users, 
+      label: "Referrals", 
+      value: "0",
+      color: "text-purple-400"
+    },
+    { 
+      Icon: Wallet, 
+      label: "Balance", 
       value: `${formatFrhBalance()} FRH`,
       color: "text-cyan-400"
     },
     { 
-      icon: "⏰", 
-      label: "Next Snapshot", 
-      value: "30 days",
-      color: "text-blue-400"
+      Icon: ChartBar, 
+      label: "Rank", 
+      value: "Unranked",
+      color: "text-gray-400"
     },
     { 
-      icon: tier === 'Premium' ? "👑" : "🥉", 
+      Icon: Hourglass, 
+      label: "Snapshot", 
+      value: "~30 days",
+      color: "text-yellow-400"
+    },
+    { 
+      Icon: MapPin, 
       label: "Tier", 
       value: tier,
       color: tier === 'Premium' ? "text-yellow-400" : "text-gray-400"
@@ -115,35 +150,38 @@ export default function TrustAnchor({
     <article className="glass-card rounded-3xl p-6 relative">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-primary">
-          <span className="text-xl text-black">📈</span>
+        <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-primary" style={{ background: '#181a20', border: '2px solid #000000' }}>
+          <TrendUp size={24} weight="duotone" className="text-white" />
         </div>
         <div>
           <h3 className="premium-heading text-lg text-text-primary">Trust Anchor</h3>
-          <p className="premium-caption text-text-secondary mt-1">Your on-chain metrics</p>
+          <p className="premium-caption text-text-secondary mt-1">On-chain activity record</p>
         </div>
       </div>
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-2 gap-4">
-        {cards.map((card, index) => (
-          <div
-            key={index}
-            className="bg-elevated rounded-2xl p-4 border border-white/10 hover:border-white/20 transition-all duration-300"
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-xl">{card.icon}</span>
-              <div className="flex-1 min-w-0">
-                <p className="premium-caption text-text-secondary uppercase tracking-wide text-xs">
-                  {card.label}
-                </p>
-                <p className={`premium-heading text-sm font-semibold truncate ${card.color || 'text-text-primary'}`}>
-                  {card.value}
-                </p>
+        {cards.map((card, index) => {
+          const IconComponent = card.Icon;
+          return (
+            <div
+              key={index}
+              className="bg-elevated rounded-2xl p-4 border border-white/10 hover:border-white/20 transition-all duration-300"
+            >
+              <div className="flex items-center gap-3">
+                <IconComponent size={24} weight="duotone" className={card.color} />
+                <div className="flex-1 min-w-0">
+                  <p className="premium-caption text-text-secondary uppercase tracking-wide text-xs">
+                    {card.label}
+                  </p>
+                  <p className={`premium-heading text-sm font-semibold truncate ${card.color || 'text-text-primary'}`}>
+                    {card.value}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Error state for balance loading */}
