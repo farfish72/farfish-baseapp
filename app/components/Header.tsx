@@ -31,9 +31,9 @@ export default function Header({ page, title, subtitle }: HeaderProps = {}) {
   const displaySubtitle = subtitle || metadata.subtitle;
 
   return (
-    <header className="w-full border-b border-surface bg-surface pb-4 pt-3 rounded-xl" style={{ background: '#181a20', borderColor: '#181a20' }}>
+    <header className="w-full border-b border-surface bg-surface pb-3 pt-2 rounded-xl" style={{ background: '#181a20', borderColor: '#181a20' }}>
       {/* First row: Logo and Follow button */}
-      <div className="flex items-center justify-between px-4">
+      <div className="flex items-center justify-between">
         <Image 
           src="/farfish-logo-optimized.webp"
           alt="FarFISH"
@@ -54,7 +54,7 @@ export default function Header({ page, title, subtitle }: HeaderProps = {}) {
       </div>
 
       {/* Second row: Title and subtitle */}
-      <div className="mt-3 px-4">
+      <div className="mt-2">
         <h2 className="font-display text-2xl font-bold tracking-tight text-white leading-tight">
           {displayTitle}
         </h2>
