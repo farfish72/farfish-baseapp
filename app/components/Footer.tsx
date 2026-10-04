@@ -3,11 +3,11 @@ export default function Footer() {
     <footer 
       style={{
         position: 'fixed',
-        bottom: 'calc(4.75rem + env(safe-area-inset-bottom, 0px))',
+        bottom: 'calc(6.5rem + env(safe-area-inset-bottom, 0px))', // Move higher
         left: '50%',
         transform: 'translateX(-50%)',
-        width: 'calc(100% - 1.5rem)',
-        maxWidth: 'calc(28rem - 1.5rem)',
+        width: 'calc(100% - 2rem)',
+        maxWidth: 'calc(28rem - 2rem)',
         zIndex: 45,
         pointerEvents: 'none'
       }}
@@ -16,7 +16,7 @@ export default function Footer() {
         style={{
           background: 'var(--color-surface)',
           backdropFilter: 'blur(12px)',
-          padding: '0.375rem 0.5rem',
+          padding: '0.5rem', // Keep minimal padding
           borderRadius: '0.75rem',
           border: '1px solid var(--color-surface-raised)',
           textAlign: 'center',
