@@ -108,6 +108,14 @@ body {
   border-radius: var(--radius-control);
 }
 
+.bottom-nav {
+  bottom: env(safe-area-inset-bottom, 0px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 2rem);
+  max-width: calc(28rem - 2rem);
+}
+
 /* Mini App Color Classes */
 .bg-ink {
   background-color: var(--color-ink);
@@ -741,9 +749,9 @@ button:hover:not(:disabled) {
 }
 
 button:focus-visible {
-  outline: 2px solid var(--color-mint);
+  outline: none;
   outline-offset: 2px;
-  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-teal);
+  box-shadow: none;
 }
 
 .no-button-ring button,

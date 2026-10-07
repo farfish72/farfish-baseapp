@@ -130,7 +130,7 @@ export default function ChestPage() {
 
   /* ================= UI ================= */
   return (
-    <div className="py-4 w-full">
+    <div className="py-2 w-full">
       <div className="flex flex-col gap-4">
 
       <TrustAnchor

@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { base } from "wagmi/chains";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WagmiProvider } from "wagmi";
+import { WagmiProvider, useReconnect } from "wagmi";
 import { wagmiConfig } from "@/app/lib/wagmi";
 import { BaseAuthProvider } from "@/app/contexts/BaseAuthContext";
 import { useMiniKit } from "@coinbase/onchainkit/minikit";
@@ -34,6 +34,16 @@ function MiniAppReadyHandler() {
   return null;
 }
 
+function WalletReconnectHandler() {
+  const { reconnect } = useReconnect();
+
+  useEffect(() => {
+    reconnect();
+  }, [reconnect]);
+
+  return null;
+}
+
 // Create query client with optimized settings
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,8 +60,9 @@ export function RootProvider({ children }: { children: ReactNode }) {
   const apiKey = process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY;
   
   return (
-    <WagmiProvider config={wagmiConfig} reconnectOnMount={true}>
+    <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
       <QueryClientProvider client={queryClient}>
+        <WalletReconnectHandler />
         <OnchainKitProvider
           apiKey={apiKey || undefined}
           chain={base}

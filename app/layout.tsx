@@ -47,13 +47,13 @@ export default function RootLayout({
       <body className={`${inter.variable} ${sourceCodePro.variable}`}>
         <RootProvider>
           <SafeArea>
-            <div className="w-full max-w-md min-h-screen flex flex-col relative z-10 mx-auto px-4">
+            <div className="w-full max-w-md min-h-screen flex flex-col relative z-10 mx-auto px-4 pt-0">
               <Header />
               <main 
-                className="flex-1 w-full"
+                className="w-full"
                 style={{
-                  paddingTop: 'env(safe-area-inset-top, 0px)',
-                  paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 7.5rem)' // Reduced from 8rem
+                  paddingTop: '0',
+                  paddingBottom: '0'
                 }}
               >
                 {children}

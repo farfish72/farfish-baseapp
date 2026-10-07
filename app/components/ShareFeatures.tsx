@@ -9,7 +9,7 @@ export default function ShareFeatures() {
         <div className="flex justify-center mb-2">
           <Fish size={32} weight="duotone" color="#ffffff" />
         </div>
-        <div className="text-white font-semibold">Mint NFTs</div>
+        <div className="text-white font-semibold">Mint Premium Pass</div>
         <div className="text-white/60 text-sm">4 rarities</div>
       </div>
       <div className="bg-surface rounded-2xl p-4 text-center">

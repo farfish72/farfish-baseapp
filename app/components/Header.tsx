@@ -10,7 +10,7 @@ const pageMetadata: Record<string, { title: string; subtitle: string }> = {
   '/home': { title: 'Overview', subtitle: 'Start your daily habit' },
   '/chest': { title: 'Rewards', subtitle: 'Check in & collect' },
   '/stake': { title: 'Staking', subtitle: 'Lock NFTs, grow yield' },
-  '/steam': { title: 'Missions', subtitle: 'Tasks & missions' },
+  '/rank': { title: 'Leaderboard', subtitle: 'How you stack up' },
   '/profile': { title: 'Account', subtitle: 'Your identity & stats' },
 };
 
@@ -31,9 +31,9 @@ export default function Header({ page, title, subtitle }: HeaderProps = {}) {
   const displaySubtitle = subtitle || metadata.subtitle;
 
   return (
-    <header className="w-full border-b border-surface bg-surface pb-4 pt-3 rounded-xl" style={{ background: '#181a20', borderColor: '#181a20' }}>
+    <header className="w-full border-b border-surface bg-surface pb-4 pt-6 rounded-xl" style={{ background: '#181a20', borderColor: '#181a20' }}>
       {/* First row: Logo and Follow button */}
-      <div className="flex items-center justify-between px-4">
+      <div className="flex items-center justify-between px-4 mt-2">
         <Image 
           src="/farfish-logo-optimized.webp"
           alt="FarFISH"
@@ -43,12 +43,12 @@ export default function Header({ page, title, subtitle }: HeaderProps = {}) {
         />
         
         <a
-          href="https://base.app/app/farfish-baseapp.vercel.app"
+          href="https://farfish.xyz"
           target="_blank"
           rel="noopener noreferrer"
           className="app-control inline-flex items-center gap-1 border border-muted text-xs font-semibold text-white transition-colors hover:border-accent hover:text-accent"
         >
-          Follow
+          Find us
           <ArrowSquareOut size={16} weight="bold" />
         </a>
       </div>

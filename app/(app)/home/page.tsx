@@ -460,7 +460,7 @@ function HomeClient() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br">
-      <main className="py-4 w-full">
+      <main className="py-2 w-full">
         <div className="flex flex-col gap-4">
           {/* Pick Your Pass Section */}
           <section className="glass-card rounded-3xl p-6">
@@ -475,8 +475,8 @@ function HomeClient() {
 
             <div className="grid grid-cols-2 gap-4 mb-6">
               {/* Basic Tier */}
-              <div className="rounded-xl p-4 h-full" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
-                <div className="flex flex-col items-center text-center mb-4 h-[28px]">
+              <div className="rounded-xl p-3.5 h-full" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
+                <div className="flex flex-col items-center text-center mb-4 h-[28px] mt-3">
                   <h3 className="text-lg font-bold text-white">Basic</h3>
                 </div>
                 <div className="space-y-2 text-white/80 text-sm">
@@ -487,13 +487,13 @@ function HomeClient() {
               </div>
 
               {/* Premium Tier */}
-              <div className="rounded-xl p-4 relative h-full" style={{ background: '#0b0e11', border: '1px solid rgba(34, 211, 238, 0.3)' }}>
+              <div className="rounded-xl p-3.5 relative h-full" style={{ background: '#0b0e11', border: '1px solid rgba(34, 211, 238, 0.3)' }}>
                 <div className="absolute -top-2 right-0">
                   <span className="bg-accent text-black text-xs font-bold px-2 py-1 rounded">
                     FEATURED
                   </span>
                 </div>
-                <div className="flex flex-col items-center text-center mb-4 h-[28px]">
+                <div className="flex flex-col items-center text-center mb-4 h-[28px] mt-3">
                   <h3 className="text-lg font-bold text-white">Premium</h3>
                 </div>
                 <div className="space-y-2 text-white/80 text-sm">
@@ -573,7 +573,7 @@ function HomeClient() {
                 </div>
               </div>
 
-              {/* Mint NFT Button - Always Visible */}
+              {/* Mint Premium Pass Button - Always Visible */}
               <button
                 type="button"
                 onClick={handleMint}
@@ -592,7 +592,7 @@ function HomeClient() {
                     {isMinting ? "Preparing transaction..." : isMintPending ? "Awaiting confirmation..." : "Processing transaction..."}
                   </div>
                 ) : (
-                  "Mint NFT"
+                  "Mint Premium Pass"
                 )}
               </button>
 
@@ -740,9 +740,9 @@ function HomeClient() {
                   sizes="(max-width: 768px) 50vw, 200px"
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute bottom-3 left-3">
-                    <p className="text-white font-semibold text-sm">{image.name}</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
+                  <div className="absolute bottom-4 left-4">
+                    <p className="text-white font-bold text-lg">{image.name}</p>
                   </div>
                 </div>
               </div>

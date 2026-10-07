@@ -111,7 +111,7 @@ export default function StakingPage() {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br">
-        <main className="py-4 w-full">
+        <main className="py-2 w-full">
           <div className="flex flex-col gap-4">
             {/* Actions */}
             <section className="glass-card rounded-3xl">

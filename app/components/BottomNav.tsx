@@ -2,42 +2,70 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, Package, Coins, ListChecks, User } from "@phosphor-icons/react";
-import styles from "./BottomNav.module.css";
+import {
+  House,
+  Package,
+  Coins,
+  Trophy,
+  User,
+} from "@phosphor-icons/react";
+import { AppIcon } from "./ui";
 
-export function BottomNav() {
-  const pathname = usePathname();
+const items = [
+  { href: "/", label: "Home", icon: House },
+  { href: "/chest", label: "Chest", icon: Package },
+  { href: "/stake", label: "Stake", icon: Coins },
+  { href: "/rank", label: "Rank", icon: Trophy },
+  { href: "/profile", label: "Profile", icon: User },
+];
 
-  const navItems = [
-    { href: "/home", label: "Home", icon: House },
-    { href: "/chest", label: "Chest", icon: Package },
-    { href: "/stake", label: "Stake", icon: Coins },
-    { href: "/steam", label: "Steam", icon: ListChecks },
-    { href: "/profile", label: "Profile", icon: User },
-  ];
+export default function BottomNav() {
+  const path = usePathname();
 
   return (
-    <nav className={styles.bottomNav}>
-      <div className={styles.navContainer}>
-        {navItems.map((item) => {
-          const active = pathname === item.href;
+    <nav
+      className="bottom-nav fixed z-50 rounded-xl border border-surface-raised bg-surface px-1 py-2"
+    >
+      <ul className="flex justify-between items-center">
+        {items.map((item) => {
+          const active = path === item.href;
           const Icon = item.icon;
-          
+
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`${styles.navItem} ${active ? styles.active : ""}`}
-            >
-              <span className={styles.navIcon}>
-                <Icon size={20} weight="bold" />
-              </span>
-              <span className={styles.navLabel}>{item.label}</span>
-              {active && <span className={styles.activeDot} />}
-            </Link>
+            <li key={item.href} className="flex-1">
+              <Link
+                href={item.href}
+                className={`
+                  flex flex-col items-center gap-1 
+                  text-xs font-medium
+                  transition-all duration-300 ease-out
+                  app-control px-1
+                  ${active 
+                    ? "border border-accent bg-surface text-accent" 
+                    : "text-muted hover:text-white"
+                  }
+                `}
+              >
+                <div className={`
+                  p-1.5 rounded-control transition-all duration-300
+                  ${active 
+                    ? "bg-text/20"
+                    : "hover:bg-surface-raised"
+                  }
+                `}>
+                  <AppIcon icon={Icon} size="sm" />
+                </div>
+                <span className="text-[9px] font-semibold tracking-wide">
+                  {item.label}
+                </span>
+                {active && (
+                  <div className="w-1 h-1 rounded-full bg-white animate-pulse"></div>
+                )}
+              </Link>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </nav>
   );
 }

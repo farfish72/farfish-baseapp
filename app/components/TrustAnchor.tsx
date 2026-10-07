@@ -29,6 +29,8 @@ export default function TrustAnchor({
 }: TrustAnchorProps) {
   const { address, isConnected } = useAccount();
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
+  const [rank, setRank] = useState<number | null>(null);
+  const [loadingRank, setLoadingRank] = useState(false);
 
   // Read ERC20 balance - live on-chain FRH balance
   const { 
@@ -64,6 +66,41 @@ export default function TrustAnchor({
     return () => window.removeEventListener('farfish:staking-updated', handleStakingUpdate);
   }, [refetchBalance]);
 
+  // Fetch rank from leaderboard
+  useEffect(() => {
+    if (!address || !isConnected) {
+      setRank(null);
+      return;
+    }
+
+    const fetchRank = async () => {
+      setLoadingRank(true);
+      try {
+        const response = await fetch(`/api/leaderboard/user?wallet=${address}`, {
+          cache: 'no-store',
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setRank(data.rank || null);
+        } else if (response.status === 404) {
+          // User not ranked yet
+          setRank(null);
+        } else {
+          console.error('Failed to fetch rank:', response.status);
+          setRank(null);
+        }
+      } catch (error) {
+        console.error('Error fetching rank:', error);
+        setRank(null);
+      } finally {
+        setLoadingRank(false);
+      }
+    };
+
+    fetchRank();
+  }, [address, isConnected]);
+
   // Format FRH balance with error handling
   const formatFrhBalance = (): string => {
     if (!isConnected) return '0.00';
@@ -92,8 +129,8 @@ export default function TrustAnchor({
   // Determine tier - Premium if user has: At least 1 NFT minted OR At least 1 NFT staked
   const tier = (hasMintedNFT || hasActiveStake) ? 'Premium' : 'Basic';
 
-  // Status is Active if user is connected
-  const status = isConnected ? 'Active' : 'Inactive';
+  // Status is always Active
+  const status = 'Active';
 
   const cards = [
     { 
@@ -129,7 +166,7 @@ export default function TrustAnchor({
     { 
       Icon: ChartBar, 
       label: "Rank", 
-      value: "Unranked",
+      value: loadingRank ? "..." : (rank ? `#${rank}` : "Unranked"),
       color: "text-gray-400"
     },
     { 
