@@ -30,11 +30,16 @@ export default function LeaderboardPage() {
       const res = await fetch("/api/leaderboard", { cache: "no-store" });
       if (!res.ok) {
         const text = await res.text();
+        console.error("[LEADERBOARD] API error:", res.status, text);
         throw new Error(text || "Failed to load leaderboard");
       }
       const data = (await res.json()) as any[];
-      console.log('Leaderboard API returned:', data);
-      console.log('Data type:', typeof data, 'Is array:', Array.isArray(data));
+      
+      // Validate response structure
+      if (!Array.isArray(data)) {
+        console.error("[LEADERBOARD] Invalid response format:", typeof data, data);
+        throw new Error("Invalid leaderboard data format");
+      }
       
       // Transform data: use rewards from API directly
       const transformed: LeaderboardEntry[] = data.map((entry) => ({
@@ -56,10 +61,9 @@ export default function LeaderboardPage() {
       
       // Limit to top 100
       const top100 = transformed.slice(0, 100);
-      console.log(`Leaderboard: showing ${top100.length} of ${transformed.length} total entries (limited to top 100)`);
       setEntries(top100);
     } catch (error) {
-      console.error("Failed to fetch leaderboard", error);
+      console.error("[LEADERBOARD] Failed to fetch leaderboard", error);
       setToast({ type: "error", message: "Could not load leaderboard. Please try again." });
     } finally {
       setLoading(false);

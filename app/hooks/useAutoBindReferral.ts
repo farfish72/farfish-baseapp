@@ -96,16 +96,15 @@ export default function useAutoBindReferral() {
             hasRecorded.current = true;
             // Clear cached referral code after successful recording
             localStorage.removeItem(REFERRAL_CACHE_KEY);
-            console.log("Referral recorded successfully:", data);
           } else {
             // API returned success: false - log the error but don't clear cache
-            console.error("Referral recording failed:", data.error || "Unknown error");
+            console.error("[REFERRAL] Recording failed:", data.error || "Unknown error");
           }
         } else {
-          console.error("Referral API request failed:", res.status, res.statusText);
+          console.error("[REFERRAL] API request failed:", res.status, res.statusText);
         }
       } catch (error) {
-        console.error("Referral recording failed:", error);
+        console.error("[REFERRAL] Recording error:", error);
       }
     };
 

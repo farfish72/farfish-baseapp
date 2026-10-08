@@ -55,8 +55,8 @@ export default function ShareButton({
         onShareComplete?.();
       }
     } catch (error) {
-      // User cancelled share or error occurred
-      console.log('Share cancelled or failed:', error);
+      // User cancelled share or error occurred - this is expected behavior, not an error
+      // Silently handle: no logging needed in production
     } finally {
       setIsSharing(false);
     }
