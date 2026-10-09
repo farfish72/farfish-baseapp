@@ -1,0 +1,43 @@
+{
+  "name": "FarFISH - Mint, Stake, Earn on Base",
+  "short_name": "FarFISH",
+  "description": "Premium NFT collection built on Base. NFT Staking • Leaderboard • Monthly Rewards.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "finance",
+    "games",
+    "entertainment"
+  ],
+  "screenshots": [
+    {
+      "src": "/s1-optimized.webp",
+      "sizes": "390x844",
+      "type": "image/webp",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/s2-optimized.webp",
+      "sizes": "390x844",
+      "type": "image/webp",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/s3-optimized.webp",
+      "sizes": "390x844",
+      "type": "image/webp",
+      "form_factor": "narrow"
+    }
+  ]
+}

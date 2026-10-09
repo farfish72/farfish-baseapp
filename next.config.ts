@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
   
   // Enable experimental features for better performance
   experimental: {
-    optimizePackageImports: ['@coinbase/onchainkit', 'wagmi', 'viem'],
+    optimizePackageImports: ['wagmi', 'viem'],
   },
 };
 

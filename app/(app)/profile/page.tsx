@@ -17,7 +17,7 @@ import {
   SignOut,
   Copy,
 } from "@phosphor-icons/react";
-import { useBaseAuth } from "@/app/contexts/BaseAuthContext";
+import { useBaseAppAuth } from "@/app/contexts/BaseAppAuthContext";
 import { NFT_CONTRACT_ADDRESS } from "@/app/constants";
 import nftDropAbi from "@/app/abi/nftDrop.json";
 import useUserStakes from "@/app/hooks/useUserStakes";
@@ -221,7 +221,7 @@ function ManualReferCodeBind({ address }: { address: string }) {
 function ProfilePageContent() {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const { user: baseUser } = useBaseAuth();
+  const { user: baseUser } = useBaseAppAuth();
   const { showError, showSuccess } = useToast();
   const [openIdx, setOpenIdx] = useState<number | null>(0);
   const [toast, setToast] = useState<ToastState>(null);

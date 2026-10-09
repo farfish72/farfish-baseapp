@@ -382,8 +382,6 @@ function HomeClient() {
       setIsMinting(true);
       setMintMessage({ type: 'info', text: 'Transaction initiated' });
 
-      // Call claim function with sponsor transaction support
-      // Pimlico paymaster will sponsor network fees when available
       await writeMint({
         address: NFT_CONTRACT_ADDRESS as `0x${string}`,
         abi: nftDropAbi as any,
@@ -398,8 +396,6 @@ function HomeClient() {
           "0x" as `0x${string}`,
         ],
         value: isNativeCurrency ? totalValue : BigInt(0),
-        // Sponsor transaction via Pimlico paymaster
-        // Network fees will be sponsored when paymaster is available
         account: address as `0x${string}`,
         chain: base,
       } as any);

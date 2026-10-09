@@ -1,10 +1,10 @@
 "use client";
 
-import { useBaseAuth } from "@/app/contexts/BaseAuthContext";
+import { useBaseAppAuth } from "@/app/contexts/BaseAppAuthContext";
 import BaseAuthGuard from "@/app/components/BaseAuthGuard";
 
 function SimpleHomePageContent() {
-  const { user, isAuthenticated } = useBaseAuth();
+  const { user, isAuthenticated } = useBaseAppAuth();
 
   return (
     <div style={{ 
@@ -28,7 +28,7 @@ function SimpleHomePageContent() {
             {user.displayName || user.username || 'Base User'}
           </p>
           <p style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: 'var(--spacing-xs)' }}>
-            FID: {user.fid}
+            Wallet: {user.wallet.slice(0, 6)}...{user.wallet.slice(-4)}
           </p>
         </div>
       ) : (

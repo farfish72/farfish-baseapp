@@ -1,6 +1,6 @@
 "use client";
 
-import { useBaseAuth } from '@/app/contexts/BaseAuthContext';
+import { useBaseAppAuth } from '@/app/contexts/BaseAppAuthContext';
 import { ReactNode } from 'react';
 import { Warning, LockKey } from '@phosphor-icons/react';
 
@@ -10,15 +10,15 @@ interface BaseAuthGuardProps {
 }
 
 /**
- * Base Auth Guard - Simplified for Base App
+ * Base App Auth Guard - 2026 Standard Web App
  * 
- * Authentication is automatic via Base App.
- * No manual sign-in buttons - users are already authenticated.
+ * Wallet-based authentication guard for standalone Base App.
+ * Requires wallet connection, not Farcaster context.
  * 
- * @see https://docs.base.org/mini-apps/features/authentication
+ * @see https://docs.base.org/apps/guides/migrate-to-standard-web-app
  */
 export default function BaseAuthGuard({ children, fallback }: BaseAuthGuardProps) {
-  const { isAuthenticated, isLoading, error } = useBaseAuth();
+  const { isAuthenticated, isLoading, error } = useBaseAppAuth();
 
   if (isLoading) {
     return (
@@ -28,7 +28,7 @@ export default function BaseAuthGuard({ children, fallback }: BaseAuthGuardProps
             <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
           </div>
           <p className="text-white font-medium">Loading FarFISH</p>
-          <p className="text-white/60 text-sm mt-2">Connecting to Base App</p>
+          <p className="text-white/60 text-sm mt-2">Initializing Base App</p>
         </div>
       </div>
     );
@@ -43,7 +43,7 @@ export default function BaseAuthGuard({ children, fallback }: BaseAuthGuardProps
           </div>
           <p className="text-white font-medium mb-2">Connection Error</p>
           <p className="text-white/70 text-sm mb-6">{error}</p>
-          <p className="text-white/60 text-xs">Please try reopening the app from Base</p>
+          <p className="text-white/60 text-xs">Please refresh and try again</p>
         </div>
       </div>
     );
@@ -60,12 +60,12 @@ export default function BaseAuthGuard({ children, fallback }: BaseAuthGuardProps
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-primary flex items-center justify-center">
             <LockKey size={32} weight="duotone" color="#000000" />
           </div>
-          <p className="text-white font-medium mb-2">Base App Required</p>
+          <p className="text-white font-medium mb-2">Wallet Required</p>
           <p className="text-white/70 text-sm mb-6">
-            Please open FarFISH from the Base App to continue
+            Connect your wallet to access FarFISH
           </p>
           <p className="text-white/60 text-xs">
-            Authentication is automatic when launched from Base
+            Click "Connect Wallet" in the header to get started
           </p>
         </div>
       </div>
