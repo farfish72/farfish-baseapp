@@ -48,18 +48,6 @@ function getWagmiConfig() {
         appLogoUrl: 'https://baseapp.farfish.xyz/icon.png',
       }),
       
-      // WalletConnect - Mobile wallets (Rainbow, Trust, MetaMask Mobile, etc.)
-      walletConnect({
-        projectId: WALLETCONNECT_PROJECT_ID,
-        metadata: {
-          name: 'FarFISH',
-          description: 'Mint. Stake. Earn. Premium NFT collection built on Base.',
-          url: typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_URL || 'https://baseapp.farfish.xyz'),
-          icons: [`${typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_URL || 'https://baseapp.farfish.xyz')}/icon.png`],
-        },
-        showQrModal: true,
-      }),
-      
       // Injected - Browser extension wallets (MetaMask, Brave, etc.)
       injected(),
     ],
