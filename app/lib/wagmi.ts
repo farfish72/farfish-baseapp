@@ -39,10 +39,11 @@ function getWagmiConfig() {
   configInstance = createConfig({
     chains: [base],
     connectors: [
-      // Coinbase Wallet - Primary for Base App users
+      // Coinbase Wallet - Works on both mobile app and browser extension
       coinbaseWallet({
         appName: 'FarFISH',
-        preference: 'smartWalletOnly',
+        // Remove preference to support both EOA and Smart Wallets
+        // This makes it work on both mobile app and browser extension
       }),
       
       // WalletConnect - Mobile wallets (Rainbow, Trust, MetaMask Mobile, etc.)

@@ -85,7 +85,14 @@ export const metadata: Metadata = {
     title: `${APP_NAME} - Mint, Stake, Earn on Base`,
     description: APP_DESCRIPTION,
     images: [`${APP_URL}/og-image.png`],
-    creator: "@FarFISH",
+    // No Twitter handle - using Farcaster instead
+  },
+  
+  // Farcaster frame metadata and profile
+  other: {
+    "fc:frame": "vNext",
+    "fc:frame:image": `${APP_URL}/og-image.png`,
+    "farcaster:profile": "https://farcaster.xyz/farf",
   },
   
   manifest: "/manifest.json",
