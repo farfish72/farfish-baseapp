@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@coinbase/wallet-sdk": "^4.4.0",
     "@phosphor-icons/react": "^2.1.10",
     "@tanstack/react-query": "^5.81.5",
     "@upstash/redis": "^1.39.0",
