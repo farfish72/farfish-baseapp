@@ -53,6 +53,7 @@ export default function WalletConnection() {
       'coinbaseWallet': 'Coinbase Wallet',
       'walletConnect': 'WalletConnect',
       'metaMask': 'MetaMask',
+      'io.metamask': 'MetaMask',
       'injected': 'Browser Wallet',
     };
     return names[id] || id;
