@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useChainId, usePublicClient, useBlockNumber } from "wagmi";
 import { base } from "viem/chains";
+import { getBuilderCodeSuffix } from "@/app/lib/builderCode";
 import Button from "./ui/Button";
 import { STAKING_CONTRACT_ADDRESS } from "../constants";
 import stakeAbi from "../abi/stake.json";
@@ -26,7 +27,12 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const publicClient = usePublicClient();
+  const [mounted, setMounted] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<ReturnType<typeof useUserStakes>["activeStakes"][number] | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const expectedChainId = getExpectedChainId();
   const isBaseNetwork = chainId === expectedChainId;
@@ -122,9 +128,11 @@ export default function UnstakeModal({ isOpen, onClose, onSuccess, initialStakeI
       args: [selectedPosition.stakeId],
       account: address as `0x${string}`,
       chain: base,
+      dataSuffix: getBuilderCodeSuffix(), // Builder Code attribution
     } as any);
   };
 
+  if (!mounted) return null;
   if (!isOpen) return null;
 
   return (

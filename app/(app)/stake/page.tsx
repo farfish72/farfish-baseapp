@@ -16,6 +16,7 @@ import {
 } from "wagmi";
 
 import { base } from "viem/chains";
+import { getBuilderCodeSuffix } from "@/app/lib/builderCode";
 import useUserStakes from "@/app/hooks/useUserStakes";
 import { STAKING_CONTRACT_ADDRESS } from "@/app/constants";
 import stakeAbi from "@/app/abi/stake.json";
@@ -31,6 +32,12 @@ export default function StakingPage() {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const publicClient = usePublicClient();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const expectedChainId = getExpectedChainId();
   const readEnabled =
@@ -101,6 +108,7 @@ export default function StakingPage() {
         args: [stakeId],
         account: address as `0x${string}`,
         chain: base,
+        dataSuffix: getBuilderCodeSuffix(), // Builder Code attribution
       });
     } catch (error) {
       // Error handling without console
@@ -108,6 +116,26 @@ export default function StakingPage() {
   };
 
   /* ---------------- render ---------------- */
+  // Prevent hydration mismatch - show consistent loading state
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br">
+        <main className="py-2 w-full">
+          <div className="flex flex-col gap-4">
+            <section className="glass-card rounded-3xl">
+              <div className="p-6">
+                <div className="text-center py-6">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+                  <p className="text-white/70">Loading...</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br">

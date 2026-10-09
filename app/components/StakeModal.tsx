@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useChainId, useReadContract } from "wagmi";
+import { getBuilderCodeSuffix } from "@/app/lib/builderCode";
 import Button from "./ui/Button";
 import { STAKING_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS, LOCK_DURATIONS } from "../constants";
 import stakeAbi from "../abi/stake.json";
@@ -34,6 +35,7 @@ const BASE_CHAIN_ID = 8453;
 export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalProps) {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
+  const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<NFTCategory | null>(null);
   const [resolvedTokenId, setResolvedTokenId] = useState<number | null>(null);
   const [isResolvingTokenId, setIsResolvingTokenId] = useState(false);
@@ -41,6 +43,10 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
   const [selectedDuration, setSelectedDuration] = useState<LockDuration>(30);
   const [toast, setToast] = useState<{ type: "error" | "success"; message: string } | null>(null);
   const [needsApproval, setNeedsApproval] = useState<boolean | null>(true);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const expectedChainId = process.env.NEXT_PUBLIC_CHAIN_ID ? Number(process.env.NEXT_PUBLIC_CHAIN_ID) : BASE_CHAIN_ID;
   const isBaseNetwork = chainId === expectedChainId;
@@ -193,6 +199,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
         abi: stakeAbi,
         functionName: "stake",
         args: [BigInt(resolvedTokenId), lockDurationSeconds],
+        dataSuffix: getBuilderCodeSuffix(), // Builder Code attribution
       } as any);
     } catch (error: any) {
       const errorMsg = error?.message || String(error);
@@ -297,6 +304,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
           abi: nftDropAbi,
           functionName: "setApprovalForAll",
           args: [STAKING_CONTRACT_ADDRESS as `0x${string}`, true],
+          dataSuffix: getBuilderCodeSuffix(), // Builder Code attribution
         } as any);
         setToast({ type: "success", message: "Please approve the transaction in your wallet..." });
       } catch (error: any) {
@@ -319,6 +327,7 @@ export default function StakeModal({ isOpen, onClose, onSuccess }: StakeModalPro
     }
   };
 
+  if (!mounted) return null;
   if (!isOpen) return null;
 
   return (

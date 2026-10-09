@@ -28,9 +28,14 @@ export default function TrustAnchor({
   hasMintedNFT,
 }: TrustAnchorProps) {
   const { address, isConnected } = useAccount();
+  const [mounted, setMounted] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
   const [rank, setRank] = useState<number | null>(null);
   const [loadingRank, setLoadingRank] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Read ERC20 balance - live on-chain FRH balance
   const { 
@@ -125,6 +130,8 @@ export default function TrustAnchor({
       return '0.00';
     }
   };
+
+  if (!mounted) return null;
 
   // Determine tier - Premium if user has: At least 1 NFT minted OR At least 1 NFT staked
   const tier = (hasMintedNFT || hasActiveStake) ? 'Premium' : 'Basic';

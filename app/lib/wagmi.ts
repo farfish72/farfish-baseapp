@@ -28,38 +28,49 @@ const dataSuffix = '0x62635f68327537327461650b0080218021802180218021802180218021
 // WalletConnect Project ID - Get from https://cloud.walletconnect.com
 const WALLETCONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'demo-project-id';
 
-export const wagmiConfig = createConfig({
-  chains: [base],
-  connectors: [
-    // Coinbase Wallet - Primary for Base App users
-    coinbaseWallet({
-      appName: 'FarFISH',
-      preference: 'smartWalletOnly',
-    }),
-    
-    // WalletConnect - Mobile wallets (Rainbow, Trust, MetaMask Mobile, etc.)
-    walletConnect({
-      projectId: WALLETCONNECT_PROJECT_ID,
-      metadata: {
-        name: 'FarFISH',
-        description: 'Mint. Stake. Earn. Premium NFT collection built on Base.',
-        url: process.env.NEXT_PUBLIC_URL || 'https://baseapp.farfish.xyz',
-        icons: [`${process.env.NEXT_PUBLIC_URL || 'https://baseapp.farfish.xyz'}/icon.png`],
-      },
-      showQrModal: true,
-    }),
-    
-    // Injected - Browser extension wallets (MetaMask, Brave, etc.)
-    injected({
-      target: 'metaMask',
-    }),
-  ],
-  transports: {
-    // Use Base's public RPC with Builder Code attribution
-    // dataSuffix automatically appends Builder Code to all transactions
-    [base.id]: http('https://mainnet.base.org', {
-      // Note: dataSuffix in transport config may not be supported in all wagmi versions
-      // If attribution fails, implement per-transaction dataSuffix instead
-    }),
-  },
-});
+// Create wagmi config with singleton pattern to prevent re-initialization
+let configInstance: ReturnType<typeof createConfig> | null = null;
+
+function getWagmiConfig() {
+  if (configInstance) {
+    return configInstance;
+  }
+
+  configInstance = createConfig({
+    chains: [base],
+    connectors: [
+      // Coinbase Wallet - Primary for Base App users
+      coinbaseWallet({
+        appName: 'FarFISH',
+        preference: 'smartWalletOnly',
+      }),
+      
+      // WalletConnect - Mobile wallets (Rainbow, Trust, MetaMask Mobile, etc.)
+      walletConnect({
+        projectId: WALLETCONNECT_PROJECT_ID,
+        metadata: {
+          name: 'FarFISH',
+          description: 'Mint. Stake. Earn. Premium NFT collection built on Base.',
+          url: typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_URL || 'https://baseapp.farfish.xyz'),
+          icons: [`${typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_URL || 'https://baseapp.farfish.xyz')}/icon.png`],
+        },
+        showQrModal: true,
+      }),
+      
+      // Injected - Browser extension wallets (MetaMask, Brave, etc.)
+      injected(),
+    ],
+    transports: {
+      // Use Base's public RPC with Builder Code attribution
+      // dataSuffix automatically appends Builder Code to all transactions
+      [base.id]: http('https://mainnet.base.org', {
+        // Note: dataSuffix in transport config may not be supported in all wagmi versions
+        // If attribution fails, implement per-transaction dataSuffix instead
+      }),
+    },
+  });
+
+  return configInstance;
+}
+
+export const wagmiConfig = getWagmiConfig();

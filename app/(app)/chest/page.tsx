@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import {
   useAccount,
   useChainId,
@@ -9,6 +9,7 @@ import {
   useWriteContract,
 } from "wagmi";
 import { base } from "viem/chains";
+import { getBuilderCodeSuffix } from "@/app/lib/builderCode";
 
 import ChestCard from "@/app/components/ChestCard";
 import TrustAnchor from "@/app/components/TrustAnchor";
@@ -31,6 +32,11 @@ export default function ChestPage() {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const isBase = chainId === base.id;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // NFT status hooks
   const { hasMintedNFT } = useNFTStatus();
@@ -77,6 +83,7 @@ export default function ChestPage() {
         args: [],
         account: address,
         chain: base,
+        dataSuffix: getBuilderCodeSuffix(), // Builder Code attribution
       });
     } catch (error) {
       throw error;
@@ -122,6 +129,7 @@ export default function ChestPage() {
         args: [],
         account: address,
         chain: base,
+        dataSuffix: getBuilderCodeSuffix(), // Builder Code attribution
       });
     } catch (error) {
       throw error;
@@ -129,6 +137,17 @@ export default function ChestPage() {
   }, [silver, address, claimSilver]);
 
   /* ================= UI ================= */
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white/70">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="py-2 w-full">
       <div className="flex flex-col gap-4">

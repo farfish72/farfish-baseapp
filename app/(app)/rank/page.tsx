@@ -19,10 +19,15 @@ const getUsername = (address: string): string => {
 
 export default function LeaderboardPage() {
   const { address } = useAccount();
+  const [mounted, setMounted] = useState(false);
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [userEntry, setUserEntry] = useState<LeaderboardEntry | null>(null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<ToastState>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const fetchLeaderboard = async () => {
     setLoading(true);
@@ -79,6 +84,17 @@ export default function LeaderboardPage() {
     const timer = setTimeout(() => setToast(null), 4000);
     return () => clearTimeout(timer);
   }, [toast]);
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white/70">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1 min-h-0">

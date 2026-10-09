@@ -11,12 +11,14 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { getPublicClient } from "@wagmi/core";
 import { wagmiConfig } from "@/app/lib/wagmi";
+import { getBuilderCodeSuffix } from "@/app/lib/builderCode";
 import { NFT_CONTRACT_ADDRESS, getNameFromTokenId, TOKEN_IDS } from "@/app/constants";
 import nftDropAbi from "@/app/abi/nftDrop.json";
 import { base } from "viem/chains";
 import { useToast } from "@/app/providers/ToastProvider";
 import { handleTransactionError } from "@/app/utils/errorHandling";
 import { GameController, Rocket, ChartBar, Clock, Trophy, Diamond, Warning } from "@phosphor-icons/react";
+import WalletConnection from "@/app/components/WalletConnection";
 
 interface SupplyInfo {
   id: number;
@@ -84,10 +86,11 @@ function pickWeightedTokenId(candidates: SupplyInfo[]): number {
 }
 
 function HomeClient() {
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const { showError, showSuccess, clearAll } = useToast();
 
   // State
+  const [mounted, setMounted] = useState(false);
   const [supplyInfo, setSupplyInfo] = useState<SupplyInfo[]>([]);
   const [loadingSupplies, setLoadingSupplies] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
@@ -96,6 +99,10 @@ function HomeClient() {
   const [claimInfo, setClaimInfo] = useState<Map<number, TokenClaimInfo>>(new Map());
   const [loadingClaimConditions, setLoadingClaimConditions] = useState(false);
   const [mintMessage, setMintMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const {
     writeContract: writeMint,
@@ -398,6 +405,7 @@ function HomeClient() {
         value: isNativeCurrency ? totalValue : BigInt(0),
         account: address as `0x${string}`,
         chain: base,
+        dataSuffix: getBuilderCodeSuffix(), // Builder Code attribution
       } as any);
 
     } catch (error) {
@@ -453,6 +461,17 @@ function HomeClient() {
     const name = getNameFromTokenId(lastMintedTokenId);
     return name ?? "Minted FarFISH";
   }, [lastMintedTokenId]);
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white/70">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br">
@@ -510,123 +529,133 @@ function HomeClient() {
           {/* NFT Minting Section */}
           <div className="glass-card rounded-3xl">
             <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-xl font-bold text-white">
-                    Get Your NFT
-                  </h2>
-                  <p className="text-white/70 text-sm mt-1">
-                    {totalMaxSupply ? `${totalMaxSupply.toLocaleString()} total · 4 rarities` : "Loading availability..."}
-                  </p>
-                </div>
-              </div>
-
-              {!NFT_CONTRACT_ADDRESS && (
-                <div className="mb-6 p-4 rounded-2xl bg-neutral/10 border border-neutral/20">
-                  <div className="flex items-center gap-3">
-                    <Warning size={24} weight="duotone" color="#ffffff" />
-                    <div>
-                      <p className="font-semibold text-white">Contract Not Configured</p>
-                      <p className="text-xs text-white/70">Minting is temporarily disabled</p>
-                    </div>
+              {/* Show heading only when wallet is connected */}
+              {isConnected && (
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-xl font-bold text-white">
+                      Get Your NFT
+                    </h2>
+                    <p className="text-white/70 text-sm mt-1">
+                      {totalMaxSupply ? `${totalMaxSupply.toLocaleString()} total · 4 rarities` : "Loading availability..."}
+                    </p>
                   </div>
                 </div>
               )}
 
-              {/* Stats Grid */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="rounded-2xl p-4 text-center" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
-                  <div className="text-2xl font-bold text-white">
-                    {loadingSupplies ? "..." : totalMinted.toLocaleString()}
-                  </div>
-                  <div className="text-xs text-white/70 mt-1">Minted</div>
-                </div>
-                <div className="rounded-2xl p-4 text-center" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
-                  <div className="text-2xl font-bold text-white">
-                    {loadingSupplies ? "..." : `${mintedProgress.toFixed(1)}%`}
-                  </div>
-                  <div className="text-xs text-white/70 mt-1">Progress</div>
-                </div>
-                <div className="rounded-2xl p-4 text-center" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
-                  <div className="text-2xl font-bold text-white">
-                    {loadingSupplies ? "..." : totalRemaining.toLocaleString()}
-                  </div>
-                  <div className="text-xs text-white/70 mt-1">Left</div>
-                </div>
-              </div>
+              {/* Wallet Connection Required - Show when not connected */}
+              {!isConnected ? (
+                <WalletConnection />
+              ) : (
+                <>
+                  {!NFT_CONTRACT_ADDRESS && (
+                    <div className="mb-6 p-4 rounded-2xl bg-neutral/10 border border-neutral/20">
+                      <div className="flex items-center gap-3">
+                        <Warning size={24} weight="duotone" color="#ffffff" />
+                        <div>
+                          <p className="font-semibold text-white">Contract Not Configured</p>
+                          <p className="text-xs text-white/70">Minting is temporarily disabled</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
-              {/* Progress Bar */}
-              <div className="mb-6">
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-sm text-white/60">Supply minted</span>
-                  <span className="text-sm text-white/60 font-medium">{mintedProgress.toFixed(1)}%</span>
-                </div>
-                <div className="w-full bg-surface rounded-full h-3 overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-primary transition-all duration-1000 ease-out"
-                    style={{ width: `${mintedProgress}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Mint Premium Pass Button - Always Visible */}
-              <button
-                type="button"
-                onClick={handleMint}
-                disabled={primaryButtonDisabled}
-                className={`
-                  w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 border-2
-                  ${primaryButtonDisabled 
-                    ? "bg-ink border-muted/30 text-muted cursor-not-allowed" 
-                    : "bg-ink border-teal text-white hover:shadow-glow hover:bg-teal/10"
-                  }
-                `}
-              >
-                {isMinting || isMintPending || isMintConfirming ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                    {isMinting ? "Preparing transaction..." : isMintPending ? "Awaiting confirmation..." : "Processing transaction..."}
-                  </div>
-                ) : (
-                  "Mint Premium Pass"
-                )}
-              </button>
-
-              {/* Mint Messages */}
-              {mintMessage && (
-                <div className={`p-4 rounded-2xl border ${
-                  mintMessage.type === 'success' 
-                    ? 'bg-green-500/20 border-green-500/30 text-green-100' 
-                    : mintMessage.type === 'error'
-                    ? 'bg-red-500/20 border-red-500/30 text-red-100'
-                    : 'bg-blue-500/20 border-blue-500/30 text-blue-100'
-                }`}>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">
-                      {mintMessage.type === 'success' ? '✅' : mintMessage.type === 'error' ? '❌' : 'ℹ️'}
-                    </span>
-                    <div>
-                      <p className="font-semibold">{mintMessage.text}</p>
-                      {mintMessage.type === 'success' && (
-                        <p className="text-xs opacity-80 mt-1">Your NFT has been minted successfully</p>
-                      )}
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    <div className="rounded-2xl p-4 text-center" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
+                      <div className="text-2xl font-bold text-white">
+                        {loadingSupplies ? "..." : totalMinted.toLocaleString()}
+                      </div>
+                      <div className="text-xs text-white/70 mt-1">Minted</div>
+                    </div>
+                    <div className="rounded-2xl p-4 text-center" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
+                      <div className="text-2xl font-bold text-white">
+                        {loadingSupplies ? "..." : `${mintedProgress.toFixed(1)}%`}
+                      </div>
+                      <div className="text-xs text-white/70 mt-1">Progress</div>
+                    </div>
+                    <div className="rounded-2xl p-4 text-center" style={{ background: '#0b0e11', border: '1px solid rgba(100, 116, 139, 0.3)' }}>
+                      <div className="text-2xl font-bold text-white">
+                        {loadingSupplies ? "..." : totalRemaining.toLocaleString()}
+                      </div>
+                      <div className="text-xs text-white/70 mt-1">Left</div>
                     </div>
                   </div>
-                </div>
-              )}
 
-              {lastMintedDisplay && (
-                <div className="p-4 rounded-2xl bg-white/10 border border-white/30">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">🎉</span>
-                    <div>
-                      <p className="font-semibold text-white">Minting Complete</p>
-                      <p className="text-xs text-white/80">{lastMintedDisplay}</p>
+                  {/* Progress Bar */}
+                  <div className="mb-6">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-sm text-white/60">Supply minted</span>
+                      <span className="text-sm text-white/60 font-medium">{mintedProgress.toFixed(1)}%</span>
+                    </div>
+                    <div className="w-full bg-surface rounded-full h-3 overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-primary transition-all duration-1000 ease-out"
+                        style={{ width: `${mintedProgress}%` }}
+                      />
                     </div>
                   </div>
-                </div>
+
+                  {/* Mint Premium Pass Button - Only when wallet connected */}
+                  <button
+                    type="button"
+                    onClick={handleMint}
+                    disabled={primaryButtonDisabled}
+                    className={`
+                      w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 border-2
+                      ${primaryButtonDisabled 
+                        ? "bg-ink border-muted/30 text-muted cursor-not-allowed" 
+                        : "bg-ink border-teal text-white hover:shadow-glow hover:bg-teal/10"
+                      }
+                    `}
+                  >
+                    {isMinting || isMintPending || isMintConfirming ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                        {isMinting ? "Preparing transaction..." : isMintPending ? "Awaiting confirmation..." : "Processing transaction..."}
+                      </div>
+                    ) : (
+                      "Mint Premium Pass"
+                    )}
+                  </button>
+
+                  {/* Mint Messages */}
+                  {mintMessage && (
+                    <div className={`mt-4 p-4 rounded-2xl border ${
+                      mintMessage.type === 'success' 
+                        ? 'bg-green-500/20 border-green-500/30 text-green-100' 
+                        : mintMessage.type === 'error'
+                        ? 'bg-red-500/20 border-red-500/30 text-red-100'
+                        : 'bg-blue-500/20 border-blue-500/30 text-blue-100'
+                    }`}>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">
+                          {mintMessage.type === 'success' ? '✅' : mintMessage.type === 'error' ? '❌' : 'ℹ️'}
+                        </span>
+                        <div>
+                          <p className="font-semibold">{mintMessage.text}</p>
+                          {mintMessage.type === 'success' && (
+                            <p className="text-xs opacity-80 mt-1">Your NFT has been minted successfully</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {lastMintedDisplay && (
+                    <div className="mt-4 p-4 rounded-2xl bg-white/10 border border-white/30">
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">🎉</span>
+                        <div>
+                          <p className="font-semibold text-white">Minting Complete</p>
+                          <p className="text-xs text-white/80">{lastMintedDisplay}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
-          </div>
+            </div>
           </div>
 
           {/* Why FarFISH? */}

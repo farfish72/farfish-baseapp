@@ -8,6 +8,10 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   output: 'standalone',
   allowedDevOrigins: ['*.run.app', 'localhost:3000'],
+  
+  // Suppress WalletConnect double initialization warning in dev (React Strict Mode)
+  reactStrictMode: true,
+  
   webpack: (config, { isServer }) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     

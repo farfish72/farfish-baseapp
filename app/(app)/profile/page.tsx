@@ -6,6 +6,7 @@ import { useAccount, useDisconnect } from "wagmi";
 import { base } from "viem/chains";
 import { getPublicClient } from "@wagmi/core";
 import { wagmiConfig } from "@/app/lib/wagmi";
+import WalletConnection from "@/app/components/WalletConnection";
 import {
   User,
   Wallet,
@@ -223,9 +224,14 @@ function ProfilePageContent() {
   const { disconnect } = useDisconnect();
   const { user: baseUser } = useBaseAppAuth();
   const { showError, showSuccess } = useToast();
+  const [mounted, setMounted] = useState(false);
   const [openIdx, setOpenIdx] = useState<number | null>(0);
   const [toast, setToast] = useState<ToastState>(null);
   const { activeStakes } = useUserStakes();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Wallet-dependent stats (only loaded when wallet connected)
   const [liveStats, setLiveStats] = useState<LiveStats>({ nftsOwned: 0, chestStreak: 0, rank: null });
@@ -429,6 +435,17 @@ function ProfilePageContent() {
     return () => clearTimeout(timer);
   }, [toast]);
 
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white/70">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br">
       <main className="py-2 w-full">
@@ -521,21 +538,7 @@ function ProfilePageContent() {
                 <ManualReferCodeBind address={address} />
               </div>
             ) : (
-              <div className="p-4 rounded-2xl bg-white/10 border border-white/20">
-                <div className="text-center py-2">
-                  <p className="text-white/70 mb-4 text-sm">Connect your wallet to view stats and claim rewards.</p>
-                  <button
-                    onClick={() => {
-                      // Trigger wallet connection via existing WalletConnection logic
-                      // This will be handled by the WalletConnection component
-                      showError("Please use the wallet connection flow");
-                    }}
-                    className="px-6 py-3 rounded-lg bg-gradient-to-r from-teal to-mint text-ink font-bold text-base hover:opacity-90 transition"
-                  >
-                    Connect Wallet
-                  </button>
-                </div>
-              </div>
+              <WalletConnection />
             )}
           </section>
 

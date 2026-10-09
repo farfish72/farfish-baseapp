@@ -13,16 +13,17 @@
     "@phosphor-icons/react": "^2.1.10",
     "@tanstack/react-query": "^5.81.5",
     "@upstash/redis": "^1.39.0",
+    "@wagmi/core": "^3.6.5",
     "@x402/core": "^2.28.0",
     "@x402/evm": "^2.28.0",
     "@x402/svm": "^2.28.0",
     "next": "^16.1.1",
-    "ox": "^0.1.2",
+    "ox": "^1.8.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
-    "viem": "^2.31.6",
-    "wagmi": "^2.16.3"
+    "viem": "^2.57.4",
+    "wagmi": "^3.7.7"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.1.1",

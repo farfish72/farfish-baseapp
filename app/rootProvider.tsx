@@ -44,7 +44,7 @@ const queryClient = new QueryClient({
  */
 export function RootProvider({ children }: { children: ReactNode }) {
   return (
-    <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+    <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <WalletReconnectHandler />
         <BaseAppAuthProvider>

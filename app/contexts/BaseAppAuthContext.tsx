@@ -31,9 +31,14 @@ const BaseAppAuthContext = createContext<BaseAppAuthContextType | undefined>(und
 export function BaseAppAuthProvider({ children }: { children: ReactNode }) {
   const { address, isConnected } = useAccount();
   
+  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<BaseAppUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Load or create user profile when wallet connects
   useEffect(() => {
@@ -119,8 +124,8 @@ export function BaseAppAuthProvider({ children }: { children: ReactNode }) {
   }, [address, isConnected]);
 
   const value: BaseAppAuthContextType = {
-    user,
-    isAuthenticated: !!user && isConnected,
+    user: mounted ? user : null,
+    isAuthenticated: mounted ? (!!user && isConnected) : false,
     isLoading,
     error,
   };

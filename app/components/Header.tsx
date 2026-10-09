@@ -40,6 +40,8 @@ export default function Header({ page, title, subtitle }: HeaderProps = {}) {
           width={40}
           height={40}
           className="rounded-control object-cover"
+          priority
+          loading="eager"
         />
         
         <a
