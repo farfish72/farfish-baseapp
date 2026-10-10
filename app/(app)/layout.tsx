@@ -11,10 +11,10 @@ export default function AppLayout({
   return (
     <ToastProvider>
       <AutoBindReferral />
-      <div style={{ paddingBottom: 'calc(var(--bottom-nav-height) + 1.5rem)' }}>
+      <div style={{ paddingBottom: 'calc(var(--bottom-nav-height) + 0.75rem)' }}>
         {children}
+        <Footer />
       </div>
-      <Footer />
       <BottomNav />
     </ToastProvider>
   );

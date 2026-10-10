@@ -4,7 +4,7 @@ export default function Footer() {
       style={{
         width: '100%',
         marginTop: '0',
-        marginBottom: 'calc(4.75rem + env(safe-area-inset-bottom, 0px))',
+        marginBottom: '0',
         pointerEvents: 'none',
       }}
     >
